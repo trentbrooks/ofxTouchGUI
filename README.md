@@ -9,18 +9,22 @@ Includes slider, dropdown list, button/image button, toggle button, text/title f
 
 ## Sample usage ##
 // setup
+
 ofxTouchGUI settings;
 settings.loadSettings("tg_settings.xml");
 
 // add a slider
+
 ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f, 20, 115, 200, 35); // label, value, x, y, width, height
 
 // add an image button
+
 ofxTouchGUIButton* imageBtn = settings.addButton("MY IMAGE BUTTON", 225, 75, 74, 35); // label, value, x, y, width, height
 imageBtn->loadImageStates("play-up.png", "play-down.png"); // touch down and up images
 ofAddListener(imageBtn->onChangedEvent, this, &testApp::onImageButtonPressed); // bind a function in testApp to the element
 
 // enable osc
+
 settings.setupSendOSC("127.0.0.1", 4444);
 
 See example files for more detailed code samples.
