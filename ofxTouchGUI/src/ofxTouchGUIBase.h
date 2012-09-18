@@ -24,9 +24,9 @@ public:
     
     // DISPLAY
     virtual void draw();
-    virtual void drawText(const string &text, int alignment); //0=left align, 1=center align,2=right align
+    virtual void drawText(const string &text, int alignment=-1); //0=left align, 1=center align,2=right align
     virtual void drawText(const string &text, int destX, int destY);
-    virtual void drawLargeText(const string &text, int alignment); //0=left align, 1=center align,2=right align
+    virtual void drawLargeText(const string &text, int alignment=-1); //0=left align, 1=center align,2=right align
     virtual void drawLargeText(const string &text, int destX, int destY);
     virtual void drawGLRect(float *&vtxArray, float *&clrArray); // take a reference to the pointers
     string label;

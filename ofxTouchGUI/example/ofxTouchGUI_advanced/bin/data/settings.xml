@@ -38,3 +38,13 @@
     <label>TOGGLE B</label>
     <value>0</value>
 </control>
+<control>
+    <type>constant</type>
+    <label>host</label>
+    <value>127.0.0.1</value>
+</control>
+<control>
+    <type>constant</type>
+    <label>port</label>
+    <value>4444</value>
+</control>

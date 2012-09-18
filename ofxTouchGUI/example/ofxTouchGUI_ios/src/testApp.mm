@@ -28,14 +28,17 @@ void testApp::setup(){
     settings.loadBackground("guiBg.png"); // path to image (retina image: guiBg@2x.png)  
     //settings.autoDraw();
 
-    // add any random properties to be saved - good for configs
-    //settings.addFixedVar(&host, "host");
-    //settings.addFixedVar(&port, "port");
+    
+    // add constants or variables to be saved - good for configs
+    //settings.setConstant("host", &host);
+    //settings.setConstant("port", &port);
+    //settings.setVariable("host", &host);
+    //settings.setVariable("port", &port);
     
     
-    // add controls
-    settings.addTitleText("ofxTouchGUI", 20, 50, ofGetWidth()-40); // label, x, y, width, height
-    settings.addText("OSC settings (host/port):", 21, 67, ofGetWidth()-50); // label, x, y, width, height (auto wraps text to width)
+    // add controls - all controls in this example are manually positioned + sized (remove those parameters for auto placement)
+    settings.addTitleText("ofxTouchGUI", 20, 40, ofGetWidth()-40); // label, x, y, width, height
+    settings.addText("OSC settings (host/port):", 21, 47, ofGetWidth()-50); // label, x, y, width, height (auto wraps text to width)
     hostInput = settings.addTextInput(&host, 20, 75, 120, 35);
     portInput = settings.addTextInput(&portStr, 145, 75, 75, 35);
     ofxTouchGUIButton* oscBtn = settings.addButton("SETUP", 225, 75, 74, 35); // label, x, y, width, height
@@ -46,10 +49,11 @@ void testApp::setup(){
     settings.addDropDown("DROPDOWN LIST A", 5, ddOptions, 20, 195, ofGetWidth()-40, 35); // label, num items, items[], x, y, width, height
     settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions, 20, 235, ofGetWidth()-40, 35); // label, num items, preselected index, items[], x, y, width, height
     settings.addToggleButton("TOGGLE A", &toggleValA, 20, 275, 137, 35); // label, value, x, y, width, height
-    settings.addToggleButton("TOGGLE B", &toggleValB, 162, 275, 137, 35); // label, value, x, y, width, height
+    settings.addToggleButton("TOGGLE B", &toggleValB, 162, 275, 137, 35); // label, value, x, y, width, height    
+    settings.addText(description, 25, 315, ofGetWidth()-50); // label, x, y, width, height (auto wraps text to width)
     
-    settings.addText(description, 25, 335, ofGetWidth()-50); // label, x, y, width, height (auto wraps text to width)
     
+    // controls can be binded to methods
     ofxTouchGUIButton* saveBtn = settings.addButton("SAVE", 20, 425, 89, 35); // label, x, y, width, height
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed); // note: buttons have no context unless binded to a function
     ofxTouchGUIButton* resetBtn = settings.addButton("RESET", 114, 425, 89, 35); // label, x, y, width, height

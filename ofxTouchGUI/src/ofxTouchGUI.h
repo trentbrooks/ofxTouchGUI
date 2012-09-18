@@ -13,18 +13,46 @@
 #include "ofxOsc.h"
 
 
-static string SLIDER_TYPE= "slider";
-static string BUTTON_TYPE ="button";
-static string TOGGLE_TYPE="toggle";
-static string TEXT_TYPE = "text";
-static string DROPDOWN_TYPE = "dropdown";
-static string TEXTINPUT_TYPE = "input";
-static string FIXEDVAR_TYPE = "fixedVar";
+#define SLIDER_TYPE "slider"
+#define BUTTON_TYPE "button"
+#define TOGGLE_TYPE "toggle"
+#define TEXT_TYPE "text"
+#define DROPDOWN_TYPE "dropdown"
+#define TEXTINPUT_TYPE "input"
+#define CONST_TYPE "constant"
+#define VAR_TYPE "variable"
 
+enum { _INT, _FLOAT, _BOOL, _STRING };
+
+struct NameValuePair {
+    string name;
+    void* value;
+    int type;
+    
+    template <typename T>
+    void setValue(T *valuePtr) {
+
+        if(typeid(T) == typeid(int&))
+            type = _INT;
+        else if(typeid(T) == typeid(string&))
+            type = _STRING;
+        else if(typeid(T) == typeid(float&))
+            type = _FLOAT;
+        else if(typeid(T) == typeid(bool&))
+            type = _BOOL;
+        else
+            cout << "* NameValuePair error: template type is unknown *" << endl;
+        
+        value = valuePtr;
+    };
+ 
+};
 
 class ofxTouchGUI {
 
 public:
+    
+    
     
     ofxTouchGUI();
 	~ofxTouchGUI();
@@ -48,6 +76,15 @@ public:
     ofTrueTypeFont guiFontLarge;
     int fontSize;
     int fontSizeLarge;
+
+    // default positioning/sizing
+    int defaultPosX;
+    int defaultPosY;
+    int defaultColumn;
+    int defaultItemWidth;
+    int defaultItemHeight;
+    int defaultSpacer;
+    void checkPosSize(int& posX, int& posY, int& width, int& height);
     
     // drawing
     void draw();
@@ -60,24 +97,42 @@ public:
     void aDraw(ofEventArgs &e);
         
     // gui create
-    ofxTouchGUISlider* addSlider(string sliderLabel, float *val, float min, float max, int posX, int posY, int width, int height);
-    ofxTouchGUISlider* addSlider(string sliderLabel, int *val, int min, int max, int posX, int posY, int width, int height);
-    ofxTouchGUIText* addTitleText(string textLabel, int posX, int posY, int width);
-    ofxTouchGUIText* addText(string textLabel, int posX, int posY, int width);
-    ofxTouchGUIButton* addButton(string btnLabel, int posX, int posY, int width, int height);
-    ofxTouchGUIToggleButton* addToggleButton(string toggleLabel, bool *toggleVal, int posX, int posY, int width, int height);
-    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, string* listValues, int posX, int posY, int width, int height);
-    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, string* listValues, int posX, int posY, int width, int height);
-    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, vector<string> listValues, int posX, int posY, int width, int height);
-    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, vector<string> listValues, int posX, int posY, int width, int height);
-    ofxTouchGUITextInput* addTextInput(string *placeHolderText, int posX, int posY, int width, int height);
+    ofxTouchGUISlider* addSlider(string sliderLabel, float *val, float min, float max, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUISlider* addSlider(string sliderLabel, int *val, int min, int max, int posX=-1, int posY=-1, int width=-1, int height=-1);
+
+    ofxTouchGUIText* addVarText(string textLabel, string *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIText* addVarText(string textLabel, int *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIText* addVarText(string textLabel, bool *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIText* addVarText(string textLabel, float *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
-    // add a fixed var for saving - good for xml config options
-    void addFixedVar(string *fixedVar,string varName);
-    void addFixedVar(bool *fixedVar,string varName);
-    void addFixedVar(int *fixedVar,string varName);
-    void addFixedVar(float *fixedVar,string varName);
-    int fixedVarCount;
+    ofxTouchGUIText* addTitleText(string textLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIText* addText(string textLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    
+    ofxTouchGUIButton* addButton(string btnLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIToggleButton* addToggleButton(string toggleLabel, bool *toggleVal, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, string* listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, string* listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, vector<string> listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, vector<string> listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUITextInput* addTextInput(string *placeHolderText, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    // add a constant for read only (set once from app, can only be changed in xml) - good for config options
+    template <typename T>
+    void setConstant(string constName,T *fixedConst); //pointer
+    template <typename T>
+    void setConstant(string constName,T fixedConst); // non-pointer
+    int constantCount;
+    
+    // add a regular var for saving - by default values are over-written when added
+    //void setVariable(string varName, string *regVar, bool overwriteXMLValue = false);
+    //void setVariable(string varName, bool *regVar, bool overwriteXMLValue = false);
+    //void setVariable(string varName, int *regVar, bool overwriteXMLValue = false);
+   // void setVariable(string varName, float *regVar, bool overwriteXMLValue = false);
+    template <typename T>
+    void setVariable(string varName, T *regVar);
+    vector <NameValuePair*>varItems;
+    int variableCount;
     
     // save settings xml
     string saveToFile;
@@ -88,9 +143,10 @@ public:
     
     // using a template to pass in parameter of any type
     template <typename T>
-    bool saveControl(string currentType, string currentLabel, T* currentValue);    
+    bool saveControl(string currentType, string currentLabel, T* currentValue, bool overwriteXMLValue = false);    
     
     // all controls
+    NameValuePair* getVarByLabel(string textLabel);
     ofxTouchGUIBase* getItemByLabelAndType(string textLabel, string itemType);
     ofxTouchGUIBase* getItemById(string itemId);
     vector <ofxTouchGUIBase*> guiItems;

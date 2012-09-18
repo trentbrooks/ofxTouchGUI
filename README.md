@@ -13,7 +13,9 @@ Includes slider, dropdown list, button/image button, toggle button, text/title f
 	settings.loadSettings("tg_settings.xml");
 
 	// add a slider
-	ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f, 20, 115, 200, 35); // label, value, x, y, width, height
+	ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f, 20, 115, 200, 35); // label, value, min, max, x, y, width, height
+	// or auto position/size without extra parameters
+	ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f); // label, value, min, max
 
 	// add an image button
 	ofxTouchGUIButton* imageBtn = settings.addButton("MY IMAGE BUTTON", 225, 75, 74, 35); // label, value, x, y, width, height
@@ -22,6 +24,10 @@ Includes slider, dropdown list, button/image button, toggle button, text/title f
 
 	// enable osc
 	settings.setupSendOSC("127.0.0.1", 4444);
+
+	// add variables or constants
+	settings.setConstant("myConstant", &someConstant);
+    settings.setVariable("myVar", &someVar);
 
 See example files for more detailed code samples.
 

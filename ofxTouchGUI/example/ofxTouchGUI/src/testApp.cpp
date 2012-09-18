@@ -1,6 +1,7 @@
 #include "testApp.h"
 
 //--------------------------------------------------------------
+
 void testApp::setup(){
     
     // set some default values
@@ -18,9 +19,13 @@ void testApp::setup(){
     settings.loadSettings("settings.xml", true, true); // savefile, default font, use mouse
     settings.loadBackground("guiBg.png");
     
+    //settings.autoDraw();
+    
     // add any random properties to be saved - good for configs, once set can only be changed via xml
-    settings.addFixedVar(&host, "host");
-    settings.addFixedVar(&port, "port");
+    settings.setConstant("host", &host);
+    settings.setConstant("port", &port);
+    //settings.setVariable("host", &host); //can be changed
+    //settings.setVariable("port", &port); // can be changed
 
     // enable osc
     settings.setupSendOSC(host, port); 
@@ -29,19 +34,24 @@ void testApp::setup(){
     int itemsWidth = 200;
     int itemsHeight = 25;
     int destX = 20;
-    settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port), destX, 25, itemsWidth); 
-    settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f, destX, 35, itemsWidth, itemsHeight); 
-    settings.addSlider("SLIDER Y", &sliderValY, 0.0f, 100.0f, destX, 65, itemsWidth, itemsHeight); 
-    settings.addDropDown("DROPDOWN LIST A", 5, ddOptions, destX, 95, itemsWidth, itemsHeight); 
-    settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions, destX, 125, itemsWidth, itemsHeight);
-    settings.addToggleButton("TOGGLE A", &toggleValA, destX, 155, 137, itemsHeight);
-    settings.addToggleButton("TOGGLE B", &toggleValB, destX, 185, 137, itemsHeight);     
-    settings.addText(description, destX + 5, 230, itemsWidth); 
+    settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port));
+    settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
+    settings.addSlider("SLIDER Y", &sliderValY, 0, 100);
     
-    ofxTouchGUIButton* saveBtn = settings.addButton("SAVE", destX, 325, 89, itemsHeight); 
+    settings.addDropDown("DROPDOWN LIST A", 5, ddOptions);
+    settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions);
+    settings.addToggleButton("TOGGLE A", &toggleValA);
+    settings.addToggleButton("TOGGLE B", &toggleValB);    
+    settings.addText(description);//, destX + 5, 230, itemsWidth); 
+    
+    ofxTouchGUIButton* saveBtn = settings.addButton("SAVE"); 
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed);
-    ofxTouchGUIButton* resetBtn = settings.addButton("RESET", 114, 325, 89, itemsHeight); 
+    ofxTouchGUIButton* resetBtn = settings.addButton("RESET");
     ofAddListener(resetBtn->onChangedEvent, this, &testApp::onButtonPressed);
+    
+    // just displays variables
+    settings.addVarText("Display X", &sliderValX); 
+    settings.addVarText("Display Y", &sliderValY);
     
 }
 
@@ -82,6 +92,7 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 
+    
 }
 
 //--------------------------------------------------------------

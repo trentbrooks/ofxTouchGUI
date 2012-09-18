@@ -27,20 +27,22 @@ void testApp::setup(){
     //settings.autoDraw();
     
     
-    // add any random properties to be saved - good for configs, once set you have to change them via xml
-    settings.addFixedVar(&host, "host");
-    settings.addFixedVar(&port, "port");
+    // add any random properties to be saved - good for configs, once set can only be changed via xml
+    settings.setConstant("host", &host);
+    settings.setConstant("port", &port);
+    //settings.setVariable("host", &host); //can be changed
+    //settings.setVariable("port", &port); // can be changed
 
     // enable osc?
     settings.setupSendOSC(host, port); 
     
-    // add controls
+    // add controls - all are manullay sized + positioned
     int itemsWidth = 200;
     int itemsHeight = 25;
     int destX = 20;
     int destY = 60;
-    settings.addTitleText("ofxTouchGUI advanced", destX, destY, 300); // label, x, y, width, height
-    settings.addText("OSC settings: " + host + ":" + ofToString(port) + " (can be changed in settings.xml)", destX, destY+15, 300); // label, x, y, width, height (auto wraps text to width)
+    settings.addTitleText("ofxTouchGUI advanced", destX, destY-10, 300); // label, x, y, width, height
+    settings.addText("OSC settings: " + host + ":" + ofToString(port) + " (can be changed in settings.xml)", destX, destY+5, 300); // label, x, y, width, height (auto wraps text to width)
     ofxTouchGUISlider* sliderA = settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f, destX, destY+30, itemsWidth, itemsHeight); // label, value, x, y, width, height
     ofAddListener(sliderA->onChangedEvent, this, &testApp::onSliderChanged);
     ofxTouchGUISlider* sliderB = settings.addSlider("SLIDER Y", &sliderValY, 0.0f, 100.0f, destX, destY+60, itemsWidth, itemsHeight); // label, value, x, y, width, height
@@ -55,10 +57,16 @@ void testApp::setup(){
     ofAddListener(toggleB->onChangedEvent, this, &testApp::onToggleChanged);
     settings.addText(description, destX + 5, destY+225, 300); // label, x, y, width, height (auto wraps text to width)
     
-    ofxTouchGUIButton* saveBtn = settings.addButton("SAVE", destX, 375, 89, itemsHeight); // label, x, y, width, height
+    // just displays variables
+    settings.addVarText("Display X", &sliderValX); 
+    settings.addVarText("Display Y", &sliderValY);
+    
+    ofxTouchGUIButton* saveBtn = settings.addButton("SAVE", destX, 430, 89, itemsHeight); // label, x, y, width, height
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed); // note: buttons have no context unless binded to a function
-    ofxTouchGUIButton* resetBtn = settings.addButton("RESET", 114, 375, 89, itemsHeight); // label, x, y, width, height
+    ofxTouchGUIButton* resetBtn = settings.addButton("RESET", 114, 430, 89, itemsHeight); // label, x, y, width, height
     ofAddListener(resetBtn->onChangedEvent, this, &testApp::onButtonPressed); // bind a function to the element
+    
+    
     
     settings.hide();
     

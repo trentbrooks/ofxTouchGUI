@@ -184,7 +184,7 @@ void ofxTouchGUIBase::drawText(const string &text, int alignment){
     //cout << text << endl;
     int fontWidth = (hasFont) ? guiFont->stringWidth(text) : (int)label.length() * 8; // trying to figure out how wide the default text is, magic number= 8px?
     int destY = int(textOffsetY + height * 0.5);
-    int destX = (alignment == 0) ? textOffsetX : (alignment == 1) ? int(width * .5 - fontWidth * .5) : int(width - fontWidth - textOffsetX); //left,center,right (aligned)
+    int destX = (alignment == -1) ? 0 : (alignment == 0) ? textOffsetX : (alignment == 1) ? int(width * .5 - fontWidth * .5) : int(width - fontWidth - textOffsetX); //left,center,right (aligned)
     
     drawText(text, destX, destY);
 }
@@ -203,7 +203,7 @@ void ofxTouchGUIBase::drawLargeText(const string &text, int alignment){
     
     int fontWidth = (hasFont) ? guiFontLarge->stringWidth(text) : (int)label.length() * 8; // trying to figure out how wide the default text is, magic number= 8px?
     int destY = int(textOffsetY + height * 0.5);
-    int destX = (alignment == 0) ? textOffsetX : (alignment == 1) ? int(width * .5 - fontWidth * .5) : int(width - fontWidth - textOffsetX); //left,center,right (aligned)
+    int destX = (alignment == -1) ? 0 : (alignment == 0) ? textOffsetX : (alignment == 1) ? int(width * .5 - fontWidth * .5) : int(width - fontWidth - textOffsetX); //left,center,right (aligned)
     
     drawText(text, destX, destY);
 }
