@@ -27,6 +27,10 @@ ofxTouchGUI::ofxTouchGUI(){
     defaultColumn = 1;
     defaultItemWidth = 200;
     defaultItemHeight = 25;
+    lastItemPosX = defaultPosX;
+    lastItemPosY = defaultPosY;
+    lastItemWidth = defaultItemWidth;
+    lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
     defaultSaveToFile = "tg_settings.xml";
 }
@@ -123,14 +127,14 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
 void ofxTouchGUI::checkPosSize(int& posX, int& posY, int& width, int& height) {
     if(posX == -1) {
         ///posX = defaultColumn * defaultPosX; 
-        posX = (numGuiItems == 0) ? defaultPosX : guiItems[numGuiItems-1]->posX;
+        posX = (numGuiItems == 0) ? defaultPosX : lastItemPosX;
     }
     if(posY == -1) {
         //posY = (numGuiItems == 0) ? defaultPosY : (defaultPosY + defaultSpacer) * numGuiItems;
-        posY = (numGuiItems == 0) ? defaultPosY : guiItems[numGuiItems-1]->posY + guiItems[numGuiItems-1]->height + defaultSpacer;  
+        posY = (numGuiItems == 0) ? defaultPosY : lastItemPosY + lastItemHeight + defaultSpacer;  
         if(posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
-            posY = (numGuiItems == 0) ? defaultPosY : guiItems[0]->posY; // align with top item
-            posX = (numGuiItems == 0) ? defaultPosX : guiItems[numGuiItems-1]->posX + guiItems[numGuiItems-1]->width + defaultPosX;
+            posY = defaultPosY;//(numGuiItems == 0) ? defaultPosY : guiItems[0]->posY; // align with top item
+            posX = (numGuiItems == 0) ? defaultPosX : lastItemPosX + lastItemWidth + defaultPosX;
         }
     }
     if(width == -1) {
@@ -139,6 +143,18 @@ void ofxTouchGUI::checkPosSize(int& posX, int& posY, int& width, int& height) {
     if(height == -1) {
         height = defaultItemHeight;
     }
+    
+    // always store last item's pos/size
+    lastItemPosX = posX;
+    lastItemPosY = posY;
+    lastItemWidth = width;
+    lastItemHeight = height;
+}
+
+void ofxTouchGUI::nextColumn() {
+    
+    lastItemPosX = lastItemPosX + lastItemWidth + defaultPosX;
+    lastItemPosY = defaultPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
 }
 
 // DRAW
@@ -296,6 +312,8 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(false); // true = use title text
+    //checkPosSize(posX, posY, width, height);
+    lastItemHeight = tgt->height;
     
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();

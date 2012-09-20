@@ -85,6 +85,13 @@ public:
     int defaultItemHeight;
     int defaultSpacer;
     void checkPosSize(int& posX, int& posY, int& width, int& height);
+    int lastItemPosX;
+    int lastItemPosY;
+    int lastItemWidth;
+    int lastItemHeight;
+    
+    // when auto positioning you can call this to change columns before adding another item
+    void nextColumn();
     
     // drawing
     void draw();

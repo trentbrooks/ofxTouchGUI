@@ -15,11 +15,12 @@ void testApp::setup(){
     host = "127.0.0.1"; // change via xml
     port = 4444; // change via xml
     
+    
     // gui settings
     settings.loadSettings("settings.xml", true, true); // savefile, default font, use mouse
-    settings.loadBackground("guiBg.png");
-    
+    settings.loadBackground("guiBg.png");    
     //settings.autoDraw();
+    
     
     // add any random properties to be saved - good for configs, once set can only be changed via xml
     settings.setConstant("host", &host);
@@ -27,29 +28,29 @@ void testApp::setup(){
     //settings.setVariable("host", &host); //can be changed
     //settings.setVariable("port", &port); // can be changed
 
+    
     // enable osc
     settings.setupSendOSC(host, port); 
     
-    // add controls
-    int itemsWidth = 200;
-    int itemsHeight = 25;
-    int destX = 20;
+    
+    // add controls    
     settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port));
     settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
-    settings.addSlider("SLIDER Y", &sliderValY, 0, 100);
-    
+    settings.addSlider("SLIDER Y", &sliderValY, 0, 100);    
     settings.addDropDown("DROPDOWN LIST A", 5, ddOptions);
     settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions);
     settings.addToggleButton("TOGGLE A", &toggleValA);
     settings.addToggleButton("TOGGLE B", &toggleValB);    
     settings.addText(description);//, destX + 5, 230, itemsWidth); 
-    
+
     ofxTouchGUIButton* saveBtn = settings.addButton("SAVE"); 
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed);
     ofxTouchGUIButton* resetBtn = settings.addButton("RESET");
     ofAddListener(resetBtn->onChangedEvent, this, &testApp::onButtonPressed);
     
-    // just displays variables
+    
+    // just displays variables    
+    //settings.nextColumn(); // jump to a new column
     settings.addVarText("Display X", &sliderValX); 
     settings.addVarText("Display Y", &sliderValY);
     
