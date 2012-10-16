@@ -299,6 +299,9 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
+    
     return tgt; // return object to add listeners, etc.
 }
 
@@ -318,6 +321,9 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
+    
     return tgt; // return object to add listeners, etc.
 }
 
@@ -335,6 +341,9 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
+    
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
     
     return tgt; // return object to add listeners, etc.
 }
@@ -354,6 +363,9 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
+    
     return tgt; // return object to add listeners, etc.
 }
 
@@ -371,6 +383,9 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
+    
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
     
     return tgt; // return object to add listeners, etc.
 }
@@ -390,6 +405,9 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
+    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
+    // also this does not connect to OSC - same as above. 
+    
     return tgt; // return object to add listeners, etc.
 }
 
@@ -408,6 +426,8 @@ ofxTouchGUIButton* ofxTouchGUI::addButton(string btnLabel, int posX, int posY, i
     numGuiItems = guiItems.size();
     
     if(oscEnabled) tgb->enableSendOSC(oscSender);
+    
+    // buttons do not save to xml
     
     return tgb; // return object to add listeners, etc.
 }
@@ -653,8 +673,8 @@ void ofxTouchGUI::saveSettings() {
             }  
         }
         
-        // note fixed vars aren't saved, they are set once on creation
-        // need to add more generic 'vars/addVar' property for a changing var
+        // note fixed vars/constants aren't saved, they are set once on creation
+        // need to add more generic 'vars/addVar' property for a changing var - done!
         
         XML.popTag();
     }

@@ -32,6 +32,8 @@ class testApp : public ofBaseApp{
         int selectListIndex;
         string host;
         int port;
+        int mouseX;
+        int mouseY;
         
         // bind methods to buttons
         void onButtonPressed(const void* sender, string &buttonLabel);

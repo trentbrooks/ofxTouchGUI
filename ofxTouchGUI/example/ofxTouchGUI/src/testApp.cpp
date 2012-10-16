@@ -5,6 +5,7 @@
 void testApp::setup(){
     
     // set some default values
+    mouseX = mouseY = 0;
     sliderValX = 0.69f;
     sliderValY = 30;
     toggleValA = true;
@@ -48,11 +49,11 @@ void testApp::setup(){
     ofxTouchGUIButton* resetBtn = settings.addButton("RESET");
     ofAddListener(resetBtn->onChangedEvent, this, &testApp::onButtonPressed);
     
-    
-    // just displays variables    
     //settings.nextColumn(); // jump to a new column
-    settings.addVarText("Display X", &sliderValX); 
-    settings.addVarText("Display Y", &sliderValY);
+    
+    // addVarText is just for displaying variables. Not hooked up with the OSC controller.
+    settings.addVarText("Mouse X", &mouseX); 
+    settings.addVarText("Mouse Y", &mouseY);
     
 }
 
@@ -105,6 +106,8 @@ void testApp::keyReleased(int key){
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y){
 
+    mouseX = x;
+    mouseY = y;
 }
 
 //--------------------------------------------------------------

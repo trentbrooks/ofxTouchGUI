@@ -57,9 +57,9 @@ void testApp::setup(){
     ofAddListener(toggleB->onChangedEvent, this, &testApp::onToggleChanged);
     settings.addText(description, destX + 5, destY+225, 300); // label, x, y, width, height (auto wraps text to width)
     
-    // just displays variables
-    settings.addVarText("Display X", &sliderValX); 
-    settings.addVarText("Display Y", &sliderValY);
+    // addVarText is just for displaying variables. Not hooked up with the OSC controller.
+    settings.addVarText("Mouse X", &mouseX); 
+    settings.addVarText("Mouse Y", &mouseY);
     
     ofxTouchGUIButton* saveBtn = settings.addButton("SAVE", destX, 430, 89, itemsHeight); // label, x, y, width, height
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed); // note: buttons have no context unless binded to a function
@@ -162,7 +162,8 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y){
-
+    mouseX = x;
+    mouseY = y;
 }
 
 //--------------------------------------------------------------

@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A798DB10162D275F0020EF9D /* ofxTouchGUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAF0162D275F0020EF9D /* ofxTouchGUI.mm */; };
+		A798DB11162D275F0020EF9D /* ofxTouchGUIBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAF2162D275F0020EF9D /* ofxTouchGUIBase.mm */; };
+		A798DB12162D275F0020EF9D /* ofxTouchGUIButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAF4162D275F0020EF9D /* ofxTouchGUIButton.mm */; };
+		A798DB13162D275F0020EF9D /* ofxTouchGUIDropDown.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAF6162D275F0020EF9D /* ofxTouchGUIDropDown.mm */; };
+		A798DB14162D275F0020EF9D /* ofxTouchGUISlider.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAF8162D275F0020EF9D /* ofxTouchGUISlider.mm */; };
+		A798DB15162D275F0020EF9D /* ofxTouchGUIText.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAFA162D275F0020EF9D /* ofxTouchGUIText.mm */; };
+		A798DB16162D275F0020EF9D /* ofxTouchGUITextInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAFC162D275F0020EF9D /* ofxTouchGUITextInput.mm */; };
+		A798DB17162D275F0020EF9D /* ofxTouchGUIToggleButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = A798DAFE162D275F0020EF9D /* ofxTouchGUIToggleButton.mm */; };
 		A7DA7BF915787E31003E00C6 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7BBA15787E30003E00C6 /* IpEndpointName.cpp */; };
 		A7DA7BFA15787E31003E00C6 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7BBF15787E30003E00C6 /* NetworkingUtils.cpp */; };
 		A7DA7BFB15787E31003E00C6 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7BC015787E30003E00C6 /* UdpSocket.cpp */; };
@@ -24,14 +32,6 @@
 		A7DA7C1C15787E41003E00C6 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7C1615787E40003E00C6 /* tinyxmlerror.cpp */; };
 		A7DA7C1D15787E41003E00C6 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7C1715787E40003E00C6 /* tinyxmlparser.cpp */; };
 		A7DA7C1E15787E41003E00C6 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DA7C1915787E40003E00C6 /* ofxXmlSettings.cpp */; };
-		A7F332D8157B5C720039A15B /* ofxTouchGUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332C1157B5C720039A15B /* ofxTouchGUI.mm */; };
-		A7F332D9157B5C720039A15B /* ofxTouchGUIBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332C3157B5C720039A15B /* ofxTouchGUIBase.mm */; };
-		A7F332DA157B5C720039A15B /* ofxTouchGUIButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332C5157B5C720039A15B /* ofxTouchGUIButton.mm */; };
-		A7F332DB157B5C720039A15B /* ofxTouchGUIDropDown.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332C7157B5C720039A15B /* ofxTouchGUIDropDown.mm */; };
-		A7F332DC157B5C720039A15B /* ofxTouchGUISlider.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332C9157B5C720039A15B /* ofxTouchGUISlider.mm */; };
-		A7F332DD157B5C720039A15B /* ofxTouchGUIText.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332CB157B5C720039A15B /* ofxTouchGUIText.mm */; };
-		A7F332DE157B5C720039A15B /* ofxTouchGUITextInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332CD157B5C720039A15B /* ofxTouchGUITextInput.mm */; };
-		A7F332DF157B5C720039A15B /* ofxTouchGUIToggleButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7F332CF157B5C720039A15B /* ofxTouchGUIToggleButton.mm */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -82,6 +82,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A798DAEF162D275F0020EF9D /* ofxTouchGUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUI.h; sourceTree = "<group>"; };
+		A798DAF0162D275F0020EF9D /* ofxTouchGUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUI.mm; sourceTree = "<group>"; };
+		A798DAF1162D275F0020EF9D /* ofxTouchGUIBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIBase.h; sourceTree = "<group>"; };
+		A798DAF2162D275F0020EF9D /* ofxTouchGUIBase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIBase.mm; sourceTree = "<group>"; };
+		A798DAF3162D275F0020EF9D /* ofxTouchGUIButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIButton.h; sourceTree = "<group>"; };
+		A798DAF4162D275F0020EF9D /* ofxTouchGUIButton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIButton.mm; sourceTree = "<group>"; };
+		A798DAF5162D275F0020EF9D /* ofxTouchGUIDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIDropDown.h; sourceTree = "<group>"; };
+		A798DAF6162D275F0020EF9D /* ofxTouchGUIDropDown.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIDropDown.mm; sourceTree = "<group>"; };
+		A798DAF7162D275F0020EF9D /* ofxTouchGUISlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUISlider.h; sourceTree = "<group>"; };
+		A798DAF8162D275F0020EF9D /* ofxTouchGUISlider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUISlider.mm; sourceTree = "<group>"; };
+		A798DAF9162D275F0020EF9D /* ofxTouchGUIText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIText.h; sourceTree = "<group>"; };
+		A798DAFA162D275F0020EF9D /* ofxTouchGUIText.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIText.mm; sourceTree = "<group>"; };
+		A798DAFB162D275F0020EF9D /* ofxTouchGUITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUITextInput.h; sourceTree = "<group>"; };
+		A798DAFC162D275F0020EF9D /* ofxTouchGUITextInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUITextInput.mm; sourceTree = "<group>"; };
+		A798DAFD162D275F0020EF9D /* ofxTouchGUIToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIToggleButton.h; sourceTree = "<group>"; };
+		A798DAFE162D275F0020EF9D /* ofxTouchGUIToggleButton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIToggleButton.mm; sourceTree = "<group>"; };
 		A7DA7BB515787E30003E00C6 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		A7DA7BBA15787E30003E00C6 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IpEndpointName.cpp; sourceTree = "<group>"; };
 		A7DA7BBB15787E30003E00C6 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
@@ -121,22 +137,6 @@
 		A7DA7C1715787E40003E00C6 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		A7DA7C1915787E40003E00C6 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		A7DA7C1A15787E41003E00C6 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
-		A7F332C0157B5C720039A15B /* ofxTouchGUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUI.h; sourceTree = "<group>"; };
-		A7F332C1157B5C720039A15B /* ofxTouchGUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUI.mm; sourceTree = "<group>"; };
-		A7F332C2157B5C720039A15B /* ofxTouchGUIBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIBase.h; sourceTree = "<group>"; };
-		A7F332C3157B5C720039A15B /* ofxTouchGUIBase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIBase.mm; sourceTree = "<group>"; };
-		A7F332C4157B5C720039A15B /* ofxTouchGUIButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIButton.h; sourceTree = "<group>"; };
-		A7F332C5157B5C720039A15B /* ofxTouchGUIButton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIButton.mm; sourceTree = "<group>"; };
-		A7F332C6157B5C720039A15B /* ofxTouchGUIDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIDropDown.h; sourceTree = "<group>"; };
-		A7F332C7157B5C720039A15B /* ofxTouchGUIDropDown.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIDropDown.mm; sourceTree = "<group>"; };
-		A7F332C8157B5C720039A15B /* ofxTouchGUISlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUISlider.h; sourceTree = "<group>"; };
-		A7F332C9157B5C720039A15B /* ofxTouchGUISlider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUISlider.mm; sourceTree = "<group>"; };
-		A7F332CA157B5C720039A15B /* ofxTouchGUIText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIText.h; sourceTree = "<group>"; };
-		A7F332CB157B5C720039A15B /* ofxTouchGUIText.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIText.mm; sourceTree = "<group>"; };
-		A7F332CC157B5C720039A15B /* ofxTouchGUITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUITextInput.h; sourceTree = "<group>"; };
-		A7F332CD157B5C720039A15B /* ofxTouchGUITextInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUITextInput.mm; sourceTree = "<group>"; };
-		A7F332CE157B5C720039A15B /* ofxTouchGUIToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchGUIToggleButton.h; sourceTree = "<group>"; };
-		A7F332CF157B5C720039A15B /* ofxTouchGUIToggleButton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxTouchGUIToggleButton.mm; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -185,6 +185,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A798DAEC162D275F0020EF9D /* ofxTouchGUI */ = {
+			isa = PBXGroup;
+			children = (
+				A798DAEE162D275F0020EF9D /* src */,
+			);
+			name = ofxTouchGUI;
+			path = ../../../addons/ofxTouchGUI;
+			sourceTree = "<group>";
+		};
+		A798DAEE162D275F0020EF9D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A798DAEF162D275F0020EF9D /* ofxTouchGUI.h */,
+				A798DAF0162D275F0020EF9D /* ofxTouchGUI.mm */,
+				A798DAF1162D275F0020EF9D /* ofxTouchGUIBase.h */,
+				A798DAF2162D275F0020EF9D /* ofxTouchGUIBase.mm */,
+				A798DAF3162D275F0020EF9D /* ofxTouchGUIButton.h */,
+				A798DAF4162D275F0020EF9D /* ofxTouchGUIButton.mm */,
+				A798DAF5162D275F0020EF9D /* ofxTouchGUIDropDown.h */,
+				A798DAF6162D275F0020EF9D /* ofxTouchGUIDropDown.mm */,
+				A798DAF7162D275F0020EF9D /* ofxTouchGUISlider.h */,
+				A798DAF8162D275F0020EF9D /* ofxTouchGUISlider.mm */,
+				A798DAF9162D275F0020EF9D /* ofxTouchGUIText.h */,
+				A798DAFA162D275F0020EF9D /* ofxTouchGUIText.mm */,
+				A798DAFB162D275F0020EF9D /* ofxTouchGUITextInput.h */,
+				A798DAFC162D275F0020EF9D /* ofxTouchGUITextInput.mm */,
+				A798DAFD162D275F0020EF9D /* ofxTouchGUIToggleButton.h */,
+				A798DAFE162D275F0020EF9D /* ofxTouchGUIToggleButton.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		A7DA7BB415787E30003E00C6 /* ofxOsc */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,42 +352,10 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		A7F332AD157B5C720039A15B /* ofxTouchGUI */ = {
-			isa = PBXGroup;
-			children = (
-				A7F332BF157B5C720039A15B /* src */,
-			);
-			name = ofxTouchGUI;
-			path = ../../../addons/ofxTouchGUI;
-			sourceTree = "<group>";
-		};
-		A7F332BF157B5C720039A15B /* src */ = {
-			isa = PBXGroup;
-			children = (
-				A7F332C0157B5C720039A15B /* ofxTouchGUI.h */,
-				A7F332C1157B5C720039A15B /* ofxTouchGUI.mm */,
-				A7F332C2157B5C720039A15B /* ofxTouchGUIBase.h */,
-				A7F332C3157B5C720039A15B /* ofxTouchGUIBase.mm */,
-				A7F332C4157B5C720039A15B /* ofxTouchGUIButton.h */,
-				A7F332C5157B5C720039A15B /* ofxTouchGUIButton.mm */,
-				A7F332C6157B5C720039A15B /* ofxTouchGUIDropDown.h */,
-				A7F332C7157B5C720039A15B /* ofxTouchGUIDropDown.mm */,
-				A7F332C8157B5C720039A15B /* ofxTouchGUISlider.h */,
-				A7F332C9157B5C720039A15B /* ofxTouchGUISlider.mm */,
-				A7F332CA157B5C720039A15B /* ofxTouchGUIText.h */,
-				A7F332CB157B5C720039A15B /* ofxTouchGUIText.mm */,
-				A7F332CC157B5C720039A15B /* ofxTouchGUITextInput.h */,
-				A7F332CD157B5C720039A15B /* ofxTouchGUITextInput.mm */,
-				A7F332CE157B5C720039A15B /* ofxTouchGUIToggleButton.h */,
-				A7F332CF157B5C720039A15B /* ofxTouchGUIToggleButton.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				A7F332AD157B5C720039A15B /* ofxTouchGUI */,
+				A798DAEC162D275F0020EF9D /* ofxTouchGUI */,
 				A7DA7C1215787E40003E00C6 /* ofxXmlSettings */,
 				A7DA7BB415787E30003E00C6 /* ofxOsc */,
 			);
@@ -541,14 +541,14 @@
 				A7DA7C1C15787E41003E00C6 /* tinyxmlerror.cpp in Sources */,
 				A7DA7C1D15787E41003E00C6 /* tinyxmlparser.cpp in Sources */,
 				A7DA7C1E15787E41003E00C6 /* ofxXmlSettings.cpp in Sources */,
-				A7F332D8157B5C720039A15B /* ofxTouchGUI.mm in Sources */,
-				A7F332D9157B5C720039A15B /* ofxTouchGUIBase.mm in Sources */,
-				A7F332DA157B5C720039A15B /* ofxTouchGUIButton.mm in Sources */,
-				A7F332DB157B5C720039A15B /* ofxTouchGUIDropDown.mm in Sources */,
-				A7F332DC157B5C720039A15B /* ofxTouchGUISlider.mm in Sources */,
-				A7F332DD157B5C720039A15B /* ofxTouchGUIText.mm in Sources */,
-				A7F332DE157B5C720039A15B /* ofxTouchGUITextInput.mm in Sources */,
-				A7F332DF157B5C720039A15B /* ofxTouchGUIToggleButton.mm in Sources */,
+				A798DB10162D275F0020EF9D /* ofxTouchGUI.mm in Sources */,
+				A798DB11162D275F0020EF9D /* ofxTouchGUIBase.mm in Sources */,
+				A798DB12162D275F0020EF9D /* ofxTouchGUIButton.mm in Sources */,
+				A798DB13162D275F0020EF9D /* ofxTouchGUIDropDown.mm in Sources */,
+				A798DB14162D275F0020EF9D /* ofxTouchGUISlider.mm in Sources */,
+				A798DB15162D275F0020EF9D /* ofxTouchGUIText.mm in Sources */,
+				A798DB16162D275F0020EF9D /* ofxTouchGUITextInput.mm in Sources */,
+				A798DB17162D275F0020EF9D /* ofxTouchGUIToggleButton.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

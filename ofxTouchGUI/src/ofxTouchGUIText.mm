@@ -34,7 +34,7 @@ void ofxTouchGUIText::resetDefaultValue(){
 //--------------------------------------------------------------
 void ofxTouchGUIText::setValue(float *val) {	
     
-	this->floatVal = floatVal;
+	this->floatVal = val;
     defaultFloatVal = *val; // default value copied for resetting
     textType = TEXT_FLOAT;
 }
