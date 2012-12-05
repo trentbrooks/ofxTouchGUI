@@ -23,7 +23,6 @@ class testApp : public ofxiPhoneApp{
         void gotFocus();
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
-
     
         // ofxTouchGUI
         ofxTouchGUI settings;
@@ -40,15 +39,15 @@ class testApp : public ofxiPhoneApp{
         
         // bind methods to buttons
         void onButtonPressed(const void* sender, string &buttonLabel);
-    
+        
         // input fields
         ofxTouchGUITextInput * hostInput;
         ofxTouchGUITextInput * portInput;
-    
+        
         // create gui items individually (eg. without a settings menu)
         ofxTouchGUIButton* customButton;
         void onCustomButtonPressed(const void * sender, string &buttonLabel);
-        
+
 };
 
 

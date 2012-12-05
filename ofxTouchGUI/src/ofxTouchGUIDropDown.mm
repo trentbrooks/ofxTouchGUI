@@ -20,7 +20,7 @@ ofxTouchGUIDropDown::ofxTouchGUIDropDown(){
     bgClrBR = ofColor(180,180,180,255); //rgba  
     
     arrowClr = ofColor(255,255,255,150); //rgba
-    arrowOffset = 5;
+    arrowOffset = 5; // doubles for retina. making this a percentage of the height instead
 }
 
 ofxTouchGUIDropDown::~ofxTouchGUIDropDown(){
@@ -46,6 +46,7 @@ void ofxTouchGUIDropDown::setValues(int numValues, string* listValues) {
     }   
     
     listHeight = int(height * numListItems);
+    arrowOffset = height * .15;
 }
 
 void ofxTouchGUIDropDown::setValues(int numValues, string* listValues, int* selectedId) {    
@@ -70,6 +71,7 @@ void ofxTouchGUIDropDown::setValues(int numValues, vector<string> listValues) {
     }   
     
     listHeight = int(height * numListItems);
+    arrowOffset = height * .15;
 }
 
 void ofxTouchGUIDropDown::setValues(int numValues, vector<string> listValues, int* selectedId) {    

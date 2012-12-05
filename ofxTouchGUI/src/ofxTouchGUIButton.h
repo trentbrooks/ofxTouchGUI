@@ -18,7 +18,7 @@ public:
     // touch events
     virtual void onUp(float x, float y);
     
-    void loadImageStates(string upImagePath, string downImagePath);
+    void loadImageStates(string upImagePath, string downImagePath, bool useWidthHeightFromImage = true);
     ofImage upImage;
     ofImage downImage;
     bool hasImages;

@@ -18,13 +18,15 @@ ofxTouchGUIButton::~ofxTouchGUIButton(){
 }
 
 
-void ofxTouchGUIButton::loadImageStates(string upImagePath, string downImagePath) {
+void ofxTouchGUIButton::loadImageStates(string upImagePath, string downImagePath, bool useWidthHeightFromImage) {
     
     hasImages = true;
     upImage.loadImage(upImagePath); 
     downImage.loadImage(downImagePath); 
-    this->width = upImage.width;
-    this->height = upImage.height;
+    if(useWidthHeightFromImage) {
+        this->width = upImage.width;
+        this->height = upImage.height;
+    }
 }
 
 
