@@ -195,7 +195,7 @@ void ofxTouchGUI::show(){
     
     // not necessary - but adding for consistency
     for(int i = 0; i < numGuiItems; i++) {
-        guiItems[i]->show(false);
+        guiItems[i]->show();
     }
 }
 

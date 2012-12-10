@@ -79,7 +79,7 @@ public:
     
     // interaction
     bool itemActive;  
-    virtual void show(bool activateSingleItem = true);
+    virtual void show(bool activateSingleItem = false);
     virtual void hide();
     bool isHidden;
     virtual bool hitTest(float x, float y);
