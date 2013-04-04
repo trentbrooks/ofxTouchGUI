@@ -1,11 +1,13 @@
 ![https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot1.jpg](https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot1.jpg)
 ![https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot2.jpg](https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot2.jpg)
 ## ofxTouchGUI ##
-Openframeworks addon (tested with 007 and 0071 ios and osx). It's basically just another GUI, but geared more towards remote controlling stuff from iPhone or iPad through OSC (works with desktop). Also allows to save fixed variables, listen to events, save to XML, and reset GUI values.
+Openframeworks addon (tested with 0073 and 0074 ios and osx). It's basically just another GUI, but geared more towards remote controlling stuff from iPhone or iPad through OSC (works with desktop). Also allows to save fixed variables, listen to events, save to XML, and reset GUI values.
 
 It's kind of like Memo's ofxSimpleGuiToo and the Processing library controlP5, but with OSC control and underwhelming gradient fills. It's also handy for creating inidividual UI elements on their own, eg. image buttons for different screens.
 
 Includes slider, dropdown list, button/image button, toggle button, text/title fields, input text (ios only atm), and general variables. All items can be custom positioned/sized on creation. Colours, fonts, etc can be changed. Settings can be saved to XML. Values can be sent via OSC.
+
+Ubuntu and windows user's will need to rename the file's from .mm to .cpp.
 
 ## Sample usage ##
 	// setup

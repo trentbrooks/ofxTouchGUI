@@ -2,11 +2,9 @@
 
 /*
 // TO DO!
--- add auto draw options
--- add developer license to makis phone for testing - and test retina
--- check desktop mouse version and create example
-
-
+    - fix for 0074
+    - settings struct for defaults
+    - 
 */
 
 ofxTouchGUI::ofxTouchGUI(){
@@ -215,22 +213,13 @@ void ofxTouchGUI::toggleDisplay(){
 }
 
 void ofxTouchGUI::autoDraw(bool allowAutoDraw){
-    
-    #if OF_VERSION >= 7 && OF_VERSION_MINOR >= 1
-        if(!isAutoDrawing && allowAutoDraw) {
-            ofAddListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
-            isAutoDrawing = true;
-        } else if(isAutoDrawing) {
-            ofRemoveListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
-        }
-    #else    
-        if(!isAutoDrawing && allowAutoDraw) {
-            ofAddListener(ofEvents.draw, this, &ofxTouchGUI::aDraw);
-            isAutoDrawing = true;
-        } else if(isAutoDrawing) {
-            ofRemoveListener(ofEvents.draw, this, &ofxTouchGUI::aDraw);
-        }
-    #endif
+
+    if(!isAutoDrawing && allowAutoDraw) {
+        ofAddListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
+        isAutoDrawing = true;
+    } else if(isAutoDrawing) {
+        ofRemoveListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
+    }
 
 }
 

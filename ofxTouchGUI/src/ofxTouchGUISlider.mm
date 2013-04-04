@@ -84,7 +84,15 @@ void ofxTouchGUISlider::draw(){
 
 // TOUCH
 //--------------------------------------------------------------
- void ofxTouchGUISlider::onMoved(float x, float y) {
+void ofxTouchGUISlider::onUp(float x, float y){
+    
+    // want to trigger value changes on touch up as well as move
+    onMoved(x,y);
+    
+    ofxTouchGUIBase::onUp(x, y);
+}
+
+void ofxTouchGUISlider::onMoved(float x, float y) {
  
      // when this or another item itemActive (eg. dropdown), ignore all touch/mouse events
      //if(ignoreExternalEvents && !itemActive) return;
@@ -107,6 +115,7 @@ void ofxTouchGUISlider::draw(){
          //}
      }
 }
+
 
 float ofxTouchGUISlider::getValue() {
     
