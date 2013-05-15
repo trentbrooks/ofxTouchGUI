@@ -2,9 +2,10 @@
 
 /*
 // TO DO!
-    - fix for 0074
     - settings struct for defaults
-    - 
+    - image/texture item
+    - time chart item
+    - swipable pages
 */
 
 ofxTouchGUI::ofxTouchGUI(){
@@ -289,7 +290,8 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -311,7 +313,8 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -332,7 +335,8 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -353,7 +357,8 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -374,7 +379,8 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -395,7 +401,8 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above. 
+    // also this does not connect to OSC - same as above.
+    if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }

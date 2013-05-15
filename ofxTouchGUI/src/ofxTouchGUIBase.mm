@@ -492,6 +492,10 @@ void ofxTouchGUIBase::disableSendOSC() {
     }
 }
 
+void ofxTouchGUIBase::setOscAddress(string address) {
+    fullOscAddress = address;
+}
+
 void ofxTouchGUIBase::sendOSC(int val) {
     
     if(oscEnabled) {

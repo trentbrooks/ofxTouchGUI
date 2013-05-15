@@ -128,6 +128,7 @@ public:
     void sendOSC(string val);
     
     // osc address validation
+    void setOscAddress(string address);
     string fullOscAddress;
     bool isCharacter(const char Character);
     bool isNumber(const char Character);
