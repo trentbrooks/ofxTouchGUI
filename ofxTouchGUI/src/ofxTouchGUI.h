@@ -9,6 +9,7 @@
 #include "ofxTouchGUIToggleButton.h"
 #include "ofxTouchGUIDropDown.h"
 #include "ofxTouchGUITextInput.h"
+#include "ofxTouchGUITimeGraph.h"
 #include "ofxXmlSettings.h"
 #include "ofxOsc.h"
 
@@ -19,6 +20,7 @@
 #define TEXT_TYPE "text"
 #define DROPDOWN_TYPE "dropdown"
 #define TEXTINPUT_TYPE "input"
+#define TIMEGRAPH_TYPE "timegraph"
 #define CONST_TYPE "constant"
 #define VAR_TYPE "variable"
 
@@ -47,7 +49,6 @@ struct NameValuePair {
     };
  
 };
-
 
 class ofxTouchGUI {
 
@@ -104,26 +105,38 @@ public:
     void autoDraw(bool allowAutoDraw = true);
     void aDraw(ofEventArgs &e);
         
-    // gui create
+    // slider
     ofxTouchGUISlider* addSlider(string sliderLabel, float *val, float min, float max, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUISlider* addSlider(string sliderLabel, int *val, int min, int max, int posX=-1, int posY=-1, int width=-1, int height=-1);
 
+    // variable display
     ofxTouchGUIText* addVarText(string textLabel, string *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIText* addVarText(string textLabel, int *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIText* addVarText(string textLabel, bool *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIText* addVarText(string textLabel, float *val, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
+    // text
     ofxTouchGUIText* addTitleText(string textLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIText* addText(string textLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
-    
+    // button
     ofxTouchGUIButton* addButton(string btnLabel, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    // toggle/checkbox
     ofxTouchGUIToggleButton* addToggleButton(string toggleLabel, bool *toggleVal, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    // dropbox
     ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, string* listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, string* listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, vector<string> listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
     ofxTouchGUIDropDown* addDropDown(string listLabel, int numValues, int* selectedId, vector<string> listValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    // text input (ios only)
     ofxTouchGUITextInput* addTextInput(string *placeHolderText, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
+    // time series graph: not interactive, but good for viewing data over time
+    ofxTouchGUITimeGraph* addTimeGraph(string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
     
     // add a constant for read only (set once from app, can only be changed in xml) - good for config options
     template <typename T>
@@ -132,11 +145,7 @@ public:
     void setConstant(string constName,T fixedConst); // non-pointer
     int constantCount;
     
-    // add a regular var for saving - by default values are over-written when added
-    //void setVariable(string varName, string *regVar, bool overwriteXMLValue = false);
-    //void setVariable(string varName, bool *regVar, bool overwriteXMLValue = false);
-    //void setVariable(string varName, int *regVar, bool overwriteXMLValue = false);
-   // void setVariable(string varName, float *regVar, bool overwriteXMLValue = false);
+    // variable (not for display)
     template <typename T>
     void setVariable(string varName, T *regVar);
     vector <NameValuePair*>varItems;

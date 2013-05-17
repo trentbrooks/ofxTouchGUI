@@ -2,10 +2,9 @@
 
 /*
 // TO DO!
+    - fix for 0074
     - settings struct for defaults
-    - image/texture item
-    - time chart item
-    - swipable pages
+    - 
 */
 
 ofxTouchGUI::ofxTouchGUI(){
@@ -530,6 +529,25 @@ ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string *placeHolderText, int pos
     tgti->setInput(placeHolderText);
     
     return tgti; // return object to add listeners, etc.
+}
+
+
+ofxTouchGUITimeGraph* ofxTouchGUI::addTimeGraph(string graphLabel, int maxValues, int posX, int posY, int width, int height) {
+    
+    ofxTouchGUITimeGraph* tgtg = new ofxTouchGUITimeGraph();
+    tgtg->type = TIMEGRAPH_TYPE;
+    checkPosSize(posX, posY, width, height);
+    tgtg->setDisplay(graphLabel, posX, posY, width, height);    
+    tgtg->disable(); // disable mouse, touch
+    if(hasFont) tgtg->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
+    tgtg->setMaximumValues(maxValues);
+
+    guiItems.push_back(tgtg);
+    numGuiItems = guiItems.size();
+    
+    if(oscEnabled) tgtg->enableSendOSC(oscSender);
+   
+    return tgtg; 
 }
 
 // CONSTS 
