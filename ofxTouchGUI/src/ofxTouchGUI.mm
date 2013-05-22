@@ -1,11 +1,5 @@
 #include "ofxTouchGUI.h"
 
-/*
-// TO DO!
-    - fix for 0074
-    - settings struct for defaults
-    - 
-*/
 
 ofxTouchGUI::ofxTouchGUI(){
 	

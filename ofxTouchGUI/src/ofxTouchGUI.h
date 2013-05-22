@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-//#include "ofxiPhone.h"
 #include "ofxTouchGUIBase.h"
 #include "ofxTouchGUISlider.h"
 #include "ofxTouchGUIText.h"
@@ -14,6 +13,10 @@
 #include "ofxOsc.h"
 
 
+// ofxTouchGUI versioning
+#define OFXTOUCHGUI_VERSION 0.2
+
+// gui item types
 #define SLIDER_TYPE "slider"
 #define BUTTON_TYPE "button"
 #define TOGGLE_TYPE "toggle"
@@ -24,8 +27,10 @@
 #define CONST_TYPE "constant"
 #define VAR_TYPE "variable"
 
+// gui item value types
 enum { _INT, _FLOAT, _BOOL, _STRING };
 
+// for adding variables
 struct NameValuePair {
     string name;
     void* value;
@@ -50,11 +55,11 @@ struct NameValuePair {
  
 };
 
+
+
 class ofxTouchGUI {
 
 public:
-    
-    
     
     ofxTouchGUI();
 	~ofxTouchGUI();
@@ -173,7 +178,6 @@ public:
     void setupSendOSC(string host, int port);
     void disableSendOSC();
     ofxOscSender* oscSender;
-    //ofxOscMessage msg;
     bool oscEnabled;
 
 };
