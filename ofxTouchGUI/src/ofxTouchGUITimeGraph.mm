@@ -18,7 +18,7 @@ ofxTouchGUITimeGraph::ofxTouchGUITimeGraph(){
     
     graphFillClr = activeClrTL;
     min = 0.0f;
-    max = 1.0f;
+    max = 0.01f;
     setMaximumValues(50);
 }
 
@@ -110,7 +110,7 @@ void ofxTouchGUITimeGraph::draw(){
         glDisableClientState(GL_VERTEX_ARRAY);
         
         // draw text
-        drawText(label + " : " + ofToString(currentValue), textOffsetX, textOffsetY);
+        drawText(label + " : " + ofToString(currentValue) + " / " + ofToString(max), textOffsetX, textOffsetY);
         ofPopStyle();
           
         ofPopMatrix();   
