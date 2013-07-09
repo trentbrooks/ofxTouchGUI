@@ -25,7 +25,7 @@ public:
     void formatText(bool isTextTitle);
     string wrapString(string text, int maxWidth);
      
-    
+    bool drawTextBg;
     
     // for var text only!!!
     // int, float, bool, string text, string title

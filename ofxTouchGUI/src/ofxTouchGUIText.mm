@@ -5,6 +5,7 @@
 ofxTouchGUIText::ofxTouchGUIText(){
     
     isTextTitle = false;
+    drawTextBg = false;
     floatVal = 0;
     intVal = 0;
     stringVal = 0;
@@ -70,12 +71,13 @@ void ofxTouchGUIText::draw(){
     if(!isHidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
-        //drawGLRect(vertexArrActive, colorsArrActive);
+        if(drawTextBg) drawGLRect(vertexArrActive, colorsArrActive);
         
         // draw text
         ofPushStyle();
-        //ofSetColor(textColourDark); 
-        ofSetColor(textColourLight); 
+        //ofSetColor(textColourDark);
+        //ofSetColor(textColourLight);
+        ofSetColor(textColour);
         
         /*if(isTextTitle) {
             drawLargeText(label, 0, textOffsetY);//textOffsetY * 2);//textOffsetY); 

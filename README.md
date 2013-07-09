@@ -1,5 +1,4 @@
 ![https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot1.jpg](https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot1.jpg)
-![https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot2.jpg](https://github.com/trentbrooks/ofxTouchGUI/raw/master/screenshot2.jpg)
 ## ofxTouchGUI ##
 Openframeworks addon (tested with 0073 and 0074 ios and osx). It's basically just another GUI, but geared more towards remote controlling stuff from iPhone or iPad through OSC (works with desktop). Also allows to save fixed variables, listen to events, save to XML, and reset GUI values.
 

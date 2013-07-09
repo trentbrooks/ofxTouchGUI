@@ -49,7 +49,6 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     #ifdef TARGET_OF_IPHONE
         this->saveToFile = ofxiPhoneGetDocumentsDirectory() + saveToFile;
     #endif
-    
     // load xml from public itunes directory
     if( XML.loadFile(this->saveToFile) ){
         settingsLoaded = true;
@@ -57,9 +56,9 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
         settingsLoaded = true;
         //this->saveToFile = defaultSaveToFile;
     } else {
-        printf("\nNO XML file to load");
+        ofLog() << "TouchGUI: NO XML file to load. Settings will be saved on the first draw."; //, creating empty " << saveToFile << "
         //this->saveToFile = defaultSaveToFile;
-        saveSettings();
+        //saveSettings();
     }
     
     // load the default font
@@ -152,8 +151,14 @@ void ofxTouchGUI::nextColumn() {
 // DRAW
 //--------------------------------------------------------------
 void ofxTouchGUI::draw(){
-    
-    
+
+    // All items should have been added before first draw.
+    // If this is the first time load, need to save all to the settings.xml.
+    if(!settingsLoaded) {
+        ofLog() << "TouchGUI: first time saving settings!";
+        saveSettings(); // save the settings once only, when file exists no need to save.
+        settingsLoaded = true;
+    }
     
     if(!isHidden) {
         
@@ -284,7 +289,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
     // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -307,7 +312,7 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
     // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -327,9 +332,12 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
-    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    // this does not connect to OSC.
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    
+    // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
+    //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
+    setVariable(textLabel, val); // using the 'setVariable' function to save value
     
     return tgt; // return object to add listeners, etc.
 }
@@ -349,9 +357,12 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
-    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    // this does not connect to OSC.
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    
+    // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
+    //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
+    setVariable(textLabel, val); // using the 'setVariable' function to save value
     
     return tgt; // return object to add listeners, etc.
 }
@@ -371,9 +382,12 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
-    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    // this does not connect to OSC.
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    
+    // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
+    //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
+    setVariable(textLabel, val); // using the 'setVariable' function to save value
     
     return tgt; // return object to add listeners, etc.
 }
@@ -393,9 +407,12 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
-    // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
-    // also this does not connect to OSC - same as above.
-    if(oscEnabled) tgt->enableSendOSC(oscSender);
+    // this does not connect to OSC.
+    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    
+    // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
+    //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
+    setVariable(textLabel, val); // using the 'setVariable' function to save value
     
     return tgt; // return object to add listeners, etc.
 }
@@ -545,7 +562,7 @@ ofxTouchGUITimeGraph* ofxTouchGUI::addTimeGraph(string graphLabel, int maxValues
 }
 
 // CONSTS 
-// read only (can only be changed in xml) - good for config options
+// read only (can only be changed in xml) - good for config options. No osc.
 template <typename T>
 void ofxTouchGUI::setConstant(string constName, T *fixedConst){
     
@@ -562,7 +579,7 @@ void ofxTouchGUI::setConstant(string constName, T fixedConst){
 
 
 // VARS 
-// regular vars
+// regular vars. No osc.
 template <typename T>
 void ofxTouchGUI::setVariable(string varName, T *regVar){
     
@@ -687,7 +704,7 @@ void ofxTouchGUI::saveSettings() {
         XML.popTag();
     }
 
-    cout << "Saving file: " << saveToFile << endl;
+    ofLog() << "TouchGUI: file saved " << saveToFile;
     XML.saveFile( saveToFile );
      
 }

@@ -46,6 +46,7 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     // DEFAULT FONT COLORS: BLACK/WHITE
     textColourDark = ofColor(0,0,0,255);
     textColourLight = ofColor(255,255,255,255);
+    textColour = textColourLight;
     
     //enableTouch();
     
@@ -330,6 +331,10 @@ bool ofxTouchGUIBase::hitTest(float x, float y, float w, float h) {
 
 //--------------------------------------------------------------
 // CUSTOM COLORS
+void ofxTouchGUIBase::setTextClr(ofColor clr) {
+    textColour = clr;
+}
+
 void ofxTouchGUIBase::setBackgroundClrs(ofColor tl, ofColor tr, ofColor bl, ofColor br) {
     
     bgClrTL = tl; //rgba
