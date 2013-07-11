@@ -18,7 +18,8 @@ void testApp::setup(){
     
     
     // gui settings
-    settings.loadSettings("settings.xml", true, true); // savefile, default font, use mouse
+    settings.loadSettings("settings.xml", false, true); // savefile, default font, use mouse
+    settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14, true);
     settings.loadBackground("guiBg.png");    
     //settings.autoDraw();
     
@@ -32,27 +33,28 @@ void testApp::setup(){
     
     // enable osc
     settings.setupSendOSC(host, port); 
-    
-    
-    // add controls    
-    settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port));
+
+    // add controls
+    settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port));//->setBackgroundVisible(true);
     settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
     settings.addSlider("SLIDER Y", &sliderValY, 0, 100);    
     settings.addDropDown("DROPDOWN LIST A", 5, ddOptions);
+    settings.addText("ofxTouchGUI - " + host + ":" + ofToString(port));
     settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions);
     settings.addToggleButton("TOGGLE A", &toggleValA);
     settings.addToggleButton("TOGGLE B", &toggleValB);    
-    settings.addText(description);//, destX + 5, 230, itemsWidth); 
+    settings.addText(description);//, destX + 5, 230, itemsWidth);
 
     ofxTouchGUIButton* saveBtn = settings.addButton("SAVE"); 
     ofAddListener(saveBtn->onChangedEvent, this, &testApp::onButtonPressed);
     ofxTouchGUIButton* resetBtn = settings.addButton("RESET");
     ofAddListener(resetBtn->onChangedEvent, this, &testApp::onButtonPressed);
     
-    //settings.nextColumn(); // jump to a new column
+    //settings.nextColumn(); // jump to a new column?
+    //settings.moveTo(350, 20); // move anywhere?
     
     // addVarText is just for displaying variables. Not hooked up with the OSC controller.
-    settings.addVarText("Mouse X", &mouseX); 
+    settings.addVarText("Mouse X", &mouseX);
     settings.addVarText("Mouse Y", &mouseY);
     
 }

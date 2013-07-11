@@ -1,0 +1,47 @@
+#pragma once
+
+#include "ofMain.h"
+#include "ofxTouchGUI.h"
+
+class testApp : public ofBaseApp{
+	public:
+		void setup();
+		void update();
+		void draw();
+		
+		void keyPressed(int key);
+		void keyReleased(int key);
+		void mouseMoved(int x, int y);
+		void mouseDragged(int x, int y, int button);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);
+		void windowResized(int w, int h);
+		void dragEvent(ofDragInfo dragInfo);
+		void gotMessage(ofMessage msg);
+    
+    
+        // ofxTouchGUI
+        ofxTouchGUI settings;
+        void setupGUI();
+        
+        // test values
+        float sliderValX;
+        int sliderValY;
+        bool toggleValA;
+        bool toggleValB;
+        int selectListIndex;
+        string host;
+        int port;
+        int mouseX;
+        int mouseY;
+        
+        // bind methods to buttons
+        void onButtonPressed(const void* sender, string &buttonLabel);
+        void onSliderChanged(const void* sender, string &buttonLabel);
+        void onDropdownChanged(const void* sender, string &buttonLabel);
+        void onToggleChanged(const void* sender, string &buttonLabel);
+        
+        // create gui items individually (eg. without a settings menu)
+        ofxTouchGUIButton* customButton;
+        void onCustomButtonPressed(const void * sender, string &buttonLabel);
+};

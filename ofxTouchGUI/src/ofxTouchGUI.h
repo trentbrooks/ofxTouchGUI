@@ -88,6 +88,7 @@ public:
     int defaultPosX;
     int defaultPosY;
     int defaultColumn;
+    int defaultColumnSpacer;
     int defaultItemWidth;
     int defaultItemHeight;
     int defaultSpacer;
@@ -96,6 +97,12 @@ public:
     int lastItemPosY;
     int lastItemWidth;
     int lastItemHeight;
+    void moveTo(int posX, int posY); // all subsequently added items will be added from this position
+    void setSize(int width, int height); // all subsequently added items will have this width/height
+    void setWidth(int width);
+    void setHeight(int height);
+    void setItemSpacer(int space);
+    void setColumnSpacer(int space);
     
     // when auto positioning you can call this to change columns before adding another item
     void nextColumn();

@@ -17,6 +17,7 @@ ofxTouchGUI::ofxTouchGUI(){
     defaultPosX = 20;
     defaultPosY = 20;
     defaultColumn = 1;
+    defaultColumnSpacer = 25;
     defaultItemWidth = 200;
     defaultItemHeight = 25;
     lastItemPosX = defaultPosX;
@@ -25,6 +26,9 @@ ofxTouchGUI::ofxTouchGUI(){
     lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
     defaultSaveToFile = "tg_settings.xml";
+    
+    moveTo(defaultPosX, defaultPosY);
+    setSize(defaultItemWidth, defaultItemHeight);
 }
 
 ofxTouchGUI::~ofxTouchGUI(){
@@ -108,7 +112,7 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
     guiFont.loadFont(fontPathSmall,fontSizeSmall,antialiasedSmall,true);
     guiFont.setLineHeight(int(fontSizeSmall * 2)); // not sure about this?
     guiFontLarge.loadFont(fontPathLarge,fontSizeLarge,antialisedLarge,true);
-    guiFontLarge.setLineHeight(int(fontSizeLarge * 2 * .8));
+    guiFontLarge.setLineHeight(int(fontSizeLarge * 2 * .8)); // weird.
     
     this->fontSize = fontSizeSmall; // used to determine text offsetX for gui elements
     this->fontSizeLarge = fontSizeLarge; // used to determine text offsetX
@@ -121,6 +125,7 @@ void ofxTouchGUI::checkPosSize(int& posX, int& posY, int& width, int& height) {
         posX = (numGuiItems == 0) ? defaultPosX : lastItemPosX;
     }
     if(posY == -1) {
+        //lastItemPosY + lastItemHeight;
         //posY = (numGuiItems == 0) ? defaultPosY : (defaultPosY + defaultSpacer) * numGuiItems;
         posY = (numGuiItems == 0) ? defaultPosY : lastItemPosY + lastItemHeight + defaultSpacer;  
         if(posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
@@ -142,9 +147,50 @@ void ofxTouchGUI::checkPosSize(int& posX, int& posY, int& width, int& height) {
     lastItemHeight = height;
 }
 
+// all subsequently added items will be added from this position
+void ofxTouchGUI::moveTo(int posX, int posY) {
+    lastItemPosX = posX;
+    int offsetY = -lastItemHeight - defaultSpacer;
+    lastItemPosY = posY + offsetY;
+    if(numGuiItems == 0) {
+        
+        // if no items have been added and we moveTo, defaultPosX and defaultPosY need to be changed
+        defaultPosX = lastItemPosX;
+        defaultPosY = lastItemPosY-offsetY;
+        lastItemPosY = defaultPosY;
+    }
+}
+
+// auto gap between items
+void ofxTouchGUI::setItemSpacer(int space) {
+    defaultSpacer = space;
+}
+
+// auto gap between columns
+void ofxTouchGUI::setColumnSpacer(int space) {
+    defaultColumnSpacer = space;
+}
+
+// all subsequently added items will have this width/height
+void ofxTouchGUI::setSize(int width, int height) {
+    lastItemWidth = defaultItemWidth = width;
+    lastItemHeight = defaultItemHeight = height;
+}
+
+// all subsequently added items will have this width
+void ofxTouchGUI::setWidth(int width) {
+    lastItemWidth = defaultItemWidth = width;
+}
+
+// all subsequently added items will have this /height
+void ofxTouchGUI::setHeight(int height) {
+    lastItemHeight = defaultItemHeight = height;
+}
+
+// shifts the cursor (moveto) position over
 void ofxTouchGUI::nextColumn() {
     
-    lastItemPosX = lastItemPosX + lastItemWidth + defaultPosX;
+    lastItemPosX = lastItemPosX + lastItemWidth + defaultColumnSpacer;
     lastItemPosY = defaultPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
 }
 
@@ -284,6 +330,9 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(true); // true = use title text
     
+    // text height is different from passed in height- may be larger, so need to update lastItemHeight
+    lastItemHeight = tgt->height;
+
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
@@ -304,9 +353,11 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(false); // true = use title text
-    //checkPosSize(posX, posY, width, height);
-    lastItemHeight = tgt->height;
     
+    
+    // text height is different from passed in height- may be larger, so need to update lastItemHeight
+    lastItemHeight = tgt->height;    
+
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     

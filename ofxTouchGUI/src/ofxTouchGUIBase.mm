@@ -149,7 +149,7 @@ void ofxTouchGUIBase::setDisplay(string label, int posX, int posY, int width, in
     this->width = width;
     this->height = height;
     
-    initGLArrays();
+    updateGLArrays();
 
 }
 
@@ -341,7 +341,7 @@ void ofxTouchGUIBase::setBackgroundClrs(ofColor tl, ofColor tr, ofColor bl, ofCo
     bgClrTR = tr; //rgba
     bgClrBL = bl; //rgba
     bgClrBR = br; //rgba  
-    initGLArrays(); 
+    updateGLArrays();
 }
 
 void ofxTouchGUIBase::setBackgroundClrs(ofColor singleClr) {
@@ -350,7 +350,7 @@ void ofxTouchGUIBase::setBackgroundClrs(ofColor singleClr) {
     bgClrTR = singleClr; //rgba
     bgClrBL = singleClr; //rgba
     bgClrBR = singleClr; //rgba  
-    initGLArrays(); 
+    updateGLArrays();
 }
 
 void ofxTouchGUIBase::setActiveClrs(ofColor tl, ofColor tr, ofColor bl, ofColor br) {
@@ -359,7 +359,7 @@ void ofxTouchGUIBase::setActiveClrs(ofColor tl, ofColor tr, ofColor bl, ofColor 
     activeClrTR = tr; //rgba
     activeClrBL = bl; //rgba
     activeClrBR = br; //rgba  
-    initGLArrays();
+    updateGLArrays();
 }
 
 void ofxTouchGUIBase::setActiveClrs(ofColor singleClr) {
@@ -368,7 +368,7 @@ void ofxTouchGUIBase::setActiveClrs(ofColor singleClr) {
     activeClrTR = singleClr; //rgba
     activeClrBL = singleClr; //rgba
     activeClrBR = singleClr; //rgba  
-    initGLArrays();
+    updateGLArrays();
 }
 
 
@@ -385,7 +385,7 @@ void ofxTouchGUIBase::setTextOffsets(int textOffsetX, int textOffsetY) {
 
 // OPENGL - manually setting array values
 //--------------------------------------------------------------
-void ofxTouchGUIBase::initGLArrays(){
+void ofxTouchGUIBase::updateGLArrays(){
     
     
     // POSITIONS

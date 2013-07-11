@@ -88,7 +88,7 @@ public:
     
     
     // OPENGL COLOURS/VERTEX
-    virtual void initGLArrays();
+    virtual void updateGLArrays();
     float *colorsArr; // background colors array
     float *colorsArrActive; // foreground colours array
     float *vertexArr; // vertex positions array main    
