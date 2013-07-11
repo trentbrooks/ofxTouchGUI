@@ -13,12 +13,12 @@ Ubuntu and windows user's will need to rename the file's from .mm to .cpp.
 	ofxTouchGUI settings;
 	settings.loadSettings("tg_settings.xml");
 
-	// add a slider
-	ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f, 20, 115, 200, 35); // label, value, min, max, x, y, width, height
-	// or auto position/size without extra parameters
-	ofxTouchGUISlider* sliderX = settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f); // label, value, min, max
+	// add a slider (auto positioned)
+	settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f); // label, value, min, max
+	// or custom position and size
+	settings.addSlider("SLIDER X", &someValue, 0.0f, 1.0f, 20, 115, 200, 35); // label, value, min, max
 
-	// add an image button
+	// add an image button with event listener
 	ofxTouchGUIButton* imageBtn = settings.addButton("MY IMAGE BUTTON", 225, 75, 74, 35); // label, value, x, y, width, height
 	imageBtn->loadImageStates("play-up.png", "play-down.png"); // touch down and up images
 	ofAddListener(imageBtn->onChangedEvent, this, &testApp::onImageButtonPressed); // bind a function in testApp to the element
