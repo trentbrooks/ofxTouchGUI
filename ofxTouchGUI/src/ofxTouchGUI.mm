@@ -331,7 +331,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     tgt->formatText(true); // true = use title text
     
     // text height is different from passed in height- may be larger, so need to update lastItemHeight
-    lastItemHeight = tgt->height;
+    if(tgt->height > height) lastItemHeight = tgt->height;
 
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
@@ -356,7 +356,7 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     
     
     // text height is different from passed in height- may be larger, so need to update lastItemHeight
-    lastItemHeight = tgt->height;    
+    if(tgt->height > height) lastItemHeight = tgt->height;
 
     guiItems.push_back(tgt);
     numGuiItems = guiItems.size();
