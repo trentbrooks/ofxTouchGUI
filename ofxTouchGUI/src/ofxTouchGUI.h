@@ -73,7 +73,7 @@ public:
     ofImage background;
     // color background
     bool hasBackgroundColor;
-    void setBackgroundColor(ofColor bg,int bgX, int bgY, int bgWidth, int bgHeight);
+    void setBackgroundColor(ofColor bg,int bgX=-1, int bgY=-1, int bgWidth=-1, int bgHeight=-1);
     ofColor bg;
     int bgX,bgY,bgWidth,bgHeight;
     bool hasFont;
@@ -106,6 +106,7 @@ public:
     
     // when auto positioning you can call this to change columns before adding another item
     void nextColumn();
+    //void previousColumn();
     
     // drawing
     void draw();

@@ -7,6 +7,7 @@ ofxTouchGUI::ofxTouchGUI(){
     numGuiItems = 0;
     hasFont = false;
     hasBackground = false;
+    hasBackgroundColor = false;
     useMouse = false;
     settingsLoaded = false;
     isAutoDrawing = false;
@@ -86,10 +87,10 @@ void ofxTouchGUI::setBackgroundColor(ofColor bg, int bgX, int bgY, int bgWidth, 
     
     hasBackgroundColor = true;
     this->bg = bg;
-    this->bgX = bgX;
-    this->bgY = bgY;
-    this->bgWidth = bgWidth;
-    this->bgHeight = bgHeight;
+    this->bgX = (bgX == -1) ? 0 : bgX;
+    this->bgY = (bgY == -1) ? 0 : bgY;
+    this->bgWidth = bgWidth;//(bgWidth == -1) ? 0 : bgWidth;
+    this->bgHeight = bgHeight;//(bgHeight == -1) ? 0 : bgHeight;
     
 }
 
@@ -121,15 +122,16 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
 // DEFAULT SIZE/POSITIONING
 void ofxTouchGUI::checkPosSize(int& posX, int& posY, int& width, int& height) {
     if(posX == -1) {
-        ///posX = defaultColumn * defaultPosX; 
+        // move to same position as last item
         posX = (numGuiItems == 0) ? defaultPosX : lastItemPosX;
     }
     if(posY == -1) {
-        //lastItemPosY + lastItemHeight;
-        //posY = (numGuiItems == 0) ? defaultPosY : (defaultPosY + defaultSpacer) * numGuiItems;
+        // move to last items position + last items height
         posY = (numGuiItems == 0) ? defaultPosY : lastItemPosY + lastItemHeight + defaultSpacer;  
         if(posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
-            posY = defaultPosY;//(numGuiItems == 0) ? defaultPosY : guiItems[0]->posY; // align with top item
+            
+            // if no more room- move to next column
+            posY = defaultPosY; // align with top item
             posX = (numGuiItems == 0) ? defaultPosX : lastItemPosX + lastItemWidth + defaultPosX;
         }
     }
@@ -173,26 +175,38 @@ void ofxTouchGUI::setColumnSpacer(int space) {
 
 // all subsequently added items will have this width/height
 void ofxTouchGUI::setSize(int width, int height) {
-    lastItemWidth = defaultItemWidth = width;
-    lastItemHeight = defaultItemHeight = height;
+    //lastItemWidth = defaultItemWidth = width;
+    //lastItemHeight = defaultItemHeight = height;
+    defaultItemWidth = width;
+    defaultItemHeight = height;
 }
 
 // all subsequently added items will have this width
 void ofxTouchGUI::setWidth(int width) {
-    lastItemWidth = defaultItemWidth = width;
+    //lastItemWidth = defaultItemWidth = width;
+    defaultItemWidth = width;
 }
 
 // all subsequently added items will have this /height
 void ofxTouchGUI::setHeight(int height) {
-    lastItemHeight = defaultItemHeight = height;
+    //lastItemHeight = defaultItemHeight = height;
+    defaultItemHeight = height;
 }
 
 // shifts the cursor (moveto) position over
+// use the defaultItemWidth + defaultItemHeight instead of lastItemWidth + lastItemHeight
 void ofxTouchGUI::nextColumn() {
+    
+    lastItemPosX = lastItemPosX + defaultItemWidth + defaultColumnSpacer;
+    lastItemPosY = defaultPosY - defaultItemHeight - defaultSpacer;//guiItems[0]->posY;
+}
+
+// doesn't work
+/*void ofxTouchGUI::previousColumn() {
     
     lastItemPosX = lastItemPosX + lastItemWidth + defaultColumnSpacer;
     lastItemPosY = defaultPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
-}
+}*/
 
 // DRAW
 //--------------------------------------------------------------
@@ -204,11 +218,28 @@ void ofxTouchGUI::draw(){
         ofLog() << "TouchGUI: first time saving settings!";
         saveSettings(); // save the settings once only, when file exists no need to save.
         settingsLoaded = true;
+
     }
     
     if(!isHidden) {
         
         if(hasBackgroundColor) {
+            
+            // if we have a background colour with auto width/height (-1,-1)
+            if(bgWidth == -1 && bgHeight == -1) {
+                int lowestItemY = 0;
+                int furthestItemX = 0;
+                for(int i = 0; i < numGuiItems; i++) {
+                    float itemY = guiItems[i]->posY + guiItems[i]->height;
+                    float itemX = guiItems[i]->posX + guiItems[i]->width;
+                    if(itemY > lowestItemY) lowestItemY = itemY + defaultColumnSpacer;
+                    if(itemX > furthestItemX) furthestItemX = itemX + defaultColumnSpacer;
+                }
+                
+                bgWidth = furthestItemX;
+                bgHeight = lowestItemY;
+            }
+            
             ofSetColor(bg);
             ofRect(bgX, bgY, bgWidth, bgHeight);
         }
@@ -216,6 +247,7 @@ void ofxTouchGUI::draw(){
         if(hasBackground) background.draw(0, 0);
         
         // loop over list and draw (unless it's a dropdown)
+        // need to revisit this
         ofxTouchGUIBase* topItem = 0; // one item can be on top (for dropdown menu)
         for(int i = 0; i < numGuiItems; i++) {
 
@@ -375,9 +407,10 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     //tgt->itemId = TEXT_TYPE + ofToString(numGuiItems);
     checkPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
-    tgt->setValue(val);
+    
     tgt->enable(useMouse);
-    if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
+    if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
+    tgt->setValue(val); // add value after fonts are set to avoid text offsets
     //tgt->formatText(false); // true = use title text
     
     guiItems.push_back(tgt);
