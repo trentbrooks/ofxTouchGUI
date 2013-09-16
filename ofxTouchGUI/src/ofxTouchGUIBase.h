@@ -75,8 +75,17 @@ public:
     virtual void onUp(float x, float y);
     bool isPressed;
     
-    // dispatched events
+    // events / listeners - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method
     ofEvent<string> onChangedEvent;
+    template <class ListenerClass>
+	void addEventListener(ListenerClass * listener){
+        //void testApp::onGuiChanged(const void* sender, string &buttonLabel) {};
+        ofAddListener(onChangedEvent,listener,&ListenerClass::onGuiChanged);        
+    };
+    template <class ListenerClass>
+    void removeEventListener(ListenerClass * listener){
+        ofRemoveListener(onChangedEvent,listener,&ListenerClass::onGuiChanged);
+    };
     
     // interaction
     bool itemActive;  

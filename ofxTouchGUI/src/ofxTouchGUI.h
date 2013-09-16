@@ -164,6 +164,17 @@ public:
     vector <NameValuePair*>varItems;
     int variableCount;
     
+    // add/remove listeners to all gui items - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method in testApp
+    // call after all gui items have been added
+    template <class ListenerClass>
+	void addEventListenerAllItems(ListenerClass * listener){
+        for(int i = 0; i < guiItems.size(); i++) guiItems[i]->addEventListener(listener);
+    };
+    template <class ListenerClass>
+	void removeEventListenerAllItems(ListenerClass * listener){
+        for(int i = 0; i < guiItems.size(); i++) guiItems[i]->removeEventListener(listener);
+    };
+    
     // save settings xml
     string saveToFile;
     string defaultSaveToFile;
@@ -187,7 +198,10 @@ public:
     void disableSendOSC();
     ofxOscSender* oscSender;
     bool oscEnabled;
-
+    
+    ofxOscMessage msg;
+    void sendOSC(string address, float val); // send any generic message- must pass address + value
+    void sendOSC(string address, int val);
 };
 
 

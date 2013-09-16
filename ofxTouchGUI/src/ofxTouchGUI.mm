@@ -881,6 +881,27 @@ void ofxTouchGUI::disableSendOSC() {
 }
 
 
+// generic osc message sending
+void ofxTouchGUI::sendOSC(string address, float val) {
+    
+    if(oscEnabled) {
+        msg.clear();
+        msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
+        msg.addFloatArg(val);
+        oscSender->sendMessage( msg );
+    }    
+}
+
+void ofxTouchGUI::sendOSC(string address, int val) {
+    
+    if(oscEnabled) {
+        msg.clear();
+        msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
+        msg.addIntArg(val);
+        oscSender->sendMessage( msg );
+    }
+}
+
 
 
 // TEMPLATES
@@ -907,4 +928,5 @@ template void ofxTouchGUI::setVariable<float>(string varName, float*);
 template void ofxTouchGUI::setVariable<string>(string varName, string*);
 
 // displaying var
+
 
