@@ -4,7 +4,7 @@
 // one item can be on top - must be in cpp file?
 //static bool ignoreExternalEvents = false;
 bool ofxTouchGUIBase::ignoreExternalEvents = false;  
-string ofxTouchGUIBase::oscAddress = "/tg";
+string ofxTouchGUIBase::oscAddress = "/tg"; // all osc messages will start with "/tg" by default.
 
 ofxTouchGUIBase::ofxTouchGUIBase(){
 
@@ -17,12 +17,14 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     textOffsetX = 10;
     textOffsetY = int(textOffsetX / 2);
     hasFont = false;
+    guiFont = NULL;
+    guiFontLarge = NULL;
     type = "";
     itemId = "";
     itemActive = false; 
     isPressed = false;
     //ofxTouchGUIBase::ignoreExternalEvents = false; // static now
-    isHidden = false;
+    hidden = false;
     
     //setup opengl
     colorsArr = new float[16]; // rgba * 4 corners : background rect
@@ -66,6 +68,7 @@ void ofxTouchGUIBase::resetDefaultValue() {
 }
 
 
+
 // ENABLE/DISABLE FOR TOUCH OR MOUSE
 //--------------------------------------------------------------
 void ofxTouchGUIBase::enable(bool useMouse) {
@@ -82,14 +85,17 @@ void ofxTouchGUIBase::disable() {
 // showing allows drawing + events
 void ofxTouchGUIBase::show(bool activateSingleItem){
     if(activateSingleItem) itemActive = true;
-    isHidden = false;
+    hidden = false;
 }
 
 // hiding disables drawing + events
 void ofxTouchGUIBase::hide(){
-    isHidden = true;
+    hidden = true;
 }
 
+bool ofxTouchGUIBase::isHidden() {
+    return hidden;
+}
 
 // fix this: disableMouse
 //--------------------------------------------------------------
@@ -136,6 +142,23 @@ void ofxTouchGUIBase::disableMouse(){
 
 
 //--------------------------------------------------------------
+int ofxTouchGUIBase::getItemPosX() {
+    return posX;
+}
+int ofxTouchGUIBase::getItemPosY() {
+    return posY;
+}
+int ofxTouchGUIBase::getItemWidth() {
+    return width;
+}
+int ofxTouchGUIBase::getItemHeight() {
+    return height;
+}
+
+string ofxTouchGUIBase::getLabel() {
+    return label;
+}
+
 void ofxTouchGUIBase::setDisplay(string label, int posX, int posY, int width) {
 
     setDisplay(label, posX, posY, width, 35); // default height is 35?
@@ -300,7 +323,7 @@ void ofxTouchGUIBase::onDown(float x, float y){
     // when static prop ignoreExternalEvents is true, ignore all touch/mouse events
     // if itemActive is false (not on top) and the global static prop ignoreExternalEvents is true, ignore everything
     if(ignoreExternalEvents && !itemActive) return;
-    if(isHidden) return;
+    if(hidden) return;
     
     if(hitTest(x,y)) {
         isPressed = true;
@@ -482,7 +505,7 @@ void ofxTouchGUIBase::enableSendOSC(ofxOscSender * oscSender) {
             // only letters or numbers are valid...
             if(isCharacter(label[i]) || isNumber(label[i])) oscLabel += label[i];
         }
-        fullOscAddress = oscAddress + "/" + type + "/" + ofToLower(oscLabel);
+        fullOscAddress = oscAddress + "/"+ ofToLower(oscLabel); // + type + "/" 
         oscSenderRef = oscSender;
         oscEnabled = true;
     }
@@ -508,30 +531,27 @@ void ofxTouchGUIBase::sendOSC(int val) {
         msg.setAddress(fullOscAddress); // eg. "/tg/slider/mythingy"
         msg.addIntArg(val); 
         oscSenderRef->sendMessage( msg ); 
-    }
-    
+    }    
 }
 
 void ofxTouchGUIBase::sendOSC(float val) {
     
     if(oscEnabled) {
         msg.clear();
-        msg.setAddress(fullOscAddress);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
+        msg.setAddress(fullOscAddress);//oscAddress + "/" + label); // eg. "/tg/mythingy"
         msg.addFloatArg(val); 
         oscSenderRef->sendMessage( msg ); 
-    }
-    
+    }    
 }
 
 void ofxTouchGUIBase::sendOSC(string val) {
     
     if(oscEnabled) {
         msg.clear();
-        msg.setAddress(fullOscAddress); // eg. "/tg/slider/mythingy"
+        msg.setAddress(fullOscAddress); // eg. "/tg/mythingy"
         msg.addStringArg(val); 
         oscSenderRef->sendMessage( msg ); 
-    }
-    
+    }    
 }
 
 bool ofxTouchGUIBase::isCharacter(const char Character)

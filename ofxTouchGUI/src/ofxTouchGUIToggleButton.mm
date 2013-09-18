@@ -38,7 +38,7 @@ void ofxTouchGUIToggleButton::setValues(bool *toggleVal) {
 //--------------------------------------------------------------
 void ofxTouchGUIToggleButton::draw(){
     
-    if(!isHidden) {
+    if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         

@@ -19,11 +19,14 @@ public:
     virtual void onUp(float x, float y);
     
     void loadImageStates(string upImagePath, string downImagePath, bool useWidthHeightFromImage = true);
+    
+    bool getValue();
+    
+protected:
+    
     ofImage upImage;
     ofImage downImage;
     bool hasImages;
     
-    //ofEvent<string> onChangedEvent;
-    bool getValue();
 };
 

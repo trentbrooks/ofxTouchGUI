@@ -55,7 +55,7 @@ void ofxTouchGUISlider::setValues(int *val, int min, int max) {
 //--------------------------------------------------------------
 void ofxTouchGUISlider::draw(){
     
-    if(!isHidden) {
+    if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         

@@ -33,7 +33,7 @@ void ofxTouchGUIButton::loadImageStates(string upImagePath, string downImagePath
 //--------------------------------------------------------------
 void ofxTouchGUIButton::draw(){
     
-    if(!isHidden) {
+    if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         

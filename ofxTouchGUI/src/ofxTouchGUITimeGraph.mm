@@ -25,6 +25,7 @@ ofxTouchGUITimeGraph::ofxTouchGUITimeGraph(){
     min = 0.0f;
     max = 0.01f;
     setMaximumValues(50);
+    
 }
 
 ofxTouchGUITimeGraph::~ofxTouchGUITimeGraph(){
@@ -45,6 +46,10 @@ void ofxTouchGUITimeGraph::reset() {
 
 void ofxTouchGUITimeGraph::setFilled(bool fill) {
     isFilled = fill;
+}
+
+void ofxTouchGUITimeGraph::setGraphFillClr(ofColor clr) {
+    graphFillClr = activeClrTL = clr;
 }
 
 void ofxTouchGUITimeGraph::setCustomRange(float min, float max) {
@@ -93,7 +98,7 @@ void ofxTouchGUITimeGraph::insertValue(float val) {
 //--------------------------------------------------------------
 void ofxTouchGUITimeGraph::draw(){
     
-    if(!isHidden) {
+    if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         
@@ -124,7 +129,7 @@ void ofxTouchGUITimeGraph::draw(){
             
         }
 
-        ofSetColor(graphFillClr);
+        ofSetColor(activeClrTL);
         glVertexPointer(2, GL_FLOAT, 0, &shapeVertices[0]); //GLint size, GLenum type, GLsizei stride, const GLvoid *pointer
         glEnableClientState(GL_VERTEX_ARRAY);
         if(isFilled)

@@ -35,6 +35,11 @@ void ofxTouchGUIDropDown::resetDefaultValue(){
 }
 
 //--------------------------------------------------------------
+void ofxTouchGUIDropDown::setArrowClr(ofColor clr) {
+    arrowClr = clr;
+}
+
+//--------------------------------------------------------------
 void ofxTouchGUIDropDown::setValues(int numValues, string* listValues) {
         
     //this->listValues = listValues;
@@ -89,7 +94,7 @@ void ofxTouchGUIDropDown::setValues(int numValues, vector<string> listValues, in
 //--------------------------------------------------------------
 void ofxTouchGUIDropDown::draw(){
     
-    if(!isHidden) {
+    if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         
@@ -170,9 +175,9 @@ void ofxTouchGUIDropDown::onDown(float x, float y){
     // when itemActive is true, then this ui item has focus (mainly for drawing on top of other ui items)
     // when static prop ignoreEvents is true, ignore all touch/mouse events
     // if itemActive is false (not on top) and the global static prop ignoreEvents is true, ignore everything
-    //if(ignoreExternalEvents && !isHidden && !itemActive) return;
+    //if(ignoreExternalEvents && !hidden && !itemActive) return;
     if(ignoreExternalEvents && !itemActive) return;
-    if(isHidden) return;
+    if(hidden) return;
         
     // when the dropdown area is touched, or the menu is already opened
     if(hitTest(x,y) || toggleShowList) {

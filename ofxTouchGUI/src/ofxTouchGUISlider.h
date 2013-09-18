@@ -13,20 +13,13 @@ public:
 	~ofxTouchGUISlider();
     virtual void resetDefaultValue();
     
-    // slider values
-    float min;
-    float max;
-    void setRange(float min, float max);
-    float *val;
-    int *intVal;
-    int defaultIntVal; 
-    float defaultVal; 
-    bool useInteger;
+    // slider values    
+    void setRange(float min, float max);    
 	void setValues(float *val, float min, float max);
     void setValues(int *val, int min, int max);
-    
-    // for saved settings
-    //ofxXmlSettings *XML;
+    bool useInteger;
+    float *val;
+    int *intVal;
     
     // display
     virtual void draw();
@@ -40,5 +33,14 @@ public:
 
     
     float getValue();
+    
+protected:
+    
+    float min;
+    float max;    
+    int defaultIntVal;
+    float defaultVal;
+    
+    
 };
 
