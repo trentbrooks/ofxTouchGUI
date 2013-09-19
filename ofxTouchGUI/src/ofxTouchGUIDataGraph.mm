@@ -1,8 +1,8 @@
-#include "ofxTouchGUITimeGraph.h"
+#include "ofxTouchGUIDataGraph.h"
 
 
 
-ofxTouchGUITimeGraph::ofxTouchGUITimeGraph(){
+ofxTouchGUIDataGraph::ofxTouchGUIDataGraph(){
     
     // DEFAULT TOGGLE BUTTON BACKGROUND CLRS: GRADIENT GRAY 75%
     // creates a fade from right to left instead of left to right
@@ -28,12 +28,12 @@ ofxTouchGUITimeGraph::ofxTouchGUITimeGraph(){
     
 }
 
-ofxTouchGUITimeGraph::~ofxTouchGUITimeGraph(){
+ofxTouchGUIDataGraph::~ofxTouchGUIDataGraph(){
     //if(shapeVertexArr != NULL){ delete[] shapeVertexArr; shapeVertexArr = NULL; }
     shapeVertices.clear();
 }
 
-void ofxTouchGUITimeGraph::reset() {
+void ofxTouchGUIDataGraph::reset() {
     currentValue = 0;
     for(int i = 0; i < savedValues.size(); i++) {
         savedValues[i] = 0.0f;
@@ -44,15 +44,15 @@ void ofxTouchGUITimeGraph::reset() {
     }
 }
 
-void ofxTouchGUITimeGraph::setFilled(bool fill) {
+void ofxTouchGUIDataGraph::setFilled(bool fill) {
     isFilled = fill;
 }
 
-void ofxTouchGUITimeGraph::setGraphFillClr(ofColor clr) {
+void ofxTouchGUIDataGraph::setGraphFillClr(ofColor clr) {
     graphFillClr = activeClrTL = clr;
 }
 
-void ofxTouchGUITimeGraph::setCustomRange(float min, float max) {
+void ofxTouchGUIDataGraph::setCustomRange(float min, float max) {
     isCustomRangeSet = true;
     this->min = min;
     this->max = max;
@@ -60,7 +60,7 @@ void ofxTouchGUITimeGraph::setCustomRange(float min, float max) {
         savedValues[i] = min; // reset all to base
     }
 }
-void ofxTouchGUITimeGraph::setMaximumValues(int count) {
+void ofxTouchGUIDataGraph::setMaximumValues(int count) {
     
     maxValuesToSave = count;
     savedValues.clear();
@@ -80,7 +80,7 @@ void ofxTouchGUITimeGraph::setMaximumValues(int count) {
     
 }
 
-void ofxTouchGUITimeGraph::insertValue(float val) {
+void ofxTouchGUIDataGraph::insertValue(float val) {
     
     currentValue = val;
     while(savedValues.size() >= maxValuesToSave) savedValues.pop_front();
@@ -96,7 +96,7 @@ void ofxTouchGUITimeGraph::insertValue(float val) {
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUITimeGraph::draw(){
+void ofxTouchGUIDataGraph::draw(){
     
     if(!hidden) {
         ofPushMatrix();

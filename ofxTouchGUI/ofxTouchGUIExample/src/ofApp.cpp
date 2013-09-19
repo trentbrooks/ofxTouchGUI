@@ -8,6 +8,7 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     ofEnableAlphaBlending();
     ofBackground(20);
+    ofSetLogLevel(OF_LOG_VERBOSE);
     
     // defaults
     mouseX = mouseY = 0;
@@ -23,7 +24,9 @@ void ofApp::setup(){
     // settings
     settings.loadSettings("settings.xml", false, true); // savefile, default font, use mouse
     settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14, true); // optional
-    settings.setupSendOSC("127.0.0.1", 4444); // optional
+    settings.setupSendOSC("10.0.1.134", 5555); // optional (send to iOS device running ofxTouchGUIExampleIOS)
+    settings.setupReceiveOSC(5556); // optional (receives from iOS device running ofxTouchGUIExampleIOS)
+    //settings.setWindowPosition(ofGetWidth()- 250, 0); //optional
     
     // add controls
     settings.addTitleText("ofxTouchGUI");
@@ -33,11 +36,11 @@ void ofApp::setup(){
     settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions);
     settings.addToggleButton("TOGGLE A", &toggleValA);
     settings.addToggleButton("TOGGLE B", &toggleValB);
+    settings.addText(description);
     settings.setItemSize(200, 100);
-    graph= settings.addTimeGraph("GRAPH MOUSE X", 500);
+    graph= settings.addDataGraph("GRAPH MOUSE X", 500);
     graph->setCustomRange(0, ofGetWidth());
     settings.setItemSize(200, 25);
-    settings.addText(description);
     settings.addButton("SAVE");
     settings.addButton("RESET");    
     
@@ -51,7 +54,7 @@ void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
     
     // could use the pointer to item that was pressed? eg.
     ofxTouchGUIBase * guiItem = (ofxTouchGUIBase*)sender;
-    
+        
     // or just use the label as the identifier
     if(buttonLabel == "SAVE") {
         settings.saveSettings();
@@ -63,7 +66,8 @@ void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    
+    settings.update();
 }
 
 //--------------------------------------------------------------

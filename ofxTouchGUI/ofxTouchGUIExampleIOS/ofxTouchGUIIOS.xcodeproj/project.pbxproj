@@ -56,7 +56,7 @@
 		d361c93cfdb48bcc4e57cc19 /* ofxTouchGUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = b0c6fde7ee419b1df95f6306 /* ofxTouchGUI.mm */; };
 		eb2bbf635497e52ca689e30e /* ofxTouchGUIToggleButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8c8f634d703e9db2c0d53f4f /* ofxTouchGUIToggleButton.mm */; };
 		f4e9b8d5fd22720e777ee899 /* ofxTouchGUIText.mm in Sources */ = {isa = PBXBuildFile; fileRef = 31cac1a61423603c160cecc1 /* ofxTouchGUIText.mm */; };
-		fe68eb371e2e841792c70fe3 /* ofxTouchGUITimeGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 94ee4917f0a8ebc089a5b76f /* ofxTouchGUITimeGraph.mm */; };
+		fe68eb371e2e841792c70fe3 /* ofxTouchGUIDataGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 94ee4917f0a8ebc089a5b76f /* ofxTouchGUIDataGraph.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,7 +78,7 @@
 
 /* Begin PBXFileReference section */
 		00d6d32b84b099226431108c /* ofxOsc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOsc.h; path = ../../../addons/ofxOsc/src/ofxOsc.h; sourceTree = SOURCE_ROOT; };
-		013294119ea02dac94ee3e3a /* ofxTouchGUITimeGraph.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTouchGUITimeGraph.h; path = ../../../addons/ofxTouchGUI/src/ofxTouchGUITimeGraph.h; sourceTree = SOURCE_ROOT; };
+		013294119ea02dac94ee3e3a /* ofxTouchGUIDataGraph.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTouchGUIDataGraph.h; path = ../src/ofxTouchGUIDataGraph.h; sourceTree = SOURCE_ROOT; };
 		01dcc0911400f9acf5b65578 /* ofxXmlSettings.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxXmlSettings.h; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h; sourceTree = SOURCE_ROOT; };
 		029684cf678f70f6d3537a29 /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscOutboundPacketStream.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h; sourceTree = SOURCE_ROOT; };
 		0aed834ce4dec5260af302a2 /* ofxOscParameterSync.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscParameterSync.cpp; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.cpp; sourceTree = SOURCE_ROOT; };
@@ -123,7 +123,7 @@
 		8c75afc8774a62495dd53464 /* ofxOscReceiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscReceiver.h; path = ../../../addons/ofxOsc/src/ofxOscReceiver.h; sourceTree = SOURCE_ROOT; };
 		8c8f634d703e9db2c0d53f4f /* ofxTouchGUIToggleButton.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = ofxTouchGUIToggleButton.mm; path = ../../../addons/ofxTouchGUI/src/ofxTouchGUIToggleButton.mm; sourceTree = SOURCE_ROOT; };
 		932298a338263ed48d846a67 /* ofxTouchGUISlider.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = ofxTouchGUISlider.mm; path = ../../../addons/ofxTouchGUI/src/ofxTouchGUISlider.mm; sourceTree = SOURCE_ROOT; };
-		94ee4917f0a8ebc089a5b76f /* ofxTouchGUITimeGraph.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = ofxTouchGUITimeGraph.mm; path = ../../../addons/ofxTouchGUI/src/ofxTouchGUITimeGraph.mm; sourceTree = SOURCE_ROOT; };
+		94ee4917f0a8ebc089a5b76f /* ofxTouchGUIDataGraph.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = ofxTouchGUIDataGraph.mm; path = ../src/ofxTouchGUIDataGraph.mm; sourceTree = SOURCE_ROOT; };
 		978689adeec8caa40f096dbd /* ofxTouchGUIButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTouchGUIButton.h; path = ../../../addons/ofxTouchGUI/src/ofxTouchGUIButton.h; sourceTree = SOURCE_ROOT; };
 		9bf3aa0d4faa89d0f8a0e545 /* OscReceivedElements.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OscReceivedElements.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.cpp; sourceTree = SOURCE_ROOT; };
 		9f7986dc4eb05e75fce2c777 /* ofxOscSender.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscSender.h; path = ../../../addons/ofxOsc/src/ofxOscSender.h; sourceTree = SOURCE_ROOT; };
@@ -434,8 +434,8 @@
 				31cac1a61423603c160cecc1 /* ofxTouchGUIText.mm */,
 				683bc495de1f076bb0a5df88 /* ofxTouchGUITextInput.h */,
 				af5511cc2f09ecf487a0b3b4 /* ofxTouchGUITextInput.mm */,
-				013294119ea02dac94ee3e3a /* ofxTouchGUITimeGraph.h */,
-				94ee4917f0a8ebc089a5b76f /* ofxTouchGUITimeGraph.mm */,
+				013294119ea02dac94ee3e3a /* ofxTouchGUIDataGraph.h */,
+				94ee4917f0a8ebc089a5b76f /* ofxTouchGUIDataGraph.mm */,
 				288174801b16787b8ee71388 /* ofxTouchGUIToggleButton.h */,
 				8c8f634d703e9db2c0d53f4f /* ofxTouchGUIToggleButton.mm */,
 			);
@@ -583,7 +583,7 @@
 				62ec144fae83f382e06d27f0 /* ofxTouchGUISlider.mm in Sources */,
 				f4e9b8d5fd22720e777ee899 /* ofxTouchGUIText.mm in Sources */,
 				650ee517d30bddf8362dcd85 /* ofxTouchGUITextInput.mm in Sources */,
-				fe68eb371e2e841792c70fe3 /* ofxTouchGUITimeGraph.mm in Sources */,
+				fe68eb371e2e841792c70fe3 /* ofxTouchGUIDataGraph.mm in Sources */,
 				eb2bbf635497e52ca689e30e /* ofxTouchGUIToggleButton.mm in Sources */,
 				63b57ac5bf4ef088491e0317 /* ofxXmlSettings.cpp in Sources */,
 				933a2227713c720ceff80fd9 /* tinyxml.cpp in Sources */,

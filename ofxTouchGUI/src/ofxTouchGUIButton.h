@@ -16,7 +16,8 @@ public:
     virtual void draw();
     
     // touch events
-    virtual void onUp(float x, float y);
+    virtual bool onUp(float x, float y);
+    void doButtonAction(bool doOSC = true);
     
     void loadImageStates(string upImagePath, string downImagePath, bool useWidthHeightFromImage = true);
     

@@ -10,11 +10,13 @@ ofxTouchGUI::ofxTouchGUI(){
     hasBackgroundColor = false;
     useMouse = false;
     settingsLoaded = false;
-    isAutoDrawing = false;
+    isAutoDrawing = isAutoUpdating = false;
     hidden = false;
-    oscEnabled = false;
+    oscSendEnabled = oscReceiveEnabled = false;
     constantCount= 0;
     variableCount= 0;
+    windowPositionX = 0;
+    windowPositionY = 0;
     defaultItemPosX = 20;
     defaultItemPosY = 20;
     defaultColumn = 1;
@@ -34,6 +36,7 @@ ofxTouchGUI::ofxTouchGUI(){
 
 ofxTouchGUI::~ofxTouchGUI(){
     
+    dropDownGuiItems.clear();
     for(int i = 0; i < numGuiItems; i++) {
         delete guiItems[i];
         guiItems[i] = NULL;
@@ -80,7 +83,8 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     if(loadDefaultFont) loadFont("stan0755.ttf", 6, 6, false);
     
     // touch controlled or mouse controlled?
-    this->useMouse = useMouse;
+    //this->useMouse = useMouse;
+    (useMouse) ? enableMouse() : enableTouch();
 }
 
 
@@ -127,6 +131,13 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
     
     this->fontSize = fontSizeSmall; // used to determine text offsetX for gui elements
     this->fontSizeLarge = fontSizeLarge; // used to determine text offsetX
+}
+
+
+// window position
+void ofxTouchGUI::setWindowPosition(int posX, int posY) {
+    windowPositionX = posX;
+    windowPositionY = posY;
 }
 
 // DEFAULT SIZE/POSITIONING
@@ -218,63 +229,75 @@ void ofxTouchGUI::nextColumn() {
     lastItemPosY = defaultItemPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
 }*/
 
-// DRAW
+// UPDATE
 //--------------------------------------------------------------
-void ofxTouchGUI::draw(){
-
-    // All items should have been added before first draw.
+void ofxTouchGUI::update(){
+    
+    // All items should have been added before first update.
     // If this is the first time load, need to save all to the settings.xml.
     if(!settingsLoaded) {
         ofLog() << "TouchGUI: first time saving settings!";
         saveSettings(); // save the settings once only, when file exists no need to save.
         settingsLoaded = true;
-
     }
     
-    if(!hidden) {
-        
-        if(hasBackgroundColor) {
-            
-            // if we have a background colour with auto width/height (-1,-1)
-            if(bgWidth == -1 && bgHeight == -1) {
-                int lowestItemY = 0;
-                int furthestItemX = 0;
-                for(int i = 0; i < numGuiItems; i++) {
-                    float itemY = guiItems[i]->getItemPosY() + guiItems[i]->getItemHeight();
-                    float itemX = guiItems[i]->getItemPosX() + guiItems[i]->getItemWidth();
-                    if(itemY > lowestItemY) lowestItemY = itemY + defaultColumnSpacer;
-                    if(itemX > furthestItemX) furthestItemX = itemX + defaultColumnSpacer;
-                }
-                
-                bgWidth = furthestItemX;
-                bgHeight = lowestItemY;
+    // if we have a background colour with auto width/height (-1,-1)
+    if(hasBackgroundColor) {        
+        if(bgWidth == -1 && bgHeight == -1) {
+            int lowestItemY = 0;
+            int furthestItemX = 0;
+            for(int i = 0; i < numGuiItems; i++) {
+                float itemY = guiItems[i]->getItemPosY() + guiItems[i]->getItemHeight();
+                float itemX = guiItems[i]->getItemPosX() + guiItems[i]->getItemWidth();
+                if(itemY > lowestItemY) lowestItemY = itemY + defaultColumnSpacer;
+                if(itemX > furthestItemX) furthestItemX = itemX + defaultColumnSpacer;
             }
             
+            bgWidth = furthestItemX;
+            bgHeight = lowestItemY;
+        }
+    }
+    
+    // osc receiver
+    if(oscReceiveEnabled) checkOSCReceiver();
+}
+
+// DRAW
+//--------------------------------------------------------------
+void ofxTouchGUI::draw(){
+
+    if(!hidden) {
+        
+        ofPushMatrix();
+        ofPushStyle();
+        ofTranslate(windowPositionX, windowPositionY);
+        ofSetColor(255);
+        
+        if(hasBackgroundColor) {
             ofSetColor(bg);
             ofRect(bgX, bgY, bgWidth, bgHeight);
         }
-        ofSetColor(255, 255, 255);
+        
+        ofSetColor(255);
         if(hasBackgroundImage) backgroundImage.draw(0, 0);
         
-        // loop over list and draw (unless it's a dropdown)
-        // need to revisit this
-        ofxTouchGUIBase* topItem = 0; // one item can be on top (for dropdown menu)
-        for(int i = 0; i < numGuiItems; i++) {
-
-            if(guiItems[i]->itemActive) {
-                topItem = guiItems[i];
-            } else {
-                guiItems[i]->draw();
-            }
+        // loop over list and draw 
+        for(int i = 0; i < numGuiItems; i++) {            
+            guiItems[i]->draw();
         }
         
-        // draw the active/top item - only 1 (last one in the 
-        if(topItem) topItem->draw();  
+        // drawing dropdown overlays in descending order
+        for(int i = dropDownGuiItems.size()-1; i >= 0; i--) {
+            dropDownGuiItems[i]->drawOverlay();
+        }
+        
+        ofPopStyle();
+        ofPopMatrix();         
     }
     
 }
 
-void ofxTouchGUI::setAutoDraw(bool allowAutoDraw){
+void ofxTouchGUI::setAutoDraw(bool allowAutoDraw, bool allowAutoUpdate){
     
     if(!isAutoDrawing && allowAutoDraw) {
         ofAddListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
@@ -283,11 +306,22 @@ void ofxTouchGUI::setAutoDraw(bool allowAutoDraw){
         ofRemoveListener(ofEvents().draw, this, &ofxTouchGUI::aDraw);
     }
     
+    if(!isAutoUpdating && allowAutoUpdate) {
+        ofAddListener(ofEvents().update, this, &ofxTouchGUI::aUpdate);
+        isAutoUpdating = true;
+    } else if(isAutoUpdating) {
+        ofRemoveListener(ofEvents().update, this, &ofxTouchGUI::aUpdate);
+    }    
 }
 
 // auto draw requires events args
 void ofxTouchGUI::aDraw(ofEventArgs &e){
     draw();
+}
+
+// auto update requires events args
+void ofxTouchGUI::aUpdate(ofEventArgs &e){
+    update();
 }
 
 void ofxTouchGUI::show(){
@@ -332,13 +366,13 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, float *val, float 
     tgs->setValues(val, min, max);
     checkItemPosSize(posX, posY, width, height);
     tgs->setDisplay(sliderLabel, posX, posY, width, height);
-    tgs->enable(useMouse);
+    //tgs->enable(useMouse);
     if(hasFont) tgs->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     
     guiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgs->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgs->enableSendOSC(oscSender);
     
     saveControl(SLIDER_TYPE, sliderLabel, val);
  
@@ -354,13 +388,13 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, int *val, int min,
     tgs->setValues(val, min, max);
     checkItemPosSize(posX, posY, width, height);
     tgs->setDisplay(sliderLabel, posX, posY, width, height);
-    tgs->enable(useMouse);
+    //tgs->enable(useMouse);
     if(hasFont) tgs->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     
     guiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgs->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgs->enableSendOSC(oscSender);
     
     saveControl(SLIDER_TYPE, sliderLabel, val);
 
@@ -374,7 +408,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     //tgt->itemId = TEXT_TYPE + ofToString(numGuiItems);
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width);
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(true); // true = use title text
     
@@ -386,7 +420,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
     // also this does not connect to OSC - same as above.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -398,7 +432,7 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     //tgt->itemId = TEXT_TYPE + ofToString(numGuiItems);
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(false); // true = use title text
     
@@ -411,7 +445,7 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
     // also this does not connect to OSC - same as above.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     return tgt; // return object to add listeners, etc.
 }
@@ -424,7 +458,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
     
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     tgt->setValue(val); // add value after fonts are set to avoid text offsets
     //tgt->formatText(false); // true = use title text
@@ -433,7 +467,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -450,7 +484,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
     tgt->setValue(val);
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     //tgt->formatText(false); // true = use title text
     
@@ -458,7 +492,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -475,7 +509,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
     tgt->setValue(val);
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     //tgt->formatText(false); // true = use title text
     
@@ -483,7 +517,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -500,7 +534,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     checkItemPosSize(posX, posY, width, height);
     tgt->setDisplay(textLabel, posX, posY, width, height);
     tgt->setValue(val);
-    tgt->enable(useMouse);
+    //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     //tgt->formatText(false); // true = use title text
     
@@ -508,7 +542,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
-    //if(oscEnabled) tgt->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgt->enableSendOSC(oscSender);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     //saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -525,13 +559,13 @@ ofxTouchGUIButton* ofxTouchGUI::addButton(string btnLabel, int posX, int posY, i
     //tgb->itemId = BUTTON_TYPE + ofToString(numGuiItems);
     checkItemPosSize(posX, posY, width, height);
     tgb->setDisplay(btnLabel, posX, posY, width, height);
-    tgb->enable(useMouse);
+    //tgb->enable(useMouse);
     if(hasFont) tgb->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgb);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgb->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgb->enableSendOSC(oscSender);
     
     // buttons do not save to xml
     
@@ -546,13 +580,13 @@ ofxTouchGUIToggleButton* ofxTouchGUI::addToggleButton(string toggleLabel, bool *
     checkItemPosSize(posX, posY, width, height);
     tgtb->setDisplay(toggleLabel, posX, posY, width, height);
     tgtb->setValues(toggleVal);
-    tgtb->enable(useMouse);
+    //tgtb->enable(useMouse);
     if(hasFont) tgtb->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgtb);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgtb->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgtb->enableSendOSC(oscSender);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -575,13 +609,14 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     checkItemPosSize(posX, posY, width, height);
     tgdd->setDisplay(listLabel, posX, posY, width, height);
     (selectedId != NULL) ? tgdd->setValues(numValues, listValues, selectedId) : tgdd->setValues(numValues, listValues);
-    tgdd->enable(useMouse);
+    //tgdd->enable(useMouse);
     if(hasFont) tgdd->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgdd);
+    dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgdd->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgdd->enableSendOSC(oscSender);
     
     saveControl(DROPDOWN_TYPE, listLabel, tgdd->selectId); // problem???
     
@@ -605,13 +640,13 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     checkItemPosSize(posX, posY, width, height);
     tgdd->setDisplay(listLabel, posX, posY, width, height);
     (selectedId != NULL) ? tgdd->setValues(numValues, listValues, selectedId) : tgdd->setValues(numValues, listValues);
-    tgdd->enable(useMouse);
+    //tgdd->enable(useMouse);
     if(hasFont) tgdd->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgdd->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgdd->enableSendOSC(oscSender);
     
     saveControl(DROPDOWN_TYPE, listLabel, tgdd->selectId); // problem???
     
@@ -627,7 +662,7 @@ ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string *placeHolderText, int pos
     checkItemPosSize(posX, posY, width, height);
     tgti->setDisplay(TEXTINPUT_TYPE + ofToString(numGuiItems), posX, posY, width, height); // inputs don't have display text
     tgti->defaultInput = *placeHolderText;
-    tgti->enable(useMouse);
+    //tgti->enable(useMouse);
     if(hasFont) tgti->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgti);
@@ -643,10 +678,10 @@ ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string *placeHolderText, int pos
 }
 
 
-ofxTouchGUITimeGraph* ofxTouchGUI::addTimeGraph(string graphLabel, int maxValues, int posX, int posY, int width, int height) {
+ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues, int posX, int posY, int width, int height) {
     
-    ofxTouchGUITimeGraph* tgtg = new ofxTouchGUITimeGraph();
-    tgtg->type = TIMEGRAPH_TYPE;
+    ofxTouchGUIDataGraph* tgtg = new ofxTouchGUIDataGraph();
+    tgtg->type = DATAGRAPH_TYPE;
     checkItemPosSize(posX, posY, width, height);
     tgtg->setDisplay(graphLabel, posX, posY, width, height);    
     tgtg->disable(); // disable mouse, touch
@@ -656,7 +691,7 @@ ofxTouchGUITimeGraph* ofxTouchGUI::addTimeGraph(string graphLabel, int maxValues
     guiItems.push_back(tgtg);
     numGuiItems = guiItems.size();
     
-    if(oscEnabled) tgtg->enableSendOSC(oscSender);
+    //if(oscSendEnabled) tgtg->enableSendOSC(oscSender);
    
     return tgtg; 
 }
@@ -721,6 +756,17 @@ ofxTouchGUIBase* ofxTouchGUI::getItemById(string itemId) {
             return guiItems[i];
         }
     } 
+    
+    return NULL;
+}
+
+ofxTouchGUIBase* ofxTouchGUI::getItemByOSCAddress(string oscAddress) {
+    
+    for(int i = 0; i < numGuiItems; i++) {
+        if(oscAddress == guiItems[i]->fullOscAddress) {
+            return guiItems[i];
+        }
+    }
     
     return NULL;
 }
@@ -875,13 +921,13 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
 void ofxTouchGUI::setupSendOSC(string host, int port) {
     
     // setup osc host + port after settings have loaded
-    if(!oscEnabled) {
+    if(!oscSendEnabled) {
         oscSender = new ofxOscSender();
         oscSender->setup( host, port );
         for(int i = 0; i < numGuiItems; i++) {
             guiItems[i]->enableSendOSC(oscSender);
         } 
-        oscEnabled = true;
+        oscSendEnabled = true;
     } else {
         oscSender->setup( host, port );
     }
@@ -889,8 +935,8 @@ void ofxTouchGUI::setupSendOSC(string host, int port) {
 }
 
 void ofxTouchGUI::disableSendOSC() {
-    if(oscEnabled) {
-        oscEnabled = false;
+    if(oscSendEnabled) {
+        oscSendEnabled = false;
         delete oscSender;
     }
     
@@ -900,7 +946,7 @@ void ofxTouchGUI::disableSendOSC() {
 // generic osc message sending
 void ofxTouchGUI::sendOSC(string address, float val) {
     
-    if(oscEnabled) {
+    if(oscSendEnabled) {
         msg.clear();
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addFloatArg(val);
@@ -910,11 +956,161 @@ void ofxTouchGUI::sendOSC(string address, float val) {
 
 void ofxTouchGUI::sendOSC(string address, int val) {
     
-    if(oscEnabled) {
+    if(oscSendEnabled) {
         msg.clear();
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addIntArg(val);
         oscSender->sendMessage( msg );
+    }
+}
+
+void ofxTouchGUI::setupReceiveOSC(int port) {    
+    
+    // setup osc host + port after settings have loaded
+    if(!oscReceiveEnabled) {
+        
+        oscReceiver = new ofxOscReceiver();
+        oscReceiver->setup( port );
+        /*for(int i = 0; i < numGuiItems; i++) {
+         guiItems[i]->enableSendOSC(oscSender);
+         }*/
+        oscReceiveEnabled = true;
+        
+    } else {
+        oscReceiver->setup( port );
+    }
+}
+
+void ofxTouchGUI::checkOSCReceiver() {
+    
+	while(oscReceiver->hasWaitingMessages()){
+		ofxOscMessage m;
+		oscReceiver->getNextMessage(&m);
+        
+        ofxTouchGUIBase* item = getItemByOSCAddress(m.getAddress());
+        if(item != NULL) {            
+            for(int i = 0; i < m.getNumArgs(); i++){
+                ofxOscArgType type = m.getArgType(0);
+                if(item->type == SLIDER_TYPE) {
+                    ofxTouchGUISlider* itemSlider = (ofxTouchGUISlider*) item;
+                    if(type == OFXOSC_TYPE_INT32) {                        
+                        *itemSlider->intVal = m.getArgAsInt32(i);
+                    } else if(type == OFXOSC_TYPE_FLOAT) {
+                        *itemSlider->val = m.getArgAsFloat(i);
+                    }
+                } else if(item->type == BUTTON_TYPE) {
+                    ofxTouchGUIButton* itemButton = (ofxTouchGUIButton*) item;
+                    itemButton->doButtonAction(false);
+                } else if(item->type == TOGGLE_TYPE) {
+                    ofxTouchGUIToggleButton* itemToggle = (ofxTouchGUIToggleButton*) item;
+                    *itemToggle->toggleVal = m.getArgAsInt32(i);
+                } else if(item->type == DROPDOWN_TYPE) {
+                    ofxTouchGUIDropDown* itemDropdown = (ofxTouchGUIDropDown*) item;
+                    itemDropdown->doSelectAction(m.getArgAsInt32(i),false);
+                }
+            }
+        } else {
+            ofLogVerbose() << "No matching GUI item for " << m.getAddress();
+        }
+    }
+}
+
+
+// MOUSE/TOUCH
+//--------------------------------------------------------------
+void ofxTouchGUI::enableTouch(){
+    disableMouse();
+    useMouse = false;
+    
+    // register touch events
+    ofRegisterTouchEvents(this);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::disableTouch(){    
+    ofUnregisterTouchEvents(this);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::enableMouse(){
+    disableTouch();
+    useMouse = true;
+    
+    // register mouse events
+    ofRegisterMouseEvents(this);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::disableMouse(){    
+    ofUnregisterMouseEvents(this);
+}
+
+
+// MOUSE EVENTS
+//--------------------------------------------------------------
+void ofxTouchGUI::mouseMoved(ofMouseEventArgs& args){    
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::mouseDragged(ofMouseEventArgs& args){    
+    onMoved(args.x, args.y);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::mousePressed(ofMouseEventArgs& args){    
+    onDown(args.x, args.y);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::mouseReleased(ofMouseEventArgs& args){    
+    onUp(args.x, args.y);
+}
+
+// TOUCH
+//--------------------------------------------------------------
+void ofxTouchGUI::touchDown(ofTouchEventArgs &touch){    
+    onDown(touch.x, touch.y);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::touchMoved(ofTouchEventArgs &touch){    
+    onMoved(touch.x, touch.y);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::touchUp(ofTouchEventArgs &touch){    
+    onUp(touch.x, touch.y);
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::touchDoubleTap(ofTouchEventArgs &touch){    
+}
+
+//--------------------------------------------------------------
+void ofxTouchGUI::touchCancelled(ofTouchEventArgs& args){    
+}
+
+// TOUCH/MOUSE BINDED
+// can only be touching 1 gui item at a time.
+//--------------------------------------------------------------
+void ofxTouchGUI::onMoved(float x, float y){
+    
+    for(int i = 0; i < numGuiItems; i++) {
+        if(guiItems[i]->onMoved(x, y)) return;
+    }
+}
+
+void ofxTouchGUI::onDown(float x, float y){
+    
+    for(int i = 0; i < numGuiItems; i++) {
+        if(guiItems[i]->onDown(x, y)) return;
+    }
+}
+
+void ofxTouchGUI::onUp(float x, float y){
+    
+    for(int i = 0; i < numGuiItems; i++) {
+        if(guiItems[i]->onUp(x, y)) return;
     }
 }
 

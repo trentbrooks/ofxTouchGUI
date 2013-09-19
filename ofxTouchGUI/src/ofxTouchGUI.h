@@ -8,7 +8,7 @@
 #include "ofxTouchGUIToggleButton.h"
 #include "ofxTouchGUIDropDown.h"
 #include "ofxTouchGUITextInput.h"
-#include "ofxTouchGUITimeGraph.h"
+#include "ofxTouchGUIDataGraph.h"
 #include "ofxXmlSettings.h"
 #include "ofxOsc.h"
 
@@ -44,7 +44,7 @@
  resetBtn->setActiveClrs(ofColor tl, ofColor tr, ofColor bl, ofColor br);
  resetBtn->loadImageStates("up.png", "down.png");
  ofAddListener(resetBtn->onChangedEvent, this, &ofApp::onGuiChanged);
- ofxTouchGUITimeGraph *graph= settings.addTimeGraph("Graph", 500);
+ ofxTouchGUIDataGraph *graph= settings.addTimeGraph("Graph", 500);
  graph->setCustomRange(0, ofGetWidth());
  graph->insertValue(mouseX); // add values manually
  */
@@ -60,7 +60,7 @@
 #define TEXT_TYPE "text"
 #define DROPDOWN_TYPE "dropdown"
 #define TEXTINPUT_TYPE "input"
-#define TIMEGRAPH_TYPE "timegraph"
+#define DATAGRAPH_TYPE "datagraph"
 #define CONST_TYPE "constant"
 #define VAR_TYPE "variable"
 
@@ -111,7 +111,10 @@ public:
     void loadFont(string fontPath, int fontSize, int fontSizeLarge, bool antialiased = true);
     void loadFonts(string fontPathSmall, string fontPathLarge, int fontSizeSmall, int fontSizeLarge, bool antialisedSmall = true, bool antialisedLarge = true);
     
-
+    // window positioning (affects touch/mouse positions of all gui items)
+    void setWindowPosition(int posX, int posY);
+    
+    
     // default positioning/sizing for individual items
     void moveTo(int posX, int posY); // all subsequently added items will be added from this position
     void setItemSize(int width, int height); // all subsequently added items will have this width/height
@@ -124,14 +127,15 @@ public:
     void nextColumn();
     //void previousColumn(); // not implemented
     
-    // drawing
+    // drawing/update
+    void update();
     void draw();
     void show();
     void hide();
     void toggleDisplay();
     bool isHidden(); 
-    void setAutoDraw(bool allowAutoDraw = true); // automatically calls draw()
-    
+    void setAutoDraw(bool allowAutoDraw = true, bool allowAutoUpdate = true); // automatically calls draw()
+
         
     // slider
     ofxTouchGUISlider* addSlider(string sliderLabel, float *val, float min, float max, int posX=-1, int posY=-1, int width=-1, int height=-1);
@@ -162,8 +166,8 @@ public:
     // text input (ios only)
     ofxTouchGUITextInput* addTextInput(string *placeHolderText, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
-    // time series graph: not interactive, but good for viewing data over time
-    ofxTouchGUITimeGraph* addTimeGraph(string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    // time/data series graph: not interactive, but good for viewing data over time
+    ofxTouchGUIDataGraph* addDataGraph(string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
     
     // vars & consts
@@ -204,7 +208,9 @@ public:
     NameValuePair* getVarByLabel(string textLabel);
     ofxTouchGUIBase* getItemByLabelAndType(string textLabel, string itemType);
     ofxTouchGUIBase* getItemById(string itemId);
+    ofxTouchGUIBase* getItemByOSCAddress(string oscAddress);
     vector <ofxTouchGUIBase*> guiItems;
+    vector <ofxTouchGUIDropDown*> dropDownGuiItems;
     
     
     // osc settings - send
@@ -212,6 +218,31 @@ public:
     void disableSendOSC();
     void sendOSC(string address, float val); // send any generic message- must pass address + value
     void sendOSC(string address, int val);
+    
+    // osc receive
+    void setupReceiveOSC(int port);
+    void disableReceiveOSC();
+    
+    
+    // mouse/touch events
+    void enableTouch();
+    void disableTouch();
+    void enableMouse();
+    void disableMouse();
+    void mouseMoved(ofMouseEventArgs& args );
+    void mouseDragged(ofMouseEventArgs& args);
+    void mousePressed(ofMouseEventArgs& args);
+    void mouseReleased(ofMouseEventArgs& args);
+    void touchDown(ofTouchEventArgs &touch);
+	void touchMoved(ofTouchEventArgs &touch);
+	void touchUp(ofTouchEventArgs &touch);
+	void touchDoubleTap(ofTouchEventArgs &touch);
+	void touchCancelled(ofTouchEventArgs &touch);
+    
+    // touch/mouse binded
+    virtual void onMoved(float x, float y);
+    virtual void onDown(float x, float y);
+    virtual void onUp(float x, float y);
     
 protected:
     
@@ -231,6 +262,10 @@ protected:
     int fontSizeLarge;
     bool hasFont;
     
+    // window positioning
+    int windowPositionX;
+    int windowPositionY;
+    
     // default positioning/sizing for individual items
     int defaultItemPosX;
     int defaultItemPosY;
@@ -248,7 +283,8 @@ protected:
     // drawing
     bool hidden;
     void aDraw(ofEventArgs &e);
-    bool isAutoDrawing;
+    void aUpdate(ofEventArgs &e);
+    bool isAutoDrawing, isAutoUpdating;
     
     // vars/consts
     int constantCount;
@@ -265,8 +301,11 @@ protected:
     
     // osc
     ofxOscSender* oscSender;
+    ofxOscReceiver* oscReceiver;
     ofxOscMessage msg;
-    bool oscEnabled;    
+    bool oscSendEnabled;
+    bool oscReceiveEnabled;
+    void checkOSCReceiver();
     
 };
 

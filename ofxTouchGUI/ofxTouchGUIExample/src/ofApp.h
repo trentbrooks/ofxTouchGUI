@@ -31,5 +31,5 @@ class ofApp : public ofBaseApp{
     int selectListIndex;
     int mouseX, mouseY;
     
-    ofxTouchGUITimeGraph *graph;
+    ofxTouchGUIDataGraph *graph;
 };

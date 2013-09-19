@@ -1,10 +1,8 @@
 #include "ofxTouchGUIBase.h"
 #include "ofMain.h"
 
-// one item can be on top - must be in cpp file?
-//static bool ignoreExternalEvents = false;
-bool ofxTouchGUIBase::ignoreExternalEvents = false;  
-string ofxTouchGUIBase::oscAddress = "/tg"; // all osc messages will start with "/tg" by default.
+
+//string ofxTouchGUIBase::oscAddress = "/tg"; // all osc messages will start with "/tg" by default.
 
 ofxTouchGUIBase::ofxTouchGUIBase(){
 
@@ -25,6 +23,7 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     isPressed = false;
     //ofxTouchGUIBase::ignoreExternalEvents = false; // static now
     hidden = false;
+    isInteractive = false;
     
     //setup opengl
     colorsArr = new float[16]; // rgba * 4 corners : background rect
@@ -313,31 +312,33 @@ void ofxTouchGUIBase::mouseReleased(ofMouseEventArgs& args){
 
 // TOUCH/MOUSE BINDED - to be overriden for different ui elements
 //--------------------------------------------------------------
-void ofxTouchGUIBase::onMoved(float x, float y){
+bool ofxTouchGUIBase::onMoved(float x, float y){
    
+    if(!isInteractive || hidden) return false;
+    return false;
 }
 
-void ofxTouchGUIBase::onDown(float x, float y){
+bool ofxTouchGUIBase::onDown(float x, float y){
     
-    // when itemActive is true, then this ui item has focus (mainly for drawing on top of other ui items)
-    // when static prop ignoreExternalEvents is true, ignore all touch/mouse events
-    // if itemActive is false (not on top) and the global static prop ignoreExternalEvents is true, ignore everything
-    if(ignoreExternalEvents && !itemActive) return;
-    if(hidden) return;
+    if(!isInteractive || hidden) return false;
     
     if(hitTest(x,y)) {
         isPressed = true;
+        return true;
     }
+    return false;
 }
 
-void ofxTouchGUIBase::onUp(float x, float y){
+bool ofxTouchGUIBase::onUp(float x, float y){
     
-    // when this or another item itemActive (eg. dropdown), ignore all touch/mouse events
-    //if(ignoreExternalEvents && !itemActive) return;
+    if(!isInteractive || hidden) return false;
     
     if(isPressed) {
         isPressed = false;
+        return true;
     }
+    
+    return false;
 }
 
 
@@ -499,17 +500,18 @@ void ofxTouchGUIBase::enableSendOSC(ofxOscSender * oscSender) {
     // setup osc host + port after settings have loaded
     if(!oscEnabled) {
         
+        // formats the gui label into an osc valid address
+        // eg. "SLIDER X" becomes "/sliderx"
         string oscLabel = "";
-        for(int i = 0; i < label.length(); i++){
-            
+        for(int i = 0; i < label.length(); i++){            
             // only letters or numbers are valid...
             if(isCharacter(label[i]) || isNumber(label[i])) oscLabel += label[i];
         }
-        fullOscAddress = oscAddress + "/"+ ofToLower(oscLabel); // + type + "/" 
+        fullOscAddress = "/"+ ofToLower(oscLabel); // + type + "/" oscAddress +
+        ofLogVerbose() << "OSC address for " + ofToString(label) + " = " + fullOscAddress;
         oscSenderRef = oscSender;
         oscEnabled = true;
     }
-
 }
 
 void ofxTouchGUIBase::disableSendOSC() {
@@ -520,7 +522,7 @@ void ofxTouchGUIBase::disableSendOSC() {
     }
 }
 
-void ofxTouchGUIBase::setOscAddress(string address) {
+void ofxTouchGUIBase::setOSCAddress(string address) {
     fullOscAddress = address;
 }
 

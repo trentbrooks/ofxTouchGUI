@@ -21,7 +21,8 @@ void ofApp::setup(){
     // settings
     settings.loadSettings("settings.xml", false, true); // savefile, default font, use mouse
     settings.loadFonts("VAGRoundedStd-Light.otf", "VAGRoundedStd-Light.otf", 18, 36, true); // optional
-    settings.setupSendOSC("127.0.0.1", 4444); // optional
+    settings.setupSendOSC("10.0.1.131", 5556); // optional (send to desktop machine running ofxTouchGUIExample)
+    settings.setupReceiveOSC(5555); // optional (receives from desktop machine running ofxTouchGUIExample)
     settings.setItemSize(ofGetWidth()-40, 60);
     settings.setItemSpacer(8);
     
@@ -58,7 +59,7 @@ void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    settings.update();
 }
 
 //--------------------------------------------------------------

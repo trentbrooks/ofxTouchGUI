@@ -6,7 +6,9 @@ It's kind of like Memo's ofxSimpleGuiToo and the Processing library controlP5, b
 
 Includes slider, dropdown list, button/image button, toggle button, text/title fields, input text (ios only atm), and general variables. All items can be custom positioned/sized on creation. Colours, fonts, etc can be changed. Settings can be saved to XML. Values can be sent via OSC.
 
-Ubuntu and windows user's will need to rename the file's from .mm to .cpp.
+Running the ofxTouchGUIExampleIOS on iPhone and the ofxTouchGUIExample on desktop simultaneously will result in a synced GUI. Just enter the correct ip address in each project.
+
+Ubuntu and windows user's will need to rename the file's from .mm to .cpp, or just use the project generator to when creating project with ofxTouchGUI.
 
 ## Sample usage ##
 	// setup

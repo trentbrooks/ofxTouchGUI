@@ -5,12 +5,12 @@
 #include "ofxTouchGUIBase.h"
 
 
-class ofxTouchGUITimeGraph : public ofxTouchGUIBase {
+class ofxTouchGUIDataGraph : public ofxTouchGUIBase {
 	
 public:
     
-    ofxTouchGUITimeGraph();
-	~ofxTouchGUITimeGraph();
+    ofxTouchGUIDataGraph();
+	~ofxTouchGUIDataGraph();
     
     void reset();
     

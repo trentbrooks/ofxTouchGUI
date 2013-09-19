@@ -58,9 +58,9 @@ public:
     void mouseReleased(ofMouseEventArgs& args);
     
     // touch/mouse binded
-    virtual void onMoved(float x, float y);
-    virtual void onDown(float x, float y);
-    virtual void onUp(float x, float y);    
+    virtual bool onMoved(float x, float y);
+    virtual bool onDown(float x, float y);
+    virtual bool onUp(float x, float y);
     
     // events / listeners - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method
     ofEvent<string> onChangedEvent;
@@ -94,15 +94,15 @@ public:
     // OSC
     void enableSendOSC(ofxOscSender * oscSender);
     void disableSendOSC();
-    void setOscAddress(string address);
+    void setOSCAddress(string address);
     void sendOSC(int val);
     void sendOSC(float val);
     void sendOSC(string val);
+    string fullOscAddress;
 
 protected:
     
     // GLOBAL STATIC PROPERTY!
-    static bool ignoreExternalEvents; // only 1 touch at a time to avoid overlapping button presses.
     static string oscAddress;
     
     // display
@@ -123,6 +123,7 @@ protected:
     bool isTouchEnabled;
     bool isMouseEnabled;    
     bool isPressed;
+    bool isInteractive;
     
     //interaction
     bool hidden;
@@ -154,7 +155,6 @@ protected:
     ofxOscSender * oscSenderRef;
     ofxOscMessage msg;
     bool oscEnabled;
-    string fullOscAddress;
     bool isCharacter(const char Character);
     bool isNumber(const char Character);
 };

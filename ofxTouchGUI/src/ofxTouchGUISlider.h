@@ -27,8 +27,8 @@ public:
     // touch events
     //virtual void touchMoved(float x, float y);
     //virtual void onDown(float x, float y);
-    virtual void onMoved(float x, float y);
-    virtual void onUp(float x, float y);
+    virtual bool onMoved(float x, float y);
+    virtual bool onUp(float x, float y);
     //virtual bool overRect(float x, float y);
 
     
