@@ -122,6 +122,22 @@ public:
     void setItemHeight(int height);
     void setItemSpacer(int space);
     void setColumnSpacer(int space);
+    ofVec2f getItemPosition(); // gets last items position
+    int getItemWidth();
+    int getItemHeight();
+    //int getItemPosY();
+    /*int defaultItemPosX;
+    int defaultItemPosY;
+    int defaultColumn;
+    int defaultColumnSpacer;
+    int defaultItemWidth;
+    int defaultItemHeight;
+    int defaultSpacer;
+    void checkItemPosSize(int& posX, int& posY, int& width, int& height);
+    int lastItemPosX;
+    int lastItemPosY;
+    int lastItemWidth;
+    int lastItemHeight;*/
     
     // when auto positioning you can call this to change columns before adding another item
     void nextColumn();
@@ -130,6 +146,7 @@ public:
     // drawing/update
     void update();
     void draw();
+    void drawText(string text, int posX, int posY); // draw any generic string
     void show();
     void hide();
     void toggleDisplay();

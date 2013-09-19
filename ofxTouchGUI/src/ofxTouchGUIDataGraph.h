@@ -18,7 +18,8 @@ public:
     void setCustomRange(float min, float max); 
     void setMaximumValues(int count); // size of chart entries    
     deque<float> savedValues;
-    void insertValue(float val);    
+    void insertValue(float val);
+    float currentValue;
     
     // gl    
     void setFilled(bool fill);
@@ -32,7 +33,6 @@ protected:
     float min;
     float max;
     bool isCustomRangeSet; // off by default, graph is scaled dynamically
-    float currentValue;
     int maxValuesToSave;
     
     //gl

@@ -61,6 +61,7 @@ public:
     virtual bool onMoved(float x, float y);
     virtual bool onDown(float x, float y);
     virtual bool onUp(float x, float y);
+    bool getIsPressed();
     
     // events / listeners - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method
     ofEvent<string> onChangedEvent;

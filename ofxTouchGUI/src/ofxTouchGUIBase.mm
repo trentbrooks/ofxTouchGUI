@@ -341,6 +341,10 @@ bool ofxTouchGUIBase::onUp(float x, float y){
     return false;
 }
 
+bool ofxTouchGUIBase::getIsPressed() {
+    return isPressed;
+}
+
 
 bool ofxTouchGUIBase::hitTest(float x, float y) {
 

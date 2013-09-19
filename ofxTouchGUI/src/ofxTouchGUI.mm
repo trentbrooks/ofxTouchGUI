@@ -184,6 +184,11 @@ void ofxTouchGUI::moveTo(int posX, int posY) {
     }
 }
 
+ofVec2f ofxTouchGUI::getItemPosition() {
+    return ofVec2f(lastItemPosX, lastItemPosY);
+}
+
+
 // auto gap between items
 void ofxTouchGUI::setItemSpacer(int space) {
     defaultSpacer = space;
@@ -208,10 +213,18 @@ void ofxTouchGUI::setItemWidth(int width) {
     defaultItemWidth = width;
 }
 
+int ofxTouchGUI::getItemWidth() {
+    return defaultItemWidth;
+}
+
 // all subsequently added items will have this /height
 void ofxTouchGUI::setItemHeight(int height) {
     //lastItemHeight = defaultItemHeight = height;
     defaultItemHeight = height;
+}
+
+int ofxTouchGUI::getItemHeight() {
+    return defaultItemHeight;
 }
 
 // shifts the cursor (moveto) position over
@@ -295,6 +308,11 @@ void ofxTouchGUI::draw(){
         ofPopMatrix();         
     }
     
+}
+
+void ofxTouchGUI::drawText(string text, int posX, int posY) {
+    
+    guiFont.drawString(text, posX, posY);
 }
 
 void ofxTouchGUI::setAutoDraw(bool allowAutoDraw, bool allowAutoUpdate){
@@ -925,7 +943,7 @@ void ofxTouchGUI::setupSendOSC(string host, int port) {
         oscSender = new ofxOscSender();
         oscSender->setup( host, port );
         for(int i = 0; i < numGuiItems; i++) {
-            guiItems[i]->enableSendOSC(oscSender);
+            if(guiItems[i]->type == SLIDER_TYPE || guiItems[i]->type == BUTTON_TYPE || guiItems[i]->type == TOGGLE_TYPE || guiItems[i]->type == DROPDOWN_TYPE) guiItems[i]->enableSendOSC(oscSender);
         } 
         oscSendEnabled = true;
     } else {
