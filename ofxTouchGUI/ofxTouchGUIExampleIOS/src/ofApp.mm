@@ -19,15 +19,16 @@ void ofApp::setup(){
     
     
     // settings
-    settings.loadSettings("settings.xml", false, true); // savefile, default font, use mouse
-    settings.loadFonts("VAGRoundedStd-Light.otf", "VAGRoundedStd-Light.otf", 18, 36, true); // optional
+    settings.loadSettings("settings.xml", false, false); // savefile, default font, use mouse (true for mouse, false for multitouch)
+    settings.loadFonts("VAGRoundedStd-Light.otf", "VAGRoundedStd-Light.otf", 20, 40); // optional
     settings.setupSendOSC("10.0.1.131", 5556); // optional (send to desktop machine running ofxTouchGUIExample)
     settings.setupReceiveOSC(5555); // optional (receives from desktop machine running ofxTouchGUIExample)
-    settings.setItemSize(ofGetWidth()-40, 60);
-    settings.setItemSpacer(8);
+    settings.setItemSize(ofGetWidth()-40, 70);
+    settings.setItemSpacer(10);
+    settings.setScrollable(true); // optional - new columns will not be auto created, all items add to a single column instead.
     
     // add controls
-    settings.addTitleText("ofxTouchGUI");
+    settings.addTitleText("ofxTouchGUI " + ofToString(OFXTOUCHGUI_VERSION));
     settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
     settings.addSlider("SLIDER Y", &sliderValY, 0, 100);
     settings.addDropDown("DROPDOWN LIST A", 5, ddOptions);
@@ -37,8 +38,7 @@ void ofApp::setup(){
     settings.addText(description);
     settings.addButton("SAVE");
     settings.addButton("RESET");
-    
-    
+
     // adds a listener to all gui items, pointing to onGuiChanged();
     settings.addEventListenerAllItems(this);
 }

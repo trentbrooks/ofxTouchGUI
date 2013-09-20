@@ -109,11 +109,11 @@
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUI.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIBase.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIButton.mm" />
+		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDataGraph.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUISlider.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIText.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITextInput.mm" />
-		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITimeGraph.mm" />
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIToggleButton.mm" />
 		<ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
 		<ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
@@ -145,11 +145,11 @@
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUI.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIBase.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDataGraph.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUISlider.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIText.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITextInput.h" />
-		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITimeGraph.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIToggleButton.h" />
 		<ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
 		<ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />

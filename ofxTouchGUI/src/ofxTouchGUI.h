@@ -15,11 +15,13 @@
 
 
 /*
- 
+ Usage:
+ // .h
  ofxTouchGUI settings;
  void onGuiChanged(const void* sender, string &buttonLabel);
  
- settings.loadSettings("settings.xml", true, true); // savefile, default font, use mouse
+ //.cpp
+ settings.loadSettings("settings.xml", true, true); // savefile, default font, use mouse (true for mouse, false for multitouch/ios).
  settings.addTitleText("ofxTouchGUI");
  settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
  settings.addDropDown("DROPDOWN LIST B", 4, &selectListIndex, ddOptions);
@@ -28,30 +30,33 @@
  settings.addButton("SAVE");
  settings.addEventListenerAllItems(this);
  
- // Optional settings: different fonts, background image/colour, auto draw, osc sending
- settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14, true);
+ // Optional settings: different fonts, background image/colour, auto draw, osc sending.
+ settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14);
  settings.loadBackgroundImage("guiBg.png");
  settings.setBackgroundColor(ofColor(255,0,255));
  settings.setAutoDraw();
- settings.setupSendOSC("127.0.0.1", 4444);
+ settings.setupSendOSC("127.0.0.1", 5555);
+ settings.setupReceiveOSC(5556);
+ settings.setWindowPosition(ofGetWidth()- 250, 0); 
+ settings.setScrollable(true); // good for ios, new columns will not be auto created, all items add to single column.
  
  // individual item options
  settings.setVariable("host", &hostVar);
- settings.setConstant("port", &portConst);
+ settings.setConstant("port", &portConst); // once set, can only be changed via xml.
  ofxTouchGUIButton* resetBtn = settings.addButton("RESET");
  resetBtn->setTextClr(ofColor(255,255,0));
  resetBtn->setBackgroundClrs(ofColor tl, ofColor tr, ofColor bl, ofColor br);
  resetBtn->setActiveClrs(ofColor tl, ofColor tr, ofColor bl, ofColor br);
  resetBtn->loadImageStates("up.png", "down.png");
- ofAddListener(resetBtn->onChangedEvent, this, &ofApp::onGuiChanged);
+ ofAddListener(resetBtn->onChangedEvent, this, &ofApp::onGuiChanged); // not required if settings.addEventListenerAllItems(this) called.
  ofxTouchGUIDataGraph *graph= settings.addTimeGraph("Graph", 500);
  graph->setCustomRange(0, ofGetWidth());
- graph->insertValue(mouseX); // add values manually
+ graph->insertValue(mouseX); // add values manually eg. onMouseMoved()
  */
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.21
+#define OFXTOUCHGUI_VERSION 0.22
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -101,7 +106,7 @@ public:
 	~ofxTouchGUI();
     
     // setup
-    void loadSettings(string saveToFile = "settings.xml", bool loadDefaultFont = false, bool useMouse = false);
+    void loadSettings(string saveToFile = "settings.xml", bool loadDefaultFont = true, bool useMouse = true);
     
     // background    
 	void loadBackgroundImage(string imgPath);
@@ -142,6 +147,13 @@ public:
     // when auto positioning you can call this to change columns before adding another item
     void nextColumn();
     //void previousColumn(); // not implemented
+    
+    // TODO:scrollable window options
+    // Y scrolling only - no limits
+    // when scrolling is enabled, adding items with auto positioning will not create new columns
+    // ignore scrollwidth and scrollheight for auto width + height
+    void setScrollable(bool scrollable, int scrollWidth=-1, int scrollHeight=-1);
+    
     
     // drawing/update
     void update();
@@ -239,7 +251,7 @@ public:
     // osc receive
     void setupReceiveOSC(int port);
     void disableReceiveOSC();
-    
+
     
     // mouse/touch events
     void enableTouch();
@@ -280,8 +292,17 @@ protected:
     bool hasFont;
     
     // window positioning
-    int windowPositionX;
-    int windowPositionY;
+    ofVec2f windowPosition;
+
+    // scrolling
+    bool scrollEnabled;
+    bool isScrolling;
+    float startScrollY;
+    int scrollWidth, scrollHeight;
+    ofVec2f getFurthestItemPosition();
+    bool isFirstUpdate;
+    ofVec2f furthestItem;
+    bool hitTest(float x, float y);
     
     // default positioning/sizing for individual items
     int defaultItemPosX;

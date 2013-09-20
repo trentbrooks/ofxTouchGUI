@@ -13,10 +13,12 @@ ofxTouchGUI::ofxTouchGUI(){
     isAutoDrawing = isAutoUpdating = false;
     hidden = false;
     oscSendEnabled = oscReceiveEnabled = false;
+    scrollEnabled = isScrolling = false;
+    bgWidth = bgHeight = scrollWidth = scrollHeight = 0;
+    isFirstUpdate = true;
+    startScrollY = 0;
     constantCount= 0;
     variableCount= 0;
-    windowPositionX = 0;
-    windowPositionY = 0;
     defaultItemPosX = 20;
     defaultItemPosY = 20;
     defaultColumn = 1;
@@ -28,7 +30,6 @@ ofxTouchGUI::ofxTouchGUI(){
     lastItemWidth = defaultItemWidth;
     lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
-    defaultSaveToFile = "tg_settings.xml";
     
     moveTo(defaultItemPosX, defaultItemPosY);
     setItemSize(defaultItemWidth, defaultItemHeight);
@@ -71,12 +72,10 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     // load xml from public itunes directory
     if( XML.loadFile(this->saveToFile) ){
         settingsLoaded = true;
-    } else if(XML.loadFile(defaultSaveToFile)) {
-        settingsLoaded = true;
-        //this->saveToFile = defaultSaveToFile;
     } else {
-        ofLog() << "TouchGUI: NO XML file to load. Settings will be saved on the first draw.";
-        //saveSettings();
+        ofLog() << "TouchGUI: NO XML file to load. Creating new " << saveToFile;
+        saveSettings();
+        settingsLoaded = true;
     }
     
     // load the default font
@@ -136,8 +135,15 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
 
 // window position
 void ofxTouchGUI::setWindowPosition(int posX, int posY) {
-    windowPositionX = posX;
-    windowPositionY = posY;
+    windowPosition.x = posX;
+    windowPosition.y = posY;
+}
+
+// scrolling options
+void ofxTouchGUI::setScrollable(bool scrollable, int scrollWidth, int scrollHeight) {
+    scrollEnabled = scrollable;
+    this->scrollWidth = scrollWidth;
+    this->scrollHeight = scrollHeight;
 }
 
 // DEFAULT SIZE/POSITIONING
@@ -149,7 +155,7 @@ void ofxTouchGUI::checkItemPosSize(int& posX, int& posY, int& width, int& height
     if(posY == -1) {
         // move to last items position + last items height
         posY = (numGuiItems == 0) ? defaultItemPosY : lastItemPosY + lastItemHeight + defaultSpacer;  
-        if(posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
+        if(!scrollEnabled && posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
             
             // if no more room- move to next column
             posY = defaultItemPosY; // align with top item
@@ -242,33 +248,41 @@ void ofxTouchGUI::nextColumn() {
     lastItemPosY = defaultItemPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
 }*/
 
+ofVec2f ofxTouchGUI::getFurthestItemPosition() {
+
+    ofVec2f furthestItem;
+    for(int i = 0; i < numGuiItems; i++) {
+        float itemY = guiItems[i]->getItemPosY() + guiItems[i]->getItemHeight();
+        float itemX = guiItems[i]->getItemPosX() + guiItems[i]->getItemWidth();
+        if(itemY > furthestItem.y) furthestItem.y = itemY + defaultColumnSpacer;
+        if(itemX > furthestItem.x) furthestItem.x = itemX + defaultColumnSpacer;
+    }
+    
+    return furthestItem;
+}
+
+
 // UPDATE
 //--------------------------------------------------------------
 void ofxTouchGUI::update(){
     
-    // All items should have been added before first update.
-    // If this is the first time load, need to save all to the settings.xml.
-    if(!settingsLoaded) {
-        ofLog() << "TouchGUI: first time saving settings!";
-        saveSettings(); // save the settings once only, when file exists no need to save.
-        settingsLoaded = true;
-    }
-    
-    // if we have a background colour with auto width/height (-1,-1)
-    if(hasBackgroundColor) {        
-        if(bgWidth == -1 && bgHeight == -1) {
-            int lowestItemY = 0;
-            int furthestItemX = 0;
-            for(int i = 0; i < numGuiItems; i++) {
-                float itemY = guiItems[i]->getItemPosY() + guiItems[i]->getItemHeight();
-                float itemX = guiItems[i]->getItemPosX() + guiItems[i]->getItemWidth();
-                if(itemY > lowestItemY) lowestItemY = itemY + defaultColumnSpacer;
-                if(itemX > furthestItemX) furthestItemX = itemX + defaultColumnSpacer;
+    if(isFirstUpdate) {
+        furthestItem = getFurthestItemPosition(); // used for scroller or background color
+        // if we have a scroller with auto width/height (-1,-1) resize to width + height of window
+        if(scrollEnabled) {
+            if(scrollWidth == -1 && scrollHeight == -1) {
+                scrollWidth = furthestItem.x;
+                scrollHeight = furthestItem.y;
             }
-            
-            bgWidth = furthestItemX;
-            bgHeight = lowestItemY;
         }
+        // if we have a background colour with auto width/height (-1,-1) resize to width + height of window
+        if(hasBackgroundColor) {
+            if(bgWidth == -1 && bgHeight == -1) {
+                bgWidth = furthestItem.x;
+                bgHeight = furthestItem.y;
+            }
+        }
+        isFirstUpdate = false;
     }
     
     // osc receiver
@@ -283,7 +297,7 @@ void ofxTouchGUI::draw(){
         
         ofPushMatrix();
         ofPushStyle();
-        ofTranslate(windowPositionX, windowPositionY);
+        ofTranslate(windowPosition);
         ofSetColor(255);
         
         if(hasBackgroundColor) {
@@ -702,7 +716,7 @@ ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues
     tgtg->type = DATAGRAPH_TYPE;
     checkItemPosSize(posX, posY, width, height);
     tgtg->setDisplay(graphLabel, posX, posY, width, height);    
-    tgtg->disable(); // disable mouse, touch
+    //tgtg->disable(); // disable mouse, touch
     if(hasFont) tgtg->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     tgtg->setMaximumValues(maxValues);
 
@@ -915,7 +929,6 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
     //if control doesn't already exist in the settings file, create it
     if(!isControlSaved) {
         
-        
         // create xml 'control' node
         XML.addTag("control");
         int numControlTags = (numSavedControllers > 0) ? numSavedControllers : 0; 
@@ -928,6 +941,8 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
         //XML.setAttribute("value", "type", "int", 0);    
         XML.popTag();
         
+        // save to xml every new control
+        XML.saveFile( saveToFile );
         return true;
     } 
     
@@ -999,6 +1014,9 @@ void ofxTouchGUI::setupReceiveOSC(int port) {
     }
 }
 
+/*
+ When receiving OSC messages, the values + actions will be fired for the matching gui item. Except... it will not resend back the OSC message by default, otherwise will get stuck in an inifinite OSC send/receive loop.
+ */
 void ofxTouchGUI::checkOSCReceiver() {
     
 	while(oscReceiver->hasWaitingMessages()){
@@ -1006,25 +1024,28 @@ void ofxTouchGUI::checkOSCReceiver() {
 		oscReceiver->getNextMessage(&m);
         
         ofxTouchGUIBase* item = getItemByOSCAddress(m.getAddress());
-        if(item != NULL) {            
+        if(item != NULL) {
+            
+            float sendBackOSC = false; // change this if want to send back osc message to sender.
             for(int i = 0; i < m.getNumArgs(); i++){
                 ofxOscArgType type = m.getArgType(0);
                 if(item->type == SLIDER_TYPE) {
                     ofxTouchGUISlider* itemSlider = (ofxTouchGUISlider*) item;
                     if(type == OFXOSC_TYPE_INT32) {                        
-                        *itemSlider->intVal = m.getArgAsInt32(i);
+                        itemSlider->doSliderIntAction(m.getArgAsInt32(i), sendBackOSC);
                     } else if(type == OFXOSC_TYPE_FLOAT) {
-                        *itemSlider->val = m.getArgAsFloat(i);
+                        itemSlider->doSliderFloatAction(m.getArgAsFloat(i), sendBackOSC);
                     }
                 } else if(item->type == BUTTON_TYPE) {
                     ofxTouchGUIButton* itemButton = (ofxTouchGUIButton*) item;
-                    itemButton->doButtonAction(false);
+                    itemButton->doButtonAction(sendBackOSC);
                 } else if(item->type == TOGGLE_TYPE) {
                     ofxTouchGUIToggleButton* itemToggle = (ofxTouchGUIToggleButton*) item;
-                    *itemToggle->toggleVal = m.getArgAsInt32(i);
+                    //*itemToggle->toggleVal = m.getArgAsInt32(i);
+                    itemToggle->doToggleAction(m.getArgAsInt32(i), sendBackOSC);
                 } else if(item->type == DROPDOWN_TYPE) {
                     ofxTouchGUIDropDown* itemDropdown = (ofxTouchGUIDropDown*) item;
-                    itemDropdown->doSelectAction(m.getArgAsInt32(i),false);
+                    itemDropdown->doSelectAction(m.getArgAsInt32(i),sendBackOSC);
                 }
             }
         } else {
@@ -1070,34 +1091,40 @@ void ofxTouchGUI::mouseMoved(ofMouseEventArgs& args){
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::mouseDragged(ofMouseEventArgs& args){    
-    onMoved(args.x, args.y);
+void ofxTouchGUI::mouseDragged(ofMouseEventArgs& args){
+    // offset all through touches by windowPosition
+    onMoved(args.x , args.y );
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::mousePressed(ofMouseEventArgs& args){    
-    onDown(args.x, args.y);
+void ofxTouchGUI::mousePressed(ofMouseEventArgs& args){
+    // offset all through touches by windowPosition
+    onDown(args.x , args.y );
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::mouseReleased(ofMouseEventArgs& args){    
-    onUp(args.x, args.y);
+void ofxTouchGUI::mouseReleased(ofMouseEventArgs& args){
+    // offset all through touches by windowPosition
+    onUp(args.x , args.y );
 }
 
 // TOUCH
 //--------------------------------------------------------------
-void ofxTouchGUI::touchDown(ofTouchEventArgs &touch){    
-    onDown(touch.x, touch.y);
+void ofxTouchGUI::touchDown(ofTouchEventArgs &touch){
+    // offset all through touches by windowPosition
+    onDown(touch.x , touch.y );
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::touchMoved(ofTouchEventArgs &touch){    
-    onMoved(touch.x, touch.y);
+void ofxTouchGUI::touchMoved(ofTouchEventArgs &touch){
+    // offset all through touches by windowPosition
+    onMoved(touch.x, touch.y );
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::touchUp(ofTouchEventArgs &touch){    
-    onUp(touch.x, touch.y);
+void ofxTouchGUI::touchUp(ofTouchEventArgs &touch){
+    // offset all through touches by windowPosition
+    onUp(touch.x , touch.y );
 }
 
 //--------------------------------------------------------------
@@ -1109,27 +1136,57 @@ void ofxTouchGUI::touchCancelled(ofTouchEventArgs& args){
 }
 
 // TOUCH/MOUSE BINDED
-// can only be touching 1 gui item at a time.
 //--------------------------------------------------------------
 void ofxTouchGUI::onMoved(float x, float y){
     
-    for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onMoved(x, y)) return;
+    if(scrollEnabled) {
+        if(isScrolling) {
+            float maxScrollY = ofGetHeight()-scrollHeight;
+            if(maxScrollY < 0) windowPosition.y = ofClamp(windowPosition.y + (y - startScrollY), maxScrollY, 0);
+            startScrollY = y;
+        }
     }
+    
+    float dx = x - windowPosition.x;
+    float dy = y - windowPosition.y;
+    for(int i = 0; i < numGuiItems; i++) {
+        if(guiItems[i]->onMoved(dx, dy));// return; // nah
+    }    
 }
 
 void ofxTouchGUI::onDown(float x, float y){
     
+    float dx = x - windowPosition.x;
+    float dy = y - windowPosition.y;
     for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onDown(x, y)) return;
+        if(guiItems[i]->onDown(dx, dy)) return;
+    }
+    
+    // cannot start scrolling when touching another interactive gui item
+    if(scrollEnabled) {
+        if(hitTest(x,y)) {
+            isScrolling = true;
+            startScrollY = y;
+        }
     }
 }
 
 void ofxTouchGUI::onUp(float x, float y){
     
-    for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onUp(x, y)) return;
+    if(scrollEnabled) {
+        if(isScrolling) isScrolling = false;
     }
+    
+    float dx = x - windowPosition.x;
+    float dy = y - windowPosition.y;
+    for(int i = 0; i < numGuiItems; i++) {
+        if(guiItems[i]->onUp(dx, dy)) return;
+    }
+}
+
+bool ofxTouchGUI::hitTest(float x, float y) {
+    
+    return x >= windowPosition.x && x <= windowPosition.x + scrollWidth && y >= windowPosition.y && y <= windowPosition.y + scrollHeight;
 }
 
 

@@ -58,6 +58,9 @@
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIButton.mm">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDataGraph.mm">
+			<Filter>addons\ofxTouchGUI\src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.mm">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClCompile>
@@ -68,9 +71,6 @@
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITextInput.mm">
-			<Filter>addons\ofxTouchGUI\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITimeGraph.mm">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIToggleButton.mm">
@@ -212,6 +212,9 @@
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIButton.h">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDataGraph.h">
+			<Filter>addons\ofxTouchGUI\src</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.h">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
@@ -222,9 +225,6 @@
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITextInput.h">
-			<Filter>addons\ofxTouchGUI\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITimeGraph.h">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIToggleButton.h">

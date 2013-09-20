@@ -39,7 +39,7 @@ public:
     
     
     // touch events
-    void enable(bool useMouse=false); // defaults to false = touch events instead of mouse events
+    /*void enable(bool useMouse=false); // defaults to false = touch events instead of mouse events
     void disable();
     void enableTouch();
     void disableTouch();
@@ -55,13 +55,14 @@ public:
     void mouseMoved(ofMouseEventArgs& args );
     void mouseDragged(ofMouseEventArgs& args);
     void mousePressed(ofMouseEventArgs& args);
-    void mouseReleased(ofMouseEventArgs& args);
+    void mouseReleased(ofMouseEventArgs& args);*/
     
     // touch/mouse binded
     virtual bool onMoved(float x, float y);
     virtual bool onDown(float x, float y);
     virtual bool onUp(float x, float y);
     bool getIsPressed();
+    void setInteractive(bool interactive);
     
     // events / listeners - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method
     ofEvent<string> onChangedEvent;
@@ -121,8 +122,8 @@ protected:
     int textOffsetY;
     
     // touch/mouse
-    bool isTouchEnabled;
-    bool isMouseEnabled;    
+    //bool isTouchEnabled;
+    //bool isMouseEnabled;
     bool isPressed;
     bool isInteractive;
     

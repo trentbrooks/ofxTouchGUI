@@ -319,5 +319,11 @@
 		<Unit filename="../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp">
 			<Option virtualFolder="addons/ofxXmlSettings/libs" />
 		</Unit>
+		<Unit filename="../../../addons/ofxTouchGUI/src/ofxTouchGUIDataGraph.h">
+			<Option virtualFolder="addons/ofxTouchGUI/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxTouchGUI/src/ofxTouchGUIDataGraph.mm">
+			<Option virtualFolder="addons/ofxTouchGUI/src" />
+		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -10,6 +10,7 @@ void ofApp::setup(){
     ofBackground(20);
     ofSetLogLevel(OF_LOG_VERBOSE);
     
+    
     // defaults
     mouseX = mouseY = 0;
     sliderValX = 0.69f;
@@ -24,12 +25,12 @@ void ofApp::setup(){
     // settings
     settings.loadSettings("settings.xml", false, true); // savefile, default font, use mouse
     settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14, true); // optional
-    settings.setupSendOSC("10.0.1.134", 5555); // optional (send to iOS device running ofxTouchGUIExampleIOS)
-    settings.setupReceiveOSC(5556); // optional (receives from iOS device running ofxTouchGUIExampleIOS)
-    //settings.setWindowPosition(ofGetWidth()- 250, 0); //optional
+    settings.setupSendOSC("10.0.1.134", 5555); // optional (send to iOS device running ofxTouchGUIExampleIOS. Remember to change ip to match your ios device)
+    settings.setupReceiveOSC(5556); // optional (example receives from iOS device running ofxTouchGUIExampleIOS)
+    //settings.setWindowPosition(ofGetWidth()-250, 0); // optional
     
     // add controls
-    settings.addTitleText("ofxTouchGUI");
+    settings.addTitleText("ofxTouchGUI " + ofToString(OFXTOUCHGUI_VERSION));
     settings.addSlider("SLIDER X", &sliderValX, 0.0f, 1.0f);
     settings.addSlider("SLIDER Y", &sliderValY, 0, 100);
     settings.addDropDown("DROPDOWN LIST A", 5, ddOptions);
@@ -42,11 +43,12 @@ void ofApp::setup(){
     graph->setCustomRange(0, ofGetWidth());
     settings.setItemSize(200, 25);
     settings.addButton("SAVE");
-    settings.addButton("RESET");    
+    settings.addButton("RESET");
     
     
     // adds a listener to all gui items, pointing to onGuiChanged();
     settings.addEventListenerAllItems(this);
+    
 }
 
 
