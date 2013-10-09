@@ -101,6 +101,9 @@ public:
     void sendOSC(float val);
     void sendOSC(string val);
     string fullOscAddress;
+    
+    static bool isCharacter(const char Character);
+    static bool isNumber(const char Character);
 
 protected:
     
@@ -157,7 +160,6 @@ protected:
     ofxOscSender * oscSenderRef;
     ofxOscMessage msg;
     bool oscEnabled;
-    bool isCharacter(const char Character);
-    bool isNumber(const char Character);
+    
 };
 

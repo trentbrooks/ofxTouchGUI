@@ -31,7 +31,9 @@
  settings.addEventListenerAllItems(this);
  
  // Optional settings: different fonts, background image/colour, auto draw, osc sending.
+ settings.setIgnoreXMLValues(true); // ignore previously saved xml values.
  settings.loadFonts("stan0755.ttf", "VAGRoundedStd-Light.otf", 6, 14);
+ settings.setLineHeights(12,24); // font line heights
  settings.loadBackgroundImage("guiBg.png");
  settings.setBackgroundColor(ofColor(255,0,255));
  settings.setAutoDraw();
@@ -56,7 +58,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.22
+#define OFXTOUCHGUI_VERSION 0.23
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -107,6 +109,7 @@ public:
     
     // setup
     void loadSettings(string saveToFile = "settings.xml", bool loadDefaultFont = true, bool useMouse = true);
+    void setIgnoreXMLValues(bool ignoreXML); // ignore previously saved values in xml. all initial values set by app.
     
     // background    
 	void loadBackgroundImage(string imgPath);
@@ -115,6 +118,9 @@ public:
     // fonts
     void loadFont(string fontPath, int fontSize, int fontSizeLarge, bool antialiased = true);
     void loadFonts(string fontPathSmall, string fontPathLarge, int fontSizeSmall, int fontSizeLarge, bool antialisedSmall = true, bool antialisedLarge = true);
+    void setLineHeights(float smallLineHeight, float largeLineHeight);
+    ofTrueTypeFont& getFont() { return guiFont; }
+    ofTrueTypeFont& getLargeFont() { return guiFontLarge; }
     
     // window positioning (affects touch/mouse positions of all gui items)
     void setWindowPosition(int posX, int posY);
@@ -130,25 +136,13 @@ public:
     ofVec2f getItemPosition(); // gets last items position
     int getItemWidth();
     int getItemHeight();
-    //int getItemPosY();
-    /*int defaultItemPosX;
-    int defaultItemPosY;
-    int defaultColumn;
-    int defaultColumnSpacer;
-    int defaultItemWidth;
-    int defaultItemHeight;
-    int defaultSpacer;
-    void checkItemPosSize(int& posX, int& posY, int& width, int& height);
-    int lastItemPosX;
-    int lastItemPosY;
-    int lastItemWidth;
-    int lastItemHeight;*/
+    
     
     // when auto positioning you can call this to change columns before adding another item
     void nextColumn();
+    void setAutoColumnMaxY(int maxY); // when to wrap to next column (default ofGetHeight())
     //void previousColumn(); // not implemented
     
-    // TODO:scrollable window options
     // Y scrolling only - no limits
     // when scrolling is enabled, adding items with auto positioning will not create new columns
     // ignore scrollwidth and scrollheight for auto width + height
@@ -317,6 +311,7 @@ protected:
     int lastItemPosY;
     int lastItemWidth;
     int lastItemHeight;
+    int maxColumnY;
     
     // drawing
     bool hidden;
@@ -332,6 +327,7 @@ protected:
     string saveToFile;
     string defaultSaveToFile;
     ofxXmlSettings XML;
+    bool ignoreXMLValues;
     bool settingsLoaded;
     
     // controls
@@ -346,6 +342,7 @@ protected:
     void checkOSCReceiver();
     
 };
+
 
 
 

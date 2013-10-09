@@ -30,6 +30,7 @@ ofxTouchGUI::ofxTouchGUI(){
     lastItemWidth = defaultItemWidth;
     lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
+    maxColumnY = ofGetHeight();
     
     moveTo(defaultItemPosX, defaultItemPosY);
     setItemSize(defaultItemWidth, defaultItemHeight);
@@ -86,6 +87,9 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     (useMouse) ? enableMouse() : enableTouch();
 }
 
+void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
+    ignoreXMLValues = ignoreXML;
+}
 
 // STYLING
 //--------------------------------------------------------------
@@ -132,6 +136,14 @@ void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int font
     this->fontSizeLarge = fontSizeLarge; // used to determine text offsetX
 }
 
+void ofxTouchGUI::setLineHeights(float smallLineHeight, float largeLineHeight) {
+    
+    if(hasFont) {
+        guiFont.setLineHeight(smallLineHeight);
+        guiFontLarge.setLineHeight(largeLineHeight);
+    }
+}
+
 
 // window position
 void ofxTouchGUI::setWindowPosition(int posX, int posY) {
@@ -155,7 +167,7 @@ void ofxTouchGUI::checkItemPosSize(int& posX, int& posY, int& width, int& height
     if(posY == -1) {
         // move to last items position + last items height
         posY = (numGuiItems == 0) ? defaultItemPosY : lastItemPosY + lastItemHeight + defaultSpacer;  
-        if(!scrollEnabled && posY > ofGetHeight() - defaultItemHeight - defaultSpacer) {
+        if(!scrollEnabled && posY > maxColumnY - defaultItemHeight - defaultSpacer) {
             
             // if no more room- move to next column
             posY = defaultItemPosY; // align with top item
@@ -247,6 +259,10 @@ void ofxTouchGUI::nextColumn() {
     lastItemPosX = lastItemPosX + lastItemWidth + defaultColumnSpacer;
     lastItemPosY = defaultItemPosY - lastItemHeight - defaultSpacer;//guiItems[0]->posY;
 }*/
+
+void ofxTouchGUI::setAutoColumnMaxY(int maxY) {
+    maxColumnY = maxY;
+}
 
 ofVec2f ofxTouchGUI::getFurthestItemPosition() {
 
@@ -676,6 +692,7 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     if(hasFont) tgdd->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgdd);
+    dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
     if(oscSendEnabled) tgdd->enableSendOSC(oscSender);
@@ -914,8 +931,8 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
                 XML.setValue("value", *currentValue, 0);
                 cout << "overwriting value... " << *currentValue << " " << currentLabel << endl;
             } else {
-                // overwrite the value with the saved xml value
-               *currentValue = XML.getValue("value", *currentValue, 0); 
+                // overwrite the value with the saved xml value if not ignoring
+               if(!ignoreXMLValues) *currentValue = XML.getValue("value", *currentValue, 0);
             }
             
             //cout << "val: " << *currentValue << endl;
@@ -1141,7 +1158,7 @@ void ofxTouchGUI::onMoved(float x, float y){
     
     if(scrollEnabled) {
         if(isScrolling) {
-            float maxScrollY = ofGetHeight()-scrollHeight;
+            float maxScrollY = maxColumnY-scrollHeight;
             if(maxScrollY < 0) windowPosition.y = ofClamp(windowPosition.y + (y - startScrollY), maxScrollY, 0);
             startScrollY = y;
         }
