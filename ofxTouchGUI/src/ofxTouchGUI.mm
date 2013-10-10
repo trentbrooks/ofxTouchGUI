@@ -31,6 +31,7 @@ ofxTouchGUI::ofxTouchGUI(){
     lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
     maxColumnY = ofGetHeight();
+	ignoreXMLValues = false;
     
     TGPanel* panel = new TGPanel();
     panels.push_back(panel);
