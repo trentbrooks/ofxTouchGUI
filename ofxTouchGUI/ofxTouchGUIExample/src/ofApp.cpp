@@ -48,7 +48,7 @@ void ofApp::setup(){
     
     // adds a listener to all gui items, pointing to onGuiChanged();
     settings.addEventListenerAllItems(this);
-    
+
 }
 
 
@@ -81,6 +81,13 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
+    switch (key) {
+        case ' ':
+            settings.toggleDisplay();
+            break;
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------

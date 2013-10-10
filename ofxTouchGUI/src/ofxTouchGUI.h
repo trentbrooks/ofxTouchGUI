@@ -41,6 +41,9 @@
  settings.setupReceiveOSC(5556);
  settings.setWindowPosition(ofGetWidth()- 250, 0); 
  settings.setScrollable(true); // good for ios, new columns will not be auto created, all items add to single column.
+ settings.nextColumn(); // subsequent items added to next column
+ settings.newPanel(); // makes a new panel for all subsequent items
+ settings.showPanel(0); // display the first panel only
  
  // individual item options
  settings.setVariable("host", &hostVar);
@@ -75,27 +78,21 @@
 enum { _INT, _FLOAT, _BOOL, _STRING };
 
 // for adding variables
-struct NameValuePair {
+struct TGNameValuePair {
     string name;
     void* value;
     int type;
     
     template <typename T>
     void setValue(T *valuePtr) {
-
-        if(typeid(T) == typeid(int&))
-            type = _INT;
-        else if(typeid(T) == typeid(string&))
-            type = _STRING;
-        else if(typeid(T) == typeid(float&))
-            type = _FLOAT;
-        else if(typeid(T) == typeid(bool&))
-            type = _BOOL;
-        else
-            cout << "* NameValuePair error: template type is unknown *" << endl;
-        
+        type = (typeid(T) == typeid(int&)) ? _INT : (typeid(T) == typeid(string&)) ? _STRING : (typeid(T) == typeid(float&)) ? _FLOAT : (typeid(T) == typeid(bool&)) ? _BOOL : -1;
         value = valuePtr;
     }; 
+};
+
+// panel/column with gui items
+struct TGPanel {    
+    vector <ofxTouchGUIBase*> panelGuiItems;
 };
 
 
@@ -142,6 +139,15 @@ public:
     void nextColumn();
     void setAutoColumnMaxY(int maxY); // when to wrap to next column (default ofGetHeight())
     //void previousColumn(); // not implemented
+    
+    // panels (by default there is only 1 panel)
+    int newPanel(); // creates a new panel, all subsequent items added to new panel
+    int activePanel;
+    void hideAllPanels();
+    void showPanel(int panelIndex);
+    void showNextPanel();
+    void showPreviousPanel();
+    vector<TGPanel*> panels;
     
     // Y scrolling only - no limits
     // when scrolling is enabled, adding items with auto positioning will not create new columns
@@ -203,7 +209,7 @@ public:
     // variable (not for display)
     template <typename T>
     void setVariable(string varName, T *regVar);
-    vector <NameValuePair*>varItems;
+    vector <TGNameValuePair*>varItems;
     
     
     // add/remove listeners to all gui items - using addEventListener requires onGuiChanged(const void* sender, string &buttonLabel) method in testApp
@@ -228,7 +234,7 @@ public:
     bool saveControl(string currentType, string currentLabel, T* currentValue, bool overwriteXMLValue = false);    
     
     // all controls
-    NameValuePair* getVarByLabel(string textLabel);
+    TGNameValuePair* getVarByLabel(string textLabel);
     ofxTouchGUIBase* getItemByLabelAndType(string textLabel, string itemType);
     ofxTouchGUIBase* getItemById(string itemId);
     ofxTouchGUIBase* getItemByOSCAddress(string oscAddress);

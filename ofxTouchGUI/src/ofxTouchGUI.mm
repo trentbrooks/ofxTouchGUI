@@ -32,6 +32,10 @@ ofxTouchGUI::ofxTouchGUI(){
     defaultSpacer = 5;
     maxColumnY = ofGetHeight();
     
+    TGPanel* panel = new TGPanel();
+    panels.push_back(panel);
+    activePanel = panels.size()-1;
+    
     moveTo(defaultItemPosX, defaultItemPosY);
     setItemSize(defaultItemWidth, defaultItemHeight);
 }
@@ -50,6 +54,12 @@ ofxTouchGUI::~ofxTouchGUI(){
         varItems[i] = NULL;
     }
     varItems.clear();
+    
+    for(int i = 0; i < panels.size(); i++) {
+        delete panels[i];
+        panels[i] = NULL;
+    }
+    panels.clear();
 }
 
 
@@ -253,6 +263,52 @@ void ofxTouchGUI::nextColumn() {
     lastItemPosY = defaultItemPosY - defaultItemHeight - defaultSpacer;//guiItems[0]->posY;
 }
 
+// hides all previous panels items and makes a new panel for subsequent gui items to be added.
+// only 1 panel should be visible at any time.
+// panel items are positioned at the defaultItem positions and sizes (same as first panel).
+// TODO: positional panels 
+int ofxTouchGUI::newPanel() {
+    
+    hideAllPanels();
+    moveTo(defaultItemPosX, defaultItemPosY);
+    setItemSize(defaultItemWidth, defaultItemHeight);
+    TGPanel* panel = new TGPanel();
+    panels.push_back(panel);
+    
+    activePanel = panels.size()-1;
+    return panels.size()-1;
+}
+
+void ofxTouchGUI::hideAllPanels() {    
+    for(int i = 0; i < panels.size(); i++) {
+        for(int j = 0; j < panels[i]->panelGuiItems.size(); j++) {
+            panels[i]->panelGuiItems[j]->hide();
+        }
+    }
+}
+
+void ofxTouchGUI::showPanel(int panelIndex) {
+    if(panelIndex >= 0 && panelIndex <= panels.size()-1) {
+        hideAllPanels();
+        activePanel = panelIndex;
+        for(int j = 0; j < panels[panelIndex]->panelGuiItems.size(); j++) {
+            panels[panelIndex]->panelGuiItems[j]->show();
+        }
+    }
+}
+
+void ofxTouchGUI::showNextPanel() {
+    activePanel++;
+    if(activePanel >= panels.size()) activePanel = 0;
+    showPanel(activePanel);
+}
+
+void ofxTouchGUI::showPreviousPanel() {
+    activePanel--;
+    if(activePanel < 0) activePanel = panels.size()-1;
+    showPanel(activePanel);
+}
+
 // doesn't work
 /*void ofxTouchGUI::previousColumn() {
     
@@ -372,24 +428,24 @@ void ofxTouchGUI::aUpdate(ofEventArgs &e){
     update();
 }
 
+// shows only the last activated panel
 void ofxTouchGUI::show(){
-    //ofxTouchGUIBase::ignoreExternalEvents = false;
     hidden = false;
     
-    // not necessary - but adding for consistency
-    for(int i = 0; i < numGuiItems; i++) {
+    /*for(int i = 0; i < numGuiItems; i++) {
         guiItems[i]->show();
-    }
+    }*/
+    showPanel(activePanel);
 }
 
+// hides everything (including all panels)
 void ofxTouchGUI::hide(){
-    //ofxTouchGUIBase::ignoreExternalEvents = true;
     hidden = true;
     
-    // not necessary - but adding for consistency
-    for(int i = 0; i < numGuiItems; i++) {
+    /*for(int i = 0; i < numGuiItems; i++) {
         guiItems[i]->hide();
-    }
+    }*/
+    hideAllPanels();
 }
 
 void ofxTouchGUI::toggleDisplay(){
@@ -418,6 +474,7 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, float *val, float 
     if(hasFont) tgs->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     
     guiItems.push_back(tgs);
+    panels.back()->panelGuiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
     if(oscSendEnabled) tgs->enableSendOSC(oscSender);
@@ -440,6 +497,7 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, int *val, int min,
     if(hasFont) tgs->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
     
     guiItems.push_back(tgs);
+    panels.back()->panelGuiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
     if(oscSendEnabled) tgs->enableSendOSC(oscSender);
@@ -464,6 +522,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     if(tgt->getItemHeight() > height) lastItemHeight = tgt->getItemHeight();
 
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
@@ -489,6 +548,7 @@ ofxTouchGUIText* ofxTouchGUI::addText(string textLabel, int posX, int posY, int 
     if(tgt->getItemHeight() > height) lastItemHeight = tgt->getItemHeight();
 
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // currently this does not save to xml because it's not interactive, just displayed. may update in the future, but will cause problems with text formatting/auto wrapping so leaving out for now.
@@ -512,6 +572,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, string *val, int posX
     //tgt->formatText(false); // true = use title text
     
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
@@ -537,6 +598,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, float *val, int posX,
     //tgt->formatText(false); // true = use title text
     
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
@@ -562,6 +624,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, int *val, int posX, i
     //tgt->formatText(false); // true = use title text
     
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
@@ -587,6 +650,7 @@ ofxTouchGUIText* ofxTouchGUI::addVarText(string textLabel, bool *val, int posX, 
     //tgt->formatText(false); // true = use title text
     
     guiItems.push_back(tgt);
+    panels.back()->panelGuiItems.push_back(tgt);
     numGuiItems = guiItems.size();
     
     // this does not connect to OSC.
@@ -611,6 +675,7 @@ ofxTouchGUIButton* ofxTouchGUI::addButton(string btnLabel, int posX, int posY, i
     if(hasFont) tgb->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgb);
+    panels.back()->panelGuiItems.push_back(tgb);
     numGuiItems = guiItems.size();
     
     if(oscSendEnabled) tgb->enableSendOSC(oscSender);
@@ -632,6 +697,7 @@ ofxTouchGUIToggleButton* ofxTouchGUI::addToggleButton(string toggleLabel, bool *
     if(hasFont) tgtb->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgtb);
+    panels.back()->panelGuiItems.push_back(tgtb);
     numGuiItems = guiItems.size();
     
     if(oscSendEnabled) tgtb->enableSendOSC(oscSender);
@@ -661,6 +727,7 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     if(hasFont) tgdd->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgdd);
+    panels.back()->panelGuiItems.push_back(tgdd);
     dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
@@ -692,6 +759,7 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     if(hasFont) tgdd->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgdd);
+    panels.back()->panelGuiItems.push_back(tgdd);
     dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
@@ -715,6 +783,7 @@ ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string *placeHolderText, int pos
     if(hasFont) tgti->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     
     guiItems.push_back(tgti);
+    panels.back()->panelGuiItems.push_back(tgti);
     numGuiItems = guiItems.size();
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
@@ -738,6 +807,7 @@ ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues
     tgtg->setMaximumValues(maxValues);
 
     guiItems.push_back(tgtg);
+    panels.back()->panelGuiItems.push_back(tgtg);
     numGuiItems = guiItems.size();
     
     //if(oscSendEnabled) tgtg->enableSendOSC(oscSender);
@@ -768,7 +838,7 @@ template <typename T>
 void ofxTouchGUI::setVariable(string varName, T *regVar){
     
     saveControl(VAR_TYPE, varName, regVar); // problem???
-    NameValuePair *nvp = new NameValuePair();
+    TGNameValuePair *nvp = new TGNameValuePair();
     nvp->name = varName;
     nvp->setValue(regVar);
     varItems.push_back(nvp);
@@ -777,7 +847,7 @@ void ofxTouchGUI::setVariable(string varName, T *regVar){
 
 // SORTING
 //--------------------------------------------------------------
-NameValuePair* ofxTouchGUI::getVarByLabel(string textLabel) {
+TGNameValuePair* ofxTouchGUI::getVarByLabel(string textLabel) {
     for(int i = 0; i < variableCount; i++) {
         if(textLabel == varItems[i]->name) {
             return varItems[i];
@@ -878,7 +948,7 @@ void ofxTouchGUI::saveSettings() {
             //NameValuePair nvp;
             //= {varName, (void*)regVar};
             //varItems.push_back(nvp);
-            const NameValuePair* var = (const NameValuePair*)getVarByLabel(controlLabel);
+            const TGNameValuePair* var = (const TGNameValuePair*)getVarByLabel(controlLabel);
             if(var) {
                 
                 if(var->type == _STRING) {
