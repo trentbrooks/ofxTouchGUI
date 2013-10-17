@@ -121,7 +121,7 @@ public:
     
     // window positioning (affects touch/mouse positions of all gui items)
     void setWindowPosition(int posX, int posY);
-    
+    ofVec2f getWindowPosition();
     
     // default positioning/sizing for individual items
     void moveTo(int posX, int posY); // all subsequently added items will be added from this position

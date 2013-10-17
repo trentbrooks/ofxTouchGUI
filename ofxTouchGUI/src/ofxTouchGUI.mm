@@ -30,7 +30,7 @@ ofxTouchGUI::ofxTouchGUI(){
     lastItemWidth = defaultItemWidth;
     lastItemHeight = defaultItemHeight;
     defaultSpacer = 5;
-    maxColumnY = ofGetHeight();
+    maxColumnY = 768; // need to set the default to ofGetHeight() after setup;
 	ignoreXMLValues = false;
     
     TGPanel* panel = new TGPanel();
@@ -96,6 +96,9 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     // touch controlled or mouse controlled?
     //this->useMouse = useMouse;
     (useMouse) ? enableMouse() : enableTouch();
+    
+    // adding this here, otherwise crashes on ios in landscape
+    maxColumnY = ofGetHeight();
 }
 
 void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
@@ -160,6 +163,10 @@ void ofxTouchGUI::setLineHeights(float smallLineHeight, float largeLineHeight) {
 void ofxTouchGUI::setWindowPosition(int posX, int posY) {
     windowPosition.x = posX;
     windowPosition.y = posY;
+}
+
+ofVec2f ofxTouchGUI::getWindowPosition() {
+    return windowPosition;
 }
 
 // scrolling options
