@@ -63,6 +63,13 @@ void ofxTouchGUITextInput::setInput(string *placeHolderText) {
     
 }
 
+void ofxTouchGUITextInput::setPlaceHolderText(string text) {
+    
+    #ifdef TARGET_OF_IPHONE
+    keyboard->setText(text);
+    #endif
+}
+
 string ofxTouchGUITextInput::getInput() {
     return *input;
 }

@@ -13,6 +13,8 @@ ofxTouchGUI::ofxTouchGUI(){
     isAutoDrawing = isAutoUpdating = false;
     hidden = false;
     oscSendEnabled = oscReceiveEnabled = false;
+    oscSendHostAddress = "";
+    oscSendPort = -1;
     scrollEnabled = isScrolling = false;
     bgWidth = bgHeight = scrollWidth = scrollHeight = 0;
     isFirstUpdate = true;
@@ -407,6 +409,11 @@ void ofxTouchGUI::draw(){
 void ofxTouchGUI::drawText(string text, int posX, int posY) {
     
     guiFont.drawString(text, posX, posY);
+}
+
+void ofxTouchGUI::drawTitleText(string text, int posX, int posY) {
+    
+    guiFontLarge.drawString(text, posX, posY);
 }
 
 void ofxTouchGUI::setAutoDraw(bool allowAutoDraw, bool allowAutoUpdate){
@@ -818,7 +825,7 @@ ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues
     panels.back()->panelGuiItems.push_back(tgtg);
     numGuiItems = guiItems.size();
     
-    //if(oscSendEnabled) tgtg->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgtg->enableSendOSC(oscSender);
    
     return tgtg; 
 }
@@ -1060,6 +1067,8 @@ void ofxTouchGUI::setupSendOSC(string host, int port) {
         oscSender->setup( host, port );
     }
     
+    oscSendHostAddress = host;
+    oscSendPort = port;
 }
 
 void ofxTouchGUI::disableSendOSC() {

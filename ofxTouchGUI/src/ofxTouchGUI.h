@@ -159,6 +159,7 @@ public:
     void update();
     void draw();
     void drawText(string text, int posX, int posY); // draw any generic string
+    void drawTitleText(string text, int posX, int posY) ;
     void show();
     void hide();
     void toggleDisplay();
@@ -247,7 +248,12 @@ public:
     void disableSendOSC();
     void sendOSC(string address, float val); // send any generic message- must pass address + value
     void sendOSC(string address, int val);
-    
+    string getHostOSC() {
+        return oscSendHostAddress;
+    };
+    int getPortOSC() {
+        return oscSendPort;
+    };
     // osc receive
     void setupReceiveOSC(int port);
     void disableReceiveOSC();
@@ -341,6 +347,8 @@ protected:
     
     // osc
     ofxOscSender* oscSender;
+    string oscSendHostAddress;
+    int oscSendPort;
     ofxOscReceiver* oscReceiver;
     ofxOscMessage msg;
     bool oscSendEnabled;
