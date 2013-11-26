@@ -18,6 +18,7 @@ ofxTouchGUIToggleButton::ofxTouchGUIToggleButton(){
     crossOffset = 5;
     
     isInteractive = true;
+    hasImages = false;
 }
 
 ofxTouchGUIToggleButton::~ofxTouchGUIToggleButton(){

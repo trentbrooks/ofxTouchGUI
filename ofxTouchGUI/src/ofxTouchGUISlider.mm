@@ -11,6 +11,7 @@ ofxTouchGUISlider::ofxTouchGUISlider(){
     max = 1;
     useInteger = false;
     isInteractive = true;
+    hasImages = false;
 }
 
 ofxTouchGUISlider::~ofxTouchGUISlider(){

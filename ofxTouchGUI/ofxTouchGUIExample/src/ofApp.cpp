@@ -68,8 +68,7 @@ void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-    settings.update();
+
 }
 
 //--------------------------------------------------------------

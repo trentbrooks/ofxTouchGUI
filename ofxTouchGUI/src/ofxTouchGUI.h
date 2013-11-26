@@ -61,7 +61,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.24
+#define OFXTOUCHGUI_VERSION 0.241
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -156,7 +156,6 @@ public:
     
     
     // drawing/update
-    void update();
     void draw();
     void drawText(string text, int posX, int posY); // draw any generic string
     void drawTitleText(string text, int posX, int posY) ;
@@ -164,7 +163,7 @@ public:
     void hide();
     void toggleDisplay();
     bool isHidden(); 
-    void setAutoDraw(bool allowAutoDraw = true, bool allowAutoUpdate = true); // automatically calls draw()
+    void setAutoDraw(bool allowAutoDraw = true); // automatically calls draw() 
 
         
     // slider
@@ -328,8 +327,7 @@ protected:
     // drawing
     bool hidden;
     void aDraw(ofEventArgs &e);
-    void aUpdate(ofEventArgs &e);
-    bool isAutoDrawing, isAutoUpdating;
+    bool isAutoDrawing;
     
     // vars/consts
     int constantCount;
