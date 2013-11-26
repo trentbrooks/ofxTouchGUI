@@ -24,6 +24,28 @@ ofxTouchGUIToggleButton::~ofxTouchGUIToggleButton(){
 	
 }
 
+void ofxTouchGUIToggleButton::loadImageStates(string onImagePath, string offImagePath, bool useWidthHeightFromImage) {
+    
+    hasImages = true;
+    onImage.loadImage(onImagePath);
+    offImage.loadImage(offImagePath);
+    if(useWidthHeightFromImage) {
+        this->width = onImage.width;
+        this->height = onImage.height;
+    }
+}
+
+void ofxTouchGUIToggleButton::setImageStates(ofImage& onImage, ofImage& offImage, bool useWidthHeightFromImage) {
+    
+    hasImages = true;
+    this->onImage = onImage;
+    this->offImage = offImage;
+    if(useWidthHeightFromImage) {
+        this->width = onImage.width;
+        this->height = onImage.height;
+    }
+}
+
 void ofxTouchGUIToggleButton::resetDefaultValue(){
     
     // reset the toggle value to the original value passed in by setValues
@@ -41,35 +63,52 @@ void ofxTouchGUIToggleButton::setValues(bool *toggleVal) {
 void ofxTouchGUIToggleButton::draw(){
     
     if(!hidden) {
+        
+        
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         
-        float destValX = width - height;
+        if(hasImages) {
+            
+            ofPushStyle();
+            ofSetColor(255);
+            if(*toggleVal) {
+                onImage.draw(0,0);                
+            }
+            else {
+                offImage.draw(0,0);
+            }
+            ofPopStyle();
+            
+        } else {
+            float destValX = width - height;
+            
+            // draw the background rectangle- move the right side of the percentage bar. modify vertex values directly
+            vertexArr[2] = destValX; // TL2 x
+            vertexArr[6] = destValX; // BL2 x
+            drawGLRect(vertexArr, colorsArr);
+            
+            // draw the foreground/active rectangle- move the left side of the percentage bar. modify vertex values directly
+            // little bg square for the X
+            vertexArrActive[0] = destValX; // TL x
+            vertexArrActive[4] = destValX; // BL x
+            drawGLRect(vertexArrActive, colorsArrActive);
+            
+            // draw the 'X' if on
+            if(*toggleVal) {
+                ofSetColor(crossX);
+                ofLine(destValX + crossOffset, crossOffset, width - crossOffset, height - crossOffset);
+                ofLine(width - crossOffset, crossOffset, destValX + crossOffset, height - crossOffset);
+            }
+            
+            
+            // draw text
+            ofPushStyle();
+            ofSetColor(textColour);
+            drawText(label, 0);
+            ofPopStyle();
+        }        
         
-        // draw the background rectangle- move the right side of the percentage bar. modify vertex values directly
-        vertexArr[2] = destValX; // TL2 x
-        vertexArr[6] = destValX; // BL2 x
-        drawGLRect(vertexArr, colorsArr);
-        
-        // draw the foreground/active rectangle- move the left side of the percentage bar. modify vertex values directly    
-        // little bg square for the X
-        vertexArrActive[0] = destValX; // TL x
-        vertexArrActive[4] = destValX; // BL x
-        drawGLRect(vertexArrActive, colorsArrActive);
-        
-        // draw the 'X' if on    
-         if(*toggleVal) {
-             ofSetColor(crossX);
-             ofLine(destValX + crossOffset, crossOffset, width - crossOffset, height - crossOffset);
-             ofLine(width - crossOffset, crossOffset, destValX + crossOffset, height - crossOffset);
-         }
-         
-        
-        // draw text
-        ofPushStyle();
-        ofSetColor(textColour);
-        drawText(label, 0);
-        ofPopStyle();
           
         ofPopMatrix();   
     }

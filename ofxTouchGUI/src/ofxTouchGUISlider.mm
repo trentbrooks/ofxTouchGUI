@@ -25,6 +25,27 @@ void ofxTouchGUISlider::resetDefaultValue(){
     else { *val = defaultVal; }
 }
 
+void ofxTouchGUISlider::loadImageStates(string bgImagePath, string fgImagePath, bool useWidthHeightFromImage) {
+    
+    hasImages = true;
+    bgImage.loadImage(bgImagePath);
+    fgImage.loadImage(fgImagePath);
+    if(useWidthHeightFromImage) {
+        this->width = bgImage.width;
+        this->height = bgImage.height;
+    }
+}
+
+void ofxTouchGUISlider::setImageStates(ofImage& bgImage, ofImage& fgImage, bool useWidthHeightFromImage) {
+    
+    hasImages = true;
+    this->bgImage = bgImage;
+    this->fgImage = fgImage;
+    if(useWidthHeightFromImage) {
+        this->width = bgImage.width;
+        this->height = bgImage.height;
+    }
+}
 
 //--------------------------------------------------------------
 void ofxTouchGUISlider::setRange(float min, float max) {
@@ -59,27 +80,40 @@ void ofxTouchGUISlider::draw(){
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
         
-        // get value + percentage    
+        // get value + percentage
         float formattedValue = (useInteger) ? *intVal : *val;
-        float valPerc = (formattedValue - min) / (max-min);    
+        float valPerc = (formattedValue - min) / (max-min);
         float destValX = width * valPerc;
         
-        // draw the background rectangle- move the left side of the percentage bar. modify vertex values directly
-        vertexArr[0] = destValX; // TL x
-        vertexArr[4] = destValX; // BL x
-        drawGLRect(vertexArr, colorsArr);
+        if(hasImages) {
+            
+            ofPushStyle();
+            ofSetColor(255);
+            bgImage.draw(0, 0);
+            fgImage.draw(-fgImage.getWidth()*.5+ destValX, -fgImage.getHeight()*.5 + getItemHeight() * .5);
+            ofPopStyle();
+            
+        } else {            
+            
+            // draw the background rectangle- move the left side of the percentage bar. modify vertex values directly
+            vertexArr[0] = destValX; // TL x
+            vertexArr[4] = destValX; // BL x
+            drawGLRect(vertexArr, colorsArr);
+            
+            // draw the foreground/active rectangle- move the right side of the percentage bar. modify vertex values directly
+            vertexArrActive[2] = destValX; // TL2 x
+            vertexArrActive[6] = destValX; // BL2 x
+            drawGLRect(vertexArrActive, colorsArrActive);
+            
+            // draw text
+            ofPushStyle();
+            ofSetColor(textColour);
+            drawText(label, 2);
+            drawText(ofToString(formattedValue), 0);
+            ofPopStyle();
+        }
         
-        // draw the foreground/active rectangle- move the right side of the percentage bar. modify vertex values directly
-        vertexArrActive[2] = destValX; // TL2 x
-        vertexArrActive[6] = destValX; // BL2 x
-        drawGLRect(vertexArrActive, colorsArrActive);
         
-        // draw text
-        ofPushStyle();
-        ofSetColor(textColour);
-        drawText(label, 2);
-        drawText(ofToString(formattedValue), 0);
-        ofPopStyle();
         
         ofPopMatrix();
     }

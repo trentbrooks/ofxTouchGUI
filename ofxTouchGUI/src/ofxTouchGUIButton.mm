@@ -30,6 +30,16 @@ void ofxTouchGUIButton::loadImageStates(string upImagePath, string downImagePath
     }
 }
 
+void ofxTouchGUIButton::setImageStates(ofImage& upImage, ofImage& downImage, bool useWidthHeightFromImage) {
+    
+    hasImages = true;
+    this->upImage = upImage;
+    this->downImage = downImage;
+    if(useWidthHeightFromImage) {
+        this->width = upImage.width;
+        this->height = upImage.height;
+    }
+}
 
 //--------------------------------------------------------------
 void ofxTouchGUIButton::draw(){
@@ -40,12 +50,15 @@ void ofxTouchGUIButton::draw(){
         
         if(hasImages) {
             
+            ofPushStyle();
+            ofSetColor(255);
             if(isPressed) {
                 downImage.draw(0,0);
             }
             else {                
                 upImage.draw(0,0);
             }
+            ofPopStyle();
             
         } else {
             // draw the background rectangle

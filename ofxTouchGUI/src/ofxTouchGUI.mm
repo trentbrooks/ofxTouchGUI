@@ -80,8 +80,10 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     this->saveToFile = saveToFile;
     
-    #ifdef TARGET_OF_IPHONE
+    
+    #ifdef TARGET_OF_IPHONE        
         this->saveToFile = ofxiPhoneGetDocumentsDirectory() + saveToFile;
+        ofLog() << "IOS detected- save to path: " << this->saveToFile;
     #endif
     // load xml from public itunes directory
     if( XML.loadFile(this->saveToFile) ){
@@ -167,7 +169,7 @@ void ofxTouchGUI::setWindowPosition(int posX, int posY) {
     windowPosition.y = posY;
 }
 
-ofVec2f ofxTouchGUI::getWindowPosition() {
+ofVec2f& ofxTouchGUI::getWindowPosition() {
     return windowPosition;
 }
 

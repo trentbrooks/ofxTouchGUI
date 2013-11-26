@@ -44,7 +44,7 @@ void ofApp::setup(){
     settings.setItemSize(200, 25);
     settings.addButton("SAVE");
     settings.addButton("RESET");
-    
+
     
     // adds a listener to all gui items, pointing to onGuiChanged();
     settings.addEventListenerAllItems(this);
