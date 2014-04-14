@@ -22,7 +22,8 @@ class ofApp : public ofBaseApp{
 		
     // settings
     ofxTouchGUI settings;
-    void onGuiChanged(const void* sender, string &buttonLabel);
+    //void onGuiChanged(const void* sender, string &buttonLabel);
+    void onGUIChanged(ofxTouchGUIEventArgs &args);
     
     // test values
     float sliderValX;

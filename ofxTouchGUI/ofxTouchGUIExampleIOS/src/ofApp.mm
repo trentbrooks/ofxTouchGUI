@@ -39,14 +39,14 @@ void ofApp::setup(){
     settings.addButton("SAVE");
     settings.addButton("RESET");
 
-    // adds a listener to all gui items, pointing to onGuiChanged();
+    // adds a listener to all gui items, pointing to onGUIChanged();
     settings.addEventListenerAllItems(this);
 }
 
-void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
+void ofApp::onGUIChanged(ofxTouchGUIEventArgs& args) {
     
-    // could use the pointer to item that was pressed? eg.
-    ofxTouchGUIBase * guiItem = (ofxTouchGUIBase*)sender;
+    ofxTouchGUIBase* target = args.target;
+    string buttonLabel = target->getLabel();
     
     // or just use the label as the identifier
     if(buttonLabel == "SAVE") {

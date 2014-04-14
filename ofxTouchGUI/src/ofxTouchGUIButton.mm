@@ -97,7 +97,9 @@ bool ofxTouchGUIButton::onUp(float x, float y){
 // doOSC must = false when called from the osc receiver, otherwise it gets stuck in an infinite loop
 void ofxTouchGUIButton::doButtonAction(bool doOSC) {
     
-    ofNotifyEvent(onChangedEvent,label,this);
+    //ofNotifyEvent(onChangedEvent,label,this);
+    ofxTouchGUIEventArgs args(this);
+    ofNotifyEvent(onChangedEvent, args);
     if(doOSC) sendOSC(1);
 }
 

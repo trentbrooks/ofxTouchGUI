@@ -544,7 +544,7 @@ ofxTouchGUIText* ofxTouchGUI::addTitleText(string textLabel, int posX, int posY,
     tgt->type = TEXT_TYPE;
     //tgt->itemId = TEXT_TYPE + ofToString(numGuiItems);
     checkItemPosSize(posX, posY, width, height);
-    tgt->setDisplay(textLabel, posX, posY, width);
+    tgt->setDisplay(textLabel, posX, posY, width, height);
     //tgt->enable(useMouse);
     if(hasFont) tgt->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);    
     tgt->formatText(true); // true = use title text

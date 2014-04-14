@@ -96,7 +96,9 @@ void ofxTouchGUITextInput::onKeyboardInput()
 {    
     //input = keyboard->getLabelText(); 
     cout << "input: " << *input << endl;
-    ofNotifyEvent(onChangedEvent,*input,this);
+    //ofNotifyEvent(onChangedEvent,*input,this);
+    ofxTouchGUIEventArgs args(this);
+    ofNotifyEvent(onChangedEvent, args);
     sendOSC(*input);
 }
 

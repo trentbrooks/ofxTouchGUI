@@ -29,22 +29,22 @@ void ofxTouchGUISlider::resetDefaultValue(){
 void ofxTouchGUISlider::loadImageStates(string bgImagePath, string fgImagePath, bool useWidthHeightFromImage) {
     
     hasImages = true;
-    bgImage.loadImage(bgImagePath);
-    fgImage.loadImage(fgImagePath);
+    ofLoadImage(bgImage, bgImagePath);
+    ofLoadImage(fgImage, fgImagePath);
     if(useWidthHeightFromImage) {
-        this->width = bgImage.width;
-        this->height = bgImage.height;
+        this->width = bgImage.getWidth();
+        this->height = bgImage.getHeight();
     }
 }
 
-void ofxTouchGUISlider::setImageStates(ofImage& bgImage, ofImage& fgImage, bool useWidthHeightFromImage) {
+void ofxTouchGUISlider::setImageStates(ofTexture& bgImage, ofTexture& fgImage, bool useWidthHeightFromImage) {
     
     hasImages = true;
     this->bgImage = bgImage;
     this->fgImage = fgImage;
     if(useWidthHeightFromImage) {
-        this->width = bgImage.width;
-        this->height = bgImage.height;
+        this->width = bgImage.getWidth();
+        this->height = bgImage.getHeight();
     }
 }
 
@@ -124,11 +124,24 @@ void ofxTouchGUISlider::draw(){
 
 // TOUCH
 //--------------------------------------------------------------
+bool ofxTouchGUISlider::onDown(float x, float y){
+    
+    if(ofxTouchGUIBase::onDown(x, y)) {
+        
+        clampInputToSliderVal(x);
+        return true;
+    }
+    
+    return false;
+}
+
 bool ofxTouchGUISlider::onUp(float x, float y){
     
     if(ofxTouchGUIBase::onUp(x, y)) {
-        // want to trigger value changes on touch up as well as move.
-        onMoved(x,y);
+        
+        // want to trigger value changes on touch up as well as move
+        // TODO: check this on ios - prob not required since on down also triggers
+        //clampInputToSliderVal(x);
         return true;
     }
     
@@ -143,28 +156,34 @@ bool ofxTouchGUISlider::onMoved(float x, float y) {
          
          // must be touching inside the slider to move.
          if(hitTest(x,y)) {
-            float clampedX = ofClamp(x, posX, posX + width);
-             float perc = ( clampedX - posX ) / width;
-             if(useInteger) {
-                 int sliderIntVal = (perc * (max - min) ) + min;
-                 doSliderIntAction(sliderIntVal);
-                 return true;
-             }
-             else { 
-                 float sliderFloatVal = (perc * (max - min) ) + min;
-                 doSliderFloatAction(sliderFloatVal);
-                 return true;
-             }
+             clampInputToSliderVal(x);
+             return true;
          }
      }
     
     return false;
 }
 
+void ofxTouchGUISlider::clampInputToSliderVal(float x) {
+    
+    float clampedX = ofClamp(x, posX, posX + width);
+    float perc = ( clampedX - posX ) / width;
+    if(useInteger) {
+        int sliderIntVal = (perc * (max - min) ) + min;
+        doSliderIntAction(sliderIntVal);
+    }
+    else {
+        float sliderFloatVal = (perc * (max - min) ) + min;
+        doSliderFloatAction(sliderFloatVal);
+    }
+}
+
 void ofxTouchGUISlider::doSliderFloatAction(float sliderVal, bool doOSC) {
     
     *val = sliderVal;
-    ofNotifyEvent(onChangedEvent,label,this);
+    //ofNotifyEvent(onChangedEvent,label,this);
+    ofxTouchGUIEventArgs args(this);
+    ofNotifyEvent(onChangedEvent, args);
     if(doOSC) sendOSC(*val);
 }
 
@@ -172,7 +191,9 @@ void ofxTouchGUISlider::doSliderFloatAction(float sliderVal, bool doOSC) {
 void ofxTouchGUISlider::doSliderIntAction(int sliderVal, bool doOSC) {
     
     *intVal = sliderVal;
-    ofNotifyEvent(onChangedEvent,label,this);
+    //ofNotifyEvent(onChangedEvent,label,this);
+    ofxTouchGUIEventArgs args(this);
+    ofNotifyEvent(onChangedEvent, args);
     if(doOSC) sendOSC(*intVal);
 }
 

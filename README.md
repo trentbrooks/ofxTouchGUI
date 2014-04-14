@@ -23,7 +23,7 @@ Ubuntu and windows user's will need to rename the file's from .mm to .cpp, or ju
 	// add an image button with event listener
 	ofxTouchGUIButton* imageBtn = settings.addButton("MY IMAGE BUTTON", 225, 75, 74, 35); // label, value, x, y, width, height
 	imageBtn->loadImageStates("play-up.png", "play-down.png"); // touch down and up images
-	ofAddListener(imageBtn->onChangedEvent, this, &testApp::onImageButtonPressed); // bind a function in testApp to the element
+	ofAddListener(imageBtn->onChangedEvent, this, &ofApp::onImageButtonPressed); // bind a function in ofApp to the element
 
 	// enable osc
 	settings.setupSendOSC("127.0.0.1", 4444);

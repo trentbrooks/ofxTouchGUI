@@ -26,17 +26,18 @@ public:
 
     // touch events
     //virtual void touchMoved(float x, float y);
-    //virtual void onDown(float x, float y);
+    virtual bool onDown(float x, float y);
     virtual bool onMoved(float x, float y);
     virtual bool onUp(float x, float y);
     //virtual bool overRect(float x, float y);
     void doSliderFloatAction(float sliderVal, bool doOSC = true);
     void doSliderIntAction(int sliderVal, bool doOSC = true);
+    void clampInputToSliderVal(float x);
     
     float getValue();
     
     void loadImageStates(string bgImagePath, string fgImagePath, bool useWidthHeightFromImage = true);
-    void setImageStates(ofImage& bgImage, ofImage& fgImage, bool useWidthHeightFromImage = true);
+    void setImageStates(ofTexture& bgImage, ofTexture& fgImage, bool useWidthHeightFromImage = true);
     
 protected:
     
@@ -45,8 +46,8 @@ protected:
     int defaultIntVal;
     float defaultVal;
     
-    ofImage bgImage;
-    ofImage fgImage;
+    ofTexture bgImage;
+    ofTexture fgImage;
     bool hasImages;
 };
 

@@ -52,10 +52,10 @@ void ofApp::setup(){
 }
 
 
-void ofApp::onGuiChanged(const void* sender, string &buttonLabel) {
+void ofApp::onGUIChanged(ofxTouchGUIEventArgs& args) {//const void* sender, string &buttonLabel) {
     
-    // could use the pointer to item that was pressed? eg.
-    ofxTouchGUIBase * guiItem = (ofxTouchGUIBase*)sender;
+    ofxTouchGUIBase* target = args.target;
+    string buttonLabel = target->getLabel();
         
     // or just use the label as the identifier
     if(buttonLabel == "SAVE") {

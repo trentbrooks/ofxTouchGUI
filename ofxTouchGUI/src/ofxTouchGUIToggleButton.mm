@@ -120,7 +120,8 @@ void ofxTouchGUIToggleButton::draw(){
 bool ofxTouchGUIToggleButton::onUp(float x, float y){
     
     if(ofxTouchGUIBase::onUp(x, y)) {
-        if(hitTest(x,y)) {            
+        if(hitTest(x,y)) {
+            
             doToggleAction(!*toggleVal);
             return true;
         }
@@ -135,7 +136,9 @@ void ofxTouchGUIToggleButton::doToggleAction(bool toggleSelect, bool doOSC) {
     
     // switch the toggle value
     *toggleVal = toggleSelect;
-    ofNotifyEvent(onChangedEvent,label,this);
+    //ofNotifyEvent(onChangedEvent,label,this);
+    ofxTouchGUIEventArgs args(this);
+    ofNotifyEvent(onChangedEvent, args);
     if(doOSC) sendOSC(*toggleVal);    
 }
 
