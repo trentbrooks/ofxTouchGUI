@@ -94,6 +94,13 @@ void ofxTouchGUISlider::draw(){
             fgImage.draw(-fgImage.getWidth()*.5+ destValX, -fgImage.getHeight()*.5 + getItemHeight() * .5);
             ofPopStyle();
             
+            // draw text
+            ofPushStyle();
+            ofSetColor(textColour);
+            drawText(label, 2);
+            drawText(ofToString(formattedValue), 0);
+            ofPopStyle();
+            
         } else {            
             
             // draw the background rectangle- move the left side of the percentage bar. modify vertex values directly
