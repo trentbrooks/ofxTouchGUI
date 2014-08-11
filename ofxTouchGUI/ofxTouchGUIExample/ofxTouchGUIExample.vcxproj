@@ -147,6 +147,7 @@
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIButton.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDataGraph.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.h" />
+		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIEventArgs.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUISlider.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIText.h" />
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUITextInput.h" />

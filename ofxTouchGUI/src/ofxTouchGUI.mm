@@ -13,6 +13,7 @@ ofxTouchGUI::ofxTouchGUI(){
     isAutoDrawing = false; //isAutoUpdating
     hidden = false;
     oscSendEnabled = oscReceiveEnabled = false;
+    wrapOscMessagesInBundle = true;
     oscSendHostAddress = "";
     oscSendPort = -1;
     scrollEnabled = isScrolling = false;
@@ -508,7 +509,7 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, float *val, float 
     panels.back()->panelGuiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgs->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgs->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     saveControl(SLIDER_TYPE, sliderLabel, val);
  
@@ -531,7 +532,7 @@ ofxTouchGUISlider* ofxTouchGUI::addSlider(string sliderLabel, int *val, int min,
     panels.back()->panelGuiItems.push_back(tgs);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgs->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgs->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     saveControl(SLIDER_TYPE, sliderLabel, val);
 
@@ -709,7 +710,7 @@ ofxTouchGUIButton* ofxTouchGUI::addButton(string btnLabel, int posX, int posY, i
     panels.back()->panelGuiItems.push_back(tgb);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgb->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgb->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     // buttons do not save to xml
     
@@ -731,7 +732,7 @@ ofxTouchGUIToggleButton* ofxTouchGUI::addToggleButton(string toggleLabel, bool *
     panels.back()->panelGuiItems.push_back(tgtb);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgtb->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgtb->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
     saveControl(TOGGLE_TYPE, toggleLabel, toggleVal);
@@ -762,7 +763,7 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgdd->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgdd->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     saveControl(DROPDOWN_TYPE, listLabel, tgdd->selectId); // problem???
     
@@ -794,7 +795,7 @@ ofxTouchGUIDropDown* ofxTouchGUI::addDropDown(string listLabel, int numValues, i
     dropDownGuiItems.push_back(tgdd);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgdd->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgdd->enableSendOSC(oscSender,wrapOscMessagesInBundle);
     
     saveControl(DROPDOWN_TYPE, listLabel, tgdd->selectId); // problem???
     
@@ -841,7 +842,7 @@ ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues
     panels.back()->panelGuiItems.push_back(tgtg);
     numGuiItems = guiItems.size();
     
-    if(oscSendEnabled) tgtg->enableSendOSC(oscSender);
+    if(oscSendEnabled) tgtg->enableSendOSC(oscSender,wrapOscMessagesInBundle);
    
     return tgtg; 
 }
@@ -928,6 +929,11 @@ ofxTouchGUIBase* ofxTouchGUI::getItemByOSCAddress(string oscAddress) {
 // SAVE ALL SETTINGS
 void ofxTouchGUI::saveSettings() {
     
+    saveSettings(saveToFile);
+}
+
+void ofxTouchGUI::saveSettings(string path) {
+    
     // loop through the xml and udpate the values from the gui
     int numSavedControllers = XML.getNumTags("control");
     
@@ -945,7 +951,7 @@ void ofxTouchGUI::saveSettings() {
             if(controller) {
                 XML.setValue("value", *controller->toggleVal, 0);
             }
-        }        
+        }
         else if(controlType == SLIDER_TYPE) {
             
             //const ofxTouchGUISlider* controller = (const ofxTouchGUISlider*)getItemById(controlItemId);
@@ -956,7 +962,7 @@ void ofxTouchGUI::saveSettings() {
                 }
                 else {
                     XML.setValue("value", *controller->val, 0);
-                }   
+                }
             }
             
         }
@@ -966,14 +972,14 @@ void ofxTouchGUI::saveSettings() {
             const ofxTouchGUIDropDown* controller = (const ofxTouchGUIDropDown*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
                 XML.setValue("value", *controller->selectId, 0);
-            }            
+            }
         }
         else if(controlType == TEXTINPUT_TYPE) {
             
             const ofxTouchGUITextInput* controller = (const ofxTouchGUITextInput*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
                 XML.setValue("value", *controller->input, 0);
-            }            
+            }
         }
         else if(controlType == VAR_TYPE) {
             //NameValuePair nvp;
@@ -991,7 +997,7 @@ void ofxTouchGUI::saveSettings() {
                 } else if(var->type == _BOOL) {
                     XML.setValue("value", *(bool*)var->value, 0);
                 }
-            }  
+            }
         }
         
         // note fixed vars/constants aren't saved, they are set once on creation
@@ -999,10 +1005,9 @@ void ofxTouchGUI::saveSettings() {
         
         XML.popTag();
     }
-
-    ofLog() << "TouchGUI: file saved " << saveToFile;
-    XML.saveFile( saveToFile );
-     
+    
+    ofLog() << "TouchGUI: file saved " << path;
+    XML.saveFile( path );
 }
 
 
@@ -1069,14 +1074,16 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
 
 
 // OSC
-void ofxTouchGUI::setupSendOSC(string host, int port) {
+void ofxTouchGUI::setupSendOSC(string host, int port, bool wrapOscMessagesInBundle) {
     
     // setup osc host + port after settings have loaded
     if(!oscSendEnabled) {
         oscSender = new ofxOscSender();
         oscSender->setup( host, port );
         for(int i = 0; i < numGuiItems; i++) {
-            if(guiItems[i]->type == SLIDER_TYPE || guiItems[i]->type == BUTTON_TYPE || guiItems[i]->type == TOGGLE_TYPE || guiItems[i]->type == DROPDOWN_TYPE) guiItems[i]->enableSendOSC(oscSender);
+            if(guiItems[i]->type == SLIDER_TYPE || guiItems[i]->type == BUTTON_TYPE || guiItems[i]->type == TOGGLE_TYPE || guiItems[i]->type == DROPDOWN_TYPE) {
+                guiItems[i]->enableSendOSC(oscSender,wrapOscMessagesInBundle);
+            }
         } 
         oscSendEnabled = true;
     } else {
@@ -1085,6 +1092,7 @@ void ofxTouchGUI::setupSendOSC(string host, int port) {
     
     oscSendHostAddress = host;
     oscSendPort = port;
+    this->wrapOscMessagesInBundle = wrapOscMessagesInBundle;
 }
 
 void ofxTouchGUI::disableSendOSC() {
@@ -1103,7 +1111,8 @@ void ofxTouchGUI::sendOSC(string address, float val) {
         msg.clear();
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addFloatArg(val);
-        oscSender->sendMessage( msg );
+        //ofLog() << "FICK - sending: " << address << " : " << val;
+        oscSender->sendMessage( msg, wrapOscMessagesInBundle );
     }    
 }
 
@@ -1113,7 +1122,19 @@ void ofxTouchGUI::sendOSC(string address, int val) {
         msg.clear();
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addIntArg(val);
-        oscSender->sendMessage( msg );
+        //ofLog() << "FICK - sending: " << address << " : " << val;
+        oscSender->sendMessage( msg, wrapOscMessagesInBundle );
+    }
+}
+
+void ofxTouchGUI::sendOSC(string address, string val) {
+    
+    if(oscSendEnabled) {
+        msg.clear();
+        msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
+        msg.addStringArg(val);
+        //ofLog() << "FICK - sending: " << address << " : " << val;
+        oscSender->sendMessage( msg, wrapOscMessagesInBundle );
     }
 }
 

@@ -94,49 +94,49 @@
 			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons">
-			<UniqueIdentifier>{71834f65-f3a9-211e-73b8-dc85}</UniqueIdentifier>
+			<UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc">
-			<UniqueIdentifier>{d91dca33-6e5d-4481-2aec-9fbb}</UniqueIdentifier>
+			<UniqueIdentifier>{D91DCA33-6E5D-4481-2AEC-9FBB}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\src">
-			<UniqueIdentifier>{b9dd339a-d93d-92a1-0a2f-4b41}</UniqueIdentifier>
+			<UniqueIdentifier>{B9DD339A-D93D-92A1-0A2F-4B41}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs">
-			<UniqueIdentifier>{99eca1d9-873f-4622-8fc0-fc7b}</UniqueIdentifier>
+			<UniqueIdentifier>{99ECA1D9-873F-4622-8FC0-FC7B}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack">
-			<UniqueIdentifier>{d3a98534-1602-4fef-57a6-6593}</UniqueIdentifier>
+			<UniqueIdentifier>{D3A98534-1602-4FEF-57A6-6593}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack\src">
-			<UniqueIdentifier>{bfb5bb47-98c8-bbcb-3066-1046}</UniqueIdentifier>
+			<UniqueIdentifier>{BFB5BB47-98C8-BBCB-3066-1046}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack\src\ip">
-			<UniqueIdentifier>{5a029128-eb41-95c5-cbc0-cded}</UniqueIdentifier>
+			<UniqueIdentifier>{5A029128-EB41-95C5-CBC0-CDED}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack\src\ip\posix">
-			<UniqueIdentifier>{354c95cf-a234-0360-c6bc-af41}</UniqueIdentifier>
+			<UniqueIdentifier>{354C95CF-A234-0360-C6BC-AF41}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack\src\ip\win32">
-			<UniqueIdentifier>{79dfdfe2-400b-8654-3675-01a3}</UniqueIdentifier>
+			<UniqueIdentifier>{79DFDFE2-400B-8654-3675-01A3}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxOsc\libs\oscpack\src\osc">
-			<UniqueIdentifier>{edacb89c-9768-9551-4d41-b590}</UniqueIdentifier>
+			<UniqueIdentifier>{EDACB89C-9768-9551-4D41-B590}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxTouchGUI">
-			<UniqueIdentifier>{7bebfdec-13bf-7a36-982b-3655}</UniqueIdentifier>
+			<UniqueIdentifier>{7BEBFDEC-13BF-7A36-982B-3655}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxTouchGUI\src">
-			<UniqueIdentifier>{4df49842-9b16-e75d-a168-5804}</UniqueIdentifier>
+			<UniqueIdentifier>{4DF49842-9B16-E75D-A168-5804}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxXmlSettings">
-			<UniqueIdentifier>{877f005d-13e6-0592-1d97-f2e3}</UniqueIdentifier>
+			<UniqueIdentifier>{877F005D-13E6-0592-1D97-F2E3}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxXmlSettings\src">
-			<UniqueIdentifier>{ccb2ac63-49d2-977c-cfe8-aead}</UniqueIdentifier>
+			<UniqueIdentifier>{CCB2AC63-49D2-977C-CFE8-AEAD}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxXmlSettings\libs">
-			<UniqueIdentifier>{687714a8-1662-fa1c-261f-50f0}</UniqueIdentifier>
+			<UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
@@ -216,6 +216,9 @@
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIDropDown.h">
+			<Filter>addons\ofxTouchGUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUIEventArgs.h">
 			<Filter>addons\ofxTouchGUI\src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxTouchGUI\src\ofxTouchGUISlider.h">

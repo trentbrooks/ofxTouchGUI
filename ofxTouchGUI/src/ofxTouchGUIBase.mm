@@ -52,6 +52,7 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     //enableTouch();
     
     oscEnabled = false;
+    wrapOscMessagesInBundle = true;
     fullOscAddress = "";
 }
 
@@ -512,7 +513,7 @@ void ofxTouchGUIBase::updateGLArrays(){
  */
 
 
-void ofxTouchGUIBase::enableSendOSC(ofxOscSender * oscSender) {
+void ofxTouchGUIBase::enableSendOSC(ofxOscSender * oscSender, bool wrapOscMessagesInBundle) {
     
     // setup osc host + port after settings have loaded
     if(!oscEnabled) {
@@ -529,6 +530,8 @@ void ofxTouchGUIBase::enableSendOSC(ofxOscSender * oscSender) {
         oscSenderRef = oscSender;
         oscEnabled = true;
     }
+    
+    this->wrapOscMessagesInBundle = wrapOscMessagesInBundle;
 }
 
 void ofxTouchGUIBase::disableSendOSC() {
@@ -543,13 +546,14 @@ void ofxTouchGUIBase::setOSCAddress(string address) {
     fullOscAddress = address;
 }
 
+
 void ofxTouchGUIBase::sendOSC(int val) {
     
     if(oscEnabled) {
         msg.clear();
         msg.setAddress(fullOscAddress); // eg. "/tg/slider/mythingy"
         msg.addIntArg(val); 
-        oscSenderRef->sendMessage( msg ); 
+        oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
     }    
 }
 
@@ -559,7 +563,7 @@ void ofxTouchGUIBase::sendOSC(float val) {
         msg.clear();
         msg.setAddress(fullOscAddress);//oscAddress + "/" + label); // eg. "/tg/mythingy"
         msg.addFloatArg(val); 
-        oscSenderRef->sendMessage( msg ); 
+        oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
     }    
 }
 
@@ -569,7 +573,7 @@ void ofxTouchGUIBase::sendOSC(string val) {
         msg.clear();
         msg.setAddress(fullOscAddress); // eg. "/tg/mythingy"
         msg.addStringArg(val); 
-        oscSenderRef->sendMessage( msg ); 
+        oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
     }    
 }
 

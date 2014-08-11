@@ -13,7 +13,7 @@
 #include "ofxOsc.h"
 #include "ofxTouchGUIEventArgs.h"
 
-
+    
 /*
  Usage:
  // .h
@@ -61,7 +61,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.242
+#define OFXTOUCHGUI_VERSION 0.3
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -73,9 +73,6 @@
 #define DATAGRAPH_TYPE "datagraph"
 #define CONST_TYPE "constant"
 #define VAR_TYPE "variable"
-
-
-
 
 // gui item value types
 enum { _INT, _FLOAT, _BOOL, _STRING };
@@ -229,6 +226,7 @@ public:
     
     // save settings xml
     void saveSettings();
+    void saveSettings(string path);
     void resetDefaultValues();
     
     
@@ -246,10 +244,11 @@ public:
     
     
     // osc settings - send
-    void setupSendOSC(string host, int port);
+    void setupSendOSC(string host, int port, bool wrapOscMessagesInBundle = true);
     void disableSendOSC();
     void sendOSC(string address, float val); // send any generic message- must pass address + value
     void sendOSC(string address, int val);
+    void sendOSC(string address, string val);
     string getHostOSC() {
         return oscSendHostAddress;
     };
@@ -350,6 +349,7 @@ protected:
     ofxOscSender* oscSender;
     string oscSendHostAddress;
     int oscSendPort;
+    bool wrapOscMessagesInBundle;
     ofxOscReceiver* oscReceiver;
     ofxOscMessage msg;
     bool oscSendEnabled;

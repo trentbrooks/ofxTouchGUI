@@ -81,7 +81,7 @@ public:
         
     
     // OSC
-    void enableSendOSC(ofxOscSender * oscSender);
+    void enableSendOSC(ofxOscSender * oscSender, bool wrapOscMessagesInBundle);
     void disableSendOSC();
     void setOSCAddress(string address);
     void sendOSC(int val);
@@ -91,6 +91,9 @@ public:
     
     static bool isCharacter(const char Character);
     static bool isNumber(const char Character);
+    
+    // TODO: make this a method
+    bool isPressed;
 
 protected:
     
@@ -114,7 +117,6 @@ protected:
     // touch/mouse
     //bool isTouchEnabled;
     //bool isMouseEnabled;
-    bool isPressed;
     bool isInteractive;
     
     //interaction
@@ -147,6 +149,7 @@ protected:
     ofxOscSender * oscSenderRef;
     ofxOscMessage msg;
     bool oscEnabled;
+    bool wrapOscMessagesInBundle;
     
 };
 
