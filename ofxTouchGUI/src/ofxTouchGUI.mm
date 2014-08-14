@@ -45,7 +45,10 @@ ofxTouchGUI::ofxTouchGUI(){
 }
 
 ofxTouchGUI::~ofxTouchGUI(){
-    
+    clear();
+}
+
+void ofxTouchGUI::clear() {
     dropDownGuiItems.clear();
     for(int i = 0; i < numGuiItems; i++) {
         delete guiItems[i];
@@ -67,7 +70,6 @@ ofxTouchGUI::~ofxTouchGUI(){
 }
 
 
-
 void ofxTouchGUI::resetDefaultValues(){
     
     for(int i = 0; i < numGuiItems; i++) {
@@ -77,16 +79,33 @@ void ofxTouchGUI::resetDefaultValues(){
     ofLogVerbose() << "Resetting defaults";
 }
 
+
 void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool useMouse) {
+    
+    // first time setup - load fonts + touch/mouse listeners
+    if(!settingsLoaded) {
+        
+        ofLog() << "loading fonts + stiff first time";
+        
+        // load the default font
+        if(loadDefaultFont) loadFont("stan0755.ttf", 6, 6, false);
+        
+        // touch controlled or mouse controlled?
+        //this->useMouse = useMouse;
+        (useMouse) ? enableMouse() : enableTouch();
+        
+        // adding this here, otherwise crashes on ios in landscape
+        maxColumnY = ofGetHeight();
+    }
     
     this->saveToFile = saveToFile;
     
-    
-    #ifdef TARGET_OF_IPHONE        
-        this->saveToFile = ofxiPhoneGetDocumentsDirectory() + saveToFile;
-        ofLog() << "IOS detected- save to path: " << this->saveToFile;
-    #endif
+#ifdef TARGET_OF_IPHONE
     // load xml from public itunes directory
+    this->saveToFile = ofxiPhoneGetDocumentsDirectory() + saveToFile;
+    ofLog() << "IOS detected- save to path: " << this->saveToFile;
+#endif
+    
     if( XML.loadFile(this->saveToFile) ){
         settingsLoaded = true;
     } else {
@@ -94,16 +113,6 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
         saveSettings();
         settingsLoaded = true;
     }
-    
-    // load the default font
-    if(loadDefaultFont) loadFont("stan0755.ttf", 6, 6, false);
-    
-    // touch controlled or mouse controlled?
-    //this->useMouse = useMouse;
-    (useMouse) ? enableMouse() : enableTouch();
-    
-    // adding this here, otherwise crashes on ios in landscape
-    maxColumnY = ofGetHeight();
 }
 
 void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
@@ -1009,6 +1018,68 @@ void ofxTouchGUI::saveSettings(string path) {
     ofLog() << "TouchGUI: file saved " << path;
     XML.saveFile( path );
 }
+
+void ofxTouchGUI::resetFromSettings(string path) {
+    
+    // need to overwrite all the gui values from new xml...
+    loadSettings(path);
+    
+    // loop through the xml and udpate the gui values from xml - inverse of saveControl
+    int numSavedControllers = XML.getNumTags("control");
+    for(int i = 0; i < numSavedControllers; i++){
+        
+        XML.pushTag("control", i);
+        string controlLabel = XML.getValue("label", "", 0);
+        string controlType = XML.getValue("type", "", 0); // get the type value or ""
+        if(controlType == TOGGLE_TYPE) {
+            
+            ofxTouchGUIToggleButton* controller = (ofxTouchGUIToggleButton*)getItemByLabelAndType(controlLabel,controlType);
+            if(controller) {
+                *controller->toggleVal = XML.getValue("value", *controller->toggleVal, 0);
+            }
+        } else if(controlType == SLIDER_TYPE) {
+            
+            ofxTouchGUISlider* controller = (ofxTouchGUISlider*)getItemByLabelAndType(controlLabel,controlType);
+            if(controller) {
+                if(controller->useInteger == true) {
+                    *controller->intVal = XML.getValue("value", *controller->intVal, 0);
+                } else {
+                    *controller->val = XML.getValue("value", *controller->val, 0);
+                }
+                
+            }
+        } else if(controlType == DROPDOWN_TYPE) {
+            
+            ofxTouchGUIDropDown* controller = (ofxTouchGUIDropDown*)getItemByLabelAndType(controlLabel,controlType);
+            if(controller) {
+                *controller->selectId = XML.getValue("value", *controller->selectId, 0);
+            }
+        } else if(controlType == TEXTINPUT_TYPE) {
+            
+            ofxTouchGUITextInput* controller = (ofxTouchGUITextInput*)getItemByLabelAndType(controlLabel,controlType);
+            if(controller) {
+                *controller->input = XML.getValue("value", *controller->input, 0);
+            }
+        } else if(controlType == VAR_TYPE) {
+            
+            TGNameValuePair* var = (TGNameValuePair*)getVarByLabel(controlLabel);
+            if(var) {
+                
+                if(var->type == _STRING) {
+                    *(string*)var->value = XML.getValue("value", *(string*)var->value, 0);
+                } else if(var->type == _INT) {
+                    *(int*)var->value = XML.getValue("value", *(int*)var->value, 0);
+                } else if(var->type == _FLOAT) {
+                    *(float*)var->value = XML.getValue("value", *(float*)var->value, 0);
+                } else if(var->type == _BOOL) {
+                    *(bool*)var->value = XML.getValue("value", *(bool*)var->value, 0);
+                }
+            }
+        }
+        XML.popTag();
+    }
+}
+
 
 
 // SAVE INDIVIDUAL SETTINGS - saves the controller: T param must be int,float or bool

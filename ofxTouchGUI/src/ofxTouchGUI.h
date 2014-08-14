@@ -103,6 +103,7 @@ public:
     
     ofxTouchGUI();
 	~ofxTouchGUI();
+    void clear();
     
     // setup
     void loadSettings(string saveToFile = "settings.xml", bool loadDefaultFont = true, bool useMouse = true);
@@ -228,6 +229,7 @@ public:
     void saveSettings();
     void saveSettings(string path);
     void resetDefaultValues();
+    void resetFromSettings(string path);
     
     
     // using a template to pass in parameter of any type

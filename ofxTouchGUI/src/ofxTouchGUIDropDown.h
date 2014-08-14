@@ -27,17 +27,19 @@ public:
     int* selectId;
     void setValues(int numValues, string* listValues, int *selectedId);
     void setValues(int numValues, string* listValues);
-    void setValues(int numValues, vector<string> listValues, int *selectedId);
-    void setValues(int numValues, vector<string> listValues);
+    void setValues(int numValues, vector<string>& listValues, int *selectedId);
+    void setValues(int numValues, vector<string>& listValues);
         
     int getValue();
+    string getListValue();
     
 protected:
     
     // toggle display
     bool toggleShowList; // on or off for list disply
     
-    string* listValues;
+    //string* listValues;
+    vector<string> listValues;
     //string listValues[];
     int numListItems;
     int listHeight;

@@ -9,7 +9,6 @@ ofxTouchGUIDropDown::ofxTouchGUIDropDown(){
     defaultSelectId = initialSelectId = -1;
     selectId = &initialSelectId;
     numListItems = 0;
-    listValues = NULL;
     listHeight = 0;
     
     // DEFAULT BUTTON BACKGROUND CLRS: GRADIENT DARKER GRAY 75%
@@ -44,12 +43,11 @@ void ofxTouchGUIDropDown::setArrowClr(ofColor clr) {
 //--------------------------------------------------------------
 void ofxTouchGUIDropDown::setValues(int numValues, string* listValues) {
         
-    //this->listValues = listValues;
     numListItems = numValues;
-    this->listValues = new string[numListItems];
+    this->listValues.clear();
     
     for(int i = 0; i < numListItems; i++) {
-        this->listValues[i] = listValues[i];
+        this->listValues.push_back(listValues[i]);
     }   
     
     listHeight = int(height * numListItems);
@@ -58,38 +56,25 @@ void ofxTouchGUIDropDown::setValues(int numValues, string* listValues) {
 
 void ofxTouchGUIDropDown::setValues(int numValues, string* listValues, int* selectedId) {    
 
-    defaultSelectId = ofClamp(*selectedId, -1, numValues-1); // -1
-    //cout << "XXXXX setting default: " + ofToString(defaultSelectId) << endl;
-    
+    defaultSelectId = ofClamp(*selectedId, -1, numValues-1); // -1    
     this->selectId = selectedId;
     
     //  update the list
     setValues(numValues, listValues);
 }
 
-void ofxTouchGUIDropDown::setValues(int numValues, vector<string> listValues) {
+void ofxTouchGUIDropDown::setValues(int numValues, vector<string>& listValues) {
     
-    //this->listValues = listValues;
-    numListItems = numValues;
-    this->listValues = new string[numListItems];
-    
-    for(int i = 0; i < numListItems; i++) {
-        this->listValues[i] = listValues[i];
-    }   
-    
-    listHeight = int(height * numListItems);
-    arrowOffset = height * .15;
+    setValues(numValues, &listValues[0]);
 }
 
-void ofxTouchGUIDropDown::setValues(int numValues, vector<string> listValues, int* selectedId) {    
+void ofxTouchGUIDropDown::setValues(int numValues, vector<string>& listValues, int* selectedId) {
     
     defaultSelectId = ofClamp(*selectedId, -1, numValues-1); // -1
-    //cout << "XXXXX setting default: " + ofToString(defaultSelectId) << endl;
-    
     this->selectId = selectedId;
     
     //  update the list
-    setValues(numValues, listValues);
+    setValues(numValues, &listValues[0]);
 }
 
     
@@ -297,6 +282,10 @@ int ofxTouchGUIDropDown::getValue() {
     return *selectId;
 }
 
+string ofxTouchGUIDropDown::getListValue() {
+    
+    return listValues[*selectId];
+}
 
 
 
