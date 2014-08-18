@@ -61,7 +61,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.3
+#define OFXTOUCHGUI_VERSION 0.4
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -199,6 +199,9 @@ public:
     // time/data series graph: not interactive, but good for viewing data over time
     ofxTouchGUIDataGraph* addDataGraph(string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
+    // TODO: adding a template version so can create custom data graphs
+    ofxTouchGUIDataGraph* addCustomDataGraph(ofxTouchGUIDataGraph* customGraph, string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    
     
     // vars & consts
     // add a constant for read only (set once from app, can only be changed in xml) - good for config options
@@ -278,9 +281,9 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     // touch/mouse binded
-    virtual void onMoved(float x, float y);
-    virtual void onDown(float x, float y);
-    virtual void onUp(float x, float y);
+    virtual void onMoved(float x, float y, int pId = -1);
+    virtual void onDown(float x, float y, int pId = -1);
+    virtual void onUp(float x, float y, int pId = -1);
     
 protected:
     

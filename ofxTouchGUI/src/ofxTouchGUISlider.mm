@@ -131,9 +131,9 @@ void ofxTouchGUISlider::draw(){
 
 // TOUCH
 //--------------------------------------------------------------
-bool ofxTouchGUISlider::onDown(float x, float y){
+bool ofxTouchGUISlider::onDown(float x, float y, int pId){
     
-    if(ofxTouchGUIBase::onDown(x, y)) {
+    if(ofxTouchGUIBase::onDown(x, y, pId)) {
         
         clampInputToSliderVal(x);
         return true;
@@ -142,30 +142,30 @@ bool ofxTouchGUISlider::onDown(float x, float y){
     return false;
 }
 
-bool ofxTouchGUISlider::onUp(float x, float y){
+bool ofxTouchGUISlider::onUp(float x, float y, int pId){
     
-    if(ofxTouchGUIBase::onUp(x, y)) {
+    /*if(ofxTouchGUIBase::onUp(x, y, pId)) {
         
         // want to trigger value changes on touch up as well as move
         // TODO: check this on ios - prob not required since on down also triggers
         //clampInputToSliderVal(x);
         return true;
-    }
+    }*/
     
-    return false;
+    return ofxTouchGUIBase::onUp(x, y, pId);
 }
 
-bool ofxTouchGUISlider::onMoved(float x, float y) {
+bool ofxTouchGUISlider::onMoved(float x, float y, int pId) {
  
     if(!isInteractive || hidden) return false;
      
-     if(isPressed) {
+     if(isPressed && lastTouchId == pId) {
          
-         // must be touching inside the slider to move.
-         if(hitTest(x,y)) {
-             clampInputToSliderVal(x);
-             return true;
-         }
+         // must be touching inside the slider to move. ? NO for now
+         //if(hitTest(x,y)) {
+        clampInputToSliderVal(x);
+        return true;
+         //}
      }
     
     return false;

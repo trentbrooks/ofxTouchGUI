@@ -214,18 +214,20 @@ void ofxTouchGUIDropDown::drawOverlay() {
 
 // need to override the down + up functions for dropdowns
 // same onDown as ofxTouchGUIBase, but added || toggleShowList
-bool ofxTouchGUIDropDown::onDown(float x, float y){
-        
+bool ofxTouchGUIDropDown::onDown(float x, float y, int pId){
+
     if(!isInteractive || hidden) return false;
     if(isPressed) return false;
     
     // when the dropdown area is touched, or the menu is already opened // || toggleShowList
     if(hitTest(x,y)) {
         isPressed = true;
+        lastTouchId = pId;
         return true;        
     } else if(toggleShowList) {
         if(hitTest(x, y, width, height + listHeight)) {
             isPressed = true;
+            lastTouchId = pId;
             return true;
         }
     }
@@ -234,11 +236,11 @@ bool ofxTouchGUIDropDown::onDown(float x, float y){
 }
 
 // same onUp as ofxTouchGUIBase, except 'else if(toggleShowList)...' stuff
-bool ofxTouchGUIDropDown::onUp(float x, float y){
+bool ofxTouchGUIDropDown::onUp(float x, float y, int pId){
     
     if(!isInteractive || hidden) return false;    
 
-    if(isPressed) {
+    if(isPressed && lastTouchId == pId) {
         
         // reset press same as normal button
         isPressed = false;

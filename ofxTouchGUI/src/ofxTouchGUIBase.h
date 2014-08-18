@@ -41,9 +41,10 @@ public:
     
     
     // touch/mouse binded
-    virtual bool onMoved(float x, float y);
-    virtual bool onDown(float x, float y);
-    virtual bool onUp(float x, float y);
+    virtual bool onMoved(float x, float y, int pId = -1);
+    virtual bool onDown(float x, float y, int pId = -1);
+    virtual bool onUp(float x, float y, int pId = -1);
+    int lastTouchId;
     bool getIsPressed();
     void setInteractive(bool interactive);
     

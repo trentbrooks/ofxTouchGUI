@@ -15,10 +15,10 @@ public:
     void reset();
     
     // for charting the values over time    
-    void setCustomRange(float min, float max); 
-    void setMaximumValues(int count); // size of chart entries    
+    virtual void setCustomRange(float min, float max);
+    virtual void setMaximumValues(int count); // size of chart entries
     deque<float> savedValues;
-    void insertValue(float val);
+    virtual void insertValue(float val);
     float currentValue;
     
     // gl    

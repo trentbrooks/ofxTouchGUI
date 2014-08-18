@@ -19,8 +19,8 @@ public:
     void setArrowClr(ofColor clr);    
     
     // touch events
-    virtual bool onUp(float x, float y);
-    virtual bool onDown(float x, float y);
+    virtual bool onUp(float x, float y, int pId = -1);
+    virtual bool onDown(float x, float y, int pId = -1);
     void doSelectAction(int select, bool doOSC = true);
     
     // list + selection

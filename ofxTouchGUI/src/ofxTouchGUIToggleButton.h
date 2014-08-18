@@ -20,7 +20,7 @@ public:
     float crossLineWidth;
     
     // touch events
-    virtual bool onUp(float x, float y);
+    virtual bool onUp(float x, float y, int pId=-1);
     
     void doToggleAction(bool toggleSelect, bool doOSC = true);
     

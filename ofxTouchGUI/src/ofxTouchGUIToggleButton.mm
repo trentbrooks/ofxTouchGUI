@@ -128,9 +128,9 @@ void ofxTouchGUIToggleButton::draw(){
 
 
 
-bool ofxTouchGUIToggleButton::onUp(float x, float y){
+bool ofxTouchGUIToggleButton::onUp(float x, float y, int pId){
     
-    if(ofxTouchGUIBase::onUp(x, y)) {
+    if(ofxTouchGUIBase::onUp(x, y, pId)) {
         if(hitTest(x,y)) {
             
             doToggleAction(!*toggleVal);

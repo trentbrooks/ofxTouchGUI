@@ -26,9 +26,9 @@ public:
 
     // touch events
     //virtual void touchMoved(float x, float y);
-    virtual bool onDown(float x, float y);
-    virtual bool onMoved(float x, float y);
-    virtual bool onUp(float x, float y);
+    virtual bool onDown(float x, float y, int pId=-1);
+    virtual bool onMoved(float x, float y, int pId=-1);
+    virtual bool onUp(float x, float y, int pId=-1);
     //virtual bool overRect(float x, float y);
     void doSliderFloatAction(float sliderVal, bool doOSC = true);
     void doSliderIntAction(int sliderVal, bool doOSC = true);

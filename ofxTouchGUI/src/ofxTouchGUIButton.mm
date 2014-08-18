@@ -84,9 +84,9 @@ void ofxTouchGUIButton::draw(){
 
 
 
-bool ofxTouchGUIButton::onUp(float x, float y){
+bool ofxTouchGUIButton::onUp(float x, float y, int pId){
     
-    if(ofxTouchGUIBase::onUp(x,y)) {
+    if(ofxTouchGUIBase::onUp(x,y, pId)) {
         doButtonAction();
         return true;
     }

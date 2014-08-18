@@ -856,7 +856,26 @@ ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues
     return tgtg; 
 }
 
-// CONSTS 
+// exactly same as above, except object is created externally and passed in
+ofxTouchGUIDataGraph* ofxTouchGUI::addCustomDataGraph(ofxTouchGUIDataGraph* customGraph, string graphLabel, int maxValues, int posX, int posY, int width, int height) {
+    
+    customGraph->type = DATAGRAPH_TYPE;
+    checkItemPosSize(posX, posY, width, height);
+    customGraph->setDisplay(graphLabel, posX, posY, width, height);
+    //tgtg->disable(); // disable mouse, touch
+    if(hasFont) customGraph->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
+    customGraph->setMaximumValues(maxValues);
+    
+    guiItems.push_back(customGraph);
+    panels.back()->panelGuiItems.push_back(customGraph);
+    numGuiItems = guiItems.size();
+    
+    if(oscSendEnabled) customGraph->enableSendOSC(oscSender,wrapOscMessagesInBundle);
+    
+    return customGraph;
+}
+
+// CONSTS
 // read only (can only be changed in xml) - good for config options. No osc.
 template <typename T>
 void ofxTouchGUI::setConstant(string constName, T *fixedConst){
@@ -1324,19 +1343,19 @@ void ofxTouchGUI::mouseReleased(ofMouseEventArgs& args){
 //--------------------------------------------------------------
 void ofxTouchGUI::touchDown(ofTouchEventArgs &touch){
     // offset all through touches by windowPosition
-    onDown(touch.x , touch.y );
+    onDown(touch.x , touch.y, touch.id );
 }
 
 //--------------------------------------------------------------
 void ofxTouchGUI::touchMoved(ofTouchEventArgs &touch){
     // offset all through touches by windowPosition
-    onMoved(touch.x, touch.y );
+    onMoved(touch.x, touch.y, touch.id );
 }
 
 //--------------------------------------------------------------
 void ofxTouchGUI::touchUp(ofTouchEventArgs &touch){
     // offset all through touches by windowPosition
-    onUp(touch.x , touch.y );
+    onUp(touch.x , touch.y, touch.id );
 }
 
 //--------------------------------------------------------------
@@ -1349,7 +1368,7 @@ void ofxTouchGUI::touchCancelled(ofTouchEventArgs& args){
 
 // TOUCH/MOUSE BINDED
 //--------------------------------------------------------------
-void ofxTouchGUI::onMoved(float x, float y){
+void ofxTouchGUI::onMoved(float x, float y, int pId){
     
     if(scrollEnabled) {
         if(isScrolling) {
@@ -1362,16 +1381,16 @@ void ofxTouchGUI::onMoved(float x, float y){
     float dx = x - windowPosition.x;
     float dy = y - windowPosition.y;
     for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onMoved(dx, dy));// return; // nah
+        if(guiItems[i]->onMoved(dx, dy,pId));// return; // nah
     }    
 }
 
-void ofxTouchGUI::onDown(float x, float y){
+void ofxTouchGUI::onDown(float x, float y, int pId){
     
     float dx = x - windowPosition.x;
     float dy = y - windowPosition.y;
     for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onDown(dx, dy)) return;
+        if(guiItems[i]->onDown(dx, dy,pId)) return;
     }
     
     // cannot start scrolling when touching another interactive gui item
@@ -1383,7 +1402,7 @@ void ofxTouchGUI::onDown(float x, float y){
     }
 }
 
-void ofxTouchGUI::onUp(float x, float y){
+void ofxTouchGUI::onUp(float x, float y, int pId){
     
     if(scrollEnabled) {
         if(isScrolling) isScrolling = false;
@@ -1392,7 +1411,7 @@ void ofxTouchGUI::onUp(float x, float y){
     float dx = x - windowPosition.x;
     float dy = y - windowPosition.y;
     for(int i = 0; i < numGuiItems; i++) {
-        if(guiItems[i]->onUp(dx, dy)) return;
+        if(guiItems[i]->onUp(dx, dy,pId)) return;
     }
 }
 

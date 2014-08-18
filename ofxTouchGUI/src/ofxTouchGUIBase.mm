@@ -21,6 +21,7 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     itemId = "";
     itemActive = false; 
     isPressed = false;
+    lastTouchId = -1;
     //ofxTouchGUIBase::ignoreExternalEvents = false; // static now
     hidden = false;
     isInteractive = false;
@@ -313,32 +314,36 @@ void ofxTouchGUIBase::mouseReleased(ofMouseEventArgs& args){
 
 // TOUCH/MOUSE BINDED - to be overriden for different ui elements
 //--------------------------------------------------------------
-bool ofxTouchGUIBase::onMoved(float x, float y){
+bool ofxTouchGUIBase::onMoved(float x, float y, int pId){
    
     // onMoved not used for most gui items - always returns false here. see slider for working implementation. 
     if(!isInteractive || hidden) return false;
     return false;
 }
 
-bool ofxTouchGUIBase::onDown(float x, float y){
+bool ofxTouchGUIBase::onDown(float x, float y, int pId){
     
     if(!isInteractive || hidden) return false;
     if(isPressed) return false;
     
     if(hitTest(x,y)) {
         isPressed = true;
+        lastTouchId = pId;
         return true;
     }
     return false;
 }
 
-bool ofxTouchGUIBase::onUp(float x, float y){
+bool ofxTouchGUIBase::onUp(float x, float y, int pId){
     
     if(!isInteractive || hidden) return false;
     
-    if(isPressed) {
+    if(isPressed && lastTouchId == pId) {
         isPressed = false;
-        return true;
+        // does the touch point need to be in bounds? YES for now
+        if(hitTest(x, y)) {
+            return true;
+        }
     }
     
     return false;
