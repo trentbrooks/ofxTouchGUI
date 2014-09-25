@@ -13,7 +13,7 @@ ofxTouchGUIBase::ofxTouchGUIBase(){
     width = 100;
     height = 20;    
     textOffsetX = 10;
-    textOffsetY = int(textOffsetX / 2);
+    textOffsetY = int(textOffsetX / 2); // does nothing
     hasFont = false;
     guiFont = NULL;
     guiFontLarge = NULL;

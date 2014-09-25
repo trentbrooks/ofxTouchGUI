@@ -116,6 +116,8 @@ void ofxTouchGUIText::draw(){
         // draw text
         //drawText(label, 0);
         int yOffset = baseLineOffset + ceil(height * 0.5) + textOffsetY;
+        //int destY = int(textOffsetY + height * 0.5);
+        
         if(textType == TEXT_STRING)
             drawText(label + " : " + ofToString(*stringVal), textOffsetX, yOffset);
         else if(textType == TEXT_FLOAT)
@@ -126,9 +128,9 @@ void ofxTouchGUIText::draw(){
             drawText(label + " : " + ofToString(*boolVal), textOffsetX, yOffset);
         else if(textType == TEXT_STRING_VAL) {
             if(isTextTitle)
-                drawLargeText(label, textOffsetX, baseLineOffset + textOffsetY);//textOffsetY * 2);//textOffsetY);
+                drawLargeText(label, textOffsetX, baseLineOffset + textOffsetY);
             else
-                drawText(label, textOffsetX, baseLineOffset + textOffsetY);//textOffsetY * 2);//textOffsetY);
+                drawText(label, textOffsetX, baseLineOffset + textOffsetY);
         }
         ofPopStyle();
         

@@ -72,9 +72,11 @@ void ofxTouchGUI::clear() {
 
 void ofxTouchGUI::resetDefaultValues(){
     
+    // default saves back to what was set by the code
     for(int i = 0; i < numGuiItems; i++) {
         guiItems[i]->resetDefaultValue();
     }
+
     
     ofLogVerbose() << "Resetting defaults";
 }
@@ -84,9 +86,7 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     // first time setup - load fonts + touch/mouse listeners
     if(!settingsLoaded) {
-        
-        ofLog() << "loading fonts + stiff first time";
-        
+                
         // load the default font
         if(loadDefaultFont) loadFont("stan0755.ttf", 6, 6, false);
         

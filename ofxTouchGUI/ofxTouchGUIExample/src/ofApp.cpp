@@ -62,7 +62,8 @@ void ofApp::onGUIChanged(ofxTouchGUIEventArgs& args) {//const void* sender, stri
         settings.saveSettings();
     }
     else if(buttonLabel == "RESET") {
-        settings.resetDefaultValues();
+        settings.resetDefaultValues(); // reset to the code entered values
+        //settings.resetFromSettings("settings.xml"); // reset to the last saved xml values
     }    
 }
 

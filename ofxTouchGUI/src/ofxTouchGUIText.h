@@ -8,7 +8,11 @@
 // todo: add pointer, check if strngs == then format/wrap?
 // vars will not autowrap
 
-enum { TEXT_INT, TEXT_FLOAT, TEXT_BOOL, TEXT_STRING, TEXT_STRING_VAL };
+enum TextValueType {
+    
+    // everything excetp TEXT_STRING_VAL is for variables
+    TEXT_INT, TEXT_FLOAT, TEXT_BOOL, TEXT_STRING, TEXT_STRING_VAL
+};
 
 
 class ofxTouchGUIText : public ofxTouchGUIBase {

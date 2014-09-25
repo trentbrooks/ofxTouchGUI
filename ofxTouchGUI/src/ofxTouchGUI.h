@@ -61,7 +61,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.4
+#define OFXTOUCHGUI_VERSION 0.41
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -94,7 +94,6 @@ struct TGNameValuePair {
 struct TGPanel {
     vector <ofxTouchGUIBase*> panelGuiItems;
 };
-
 
 
 class ofxTouchGUI {
@@ -231,6 +230,8 @@ public:
     // save settings xml
     void saveSettings();
     void saveSettings(string path);
+    
+    // reset to the default code entered values or from the last saved xml values
     void resetDefaultValues();
     void resetFromSettings(string path);
     
