@@ -29,6 +29,7 @@ class ofApp : public ofBaseApp{
     int sliderValY;
     bool toggleValA, toggleValB;
     int selectListIndex;
+    string inputText;
     int mouseX, mouseY;
     
     ofxTouchGUIDataGraph *graph;

@@ -28,3 +28,8 @@
     <label>TOGGLE B</label>
     <value>0</value>
 </control>
+<control>
+    <type>input</type>
+    <label>input8</label>
+    <value>Input text...</value>
+</control>

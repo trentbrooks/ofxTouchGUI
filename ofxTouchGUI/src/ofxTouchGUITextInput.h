@@ -8,6 +8,11 @@
     #include "ofxiOSKeyboard.h"
 #endif
 
+/*
+ ofxTouchGUITextInput.
+ - originally just for ios
+ - osx + win will use a dialog popup
+ */
 
 class ofxTouchGUITextInput : public ofxTouchGUIBase {
 	
@@ -32,7 +37,8 @@ public:
     string defaultInput;
     void setPlaceHolderText(string text);
     
-    
+    // touch events
+    virtual bool onUp(float x, float y, int pId=-1);
     
 protected:
     

@@ -18,6 +18,7 @@ void ofApp::setup(){
     toggleValA = true;
     toggleValB = false;
     selectListIndex = 1;
+    inputText = "Input text...";
     string ddOptions[] = {"Oranges", "Bananas", "Apples", "Kiwis", "Mangoes"};
     string description = "ofxTouchGUI includes slider, dropdown list, button/image button, toggle button, text/title fields, input text (ios only atm), and general fixed variables. All items are custom positioned/sized on creation. Colours, fonts, etc can be changed. Settings can be saved to XML. Values can be sent via OSC.";
     
@@ -38,6 +39,7 @@ void ofApp::setup(){
     settings.addToggleButton("TOGGLE A", &toggleValA);
     settings.addToggleButton("TOGGLE B", &toggleValB);
     settings.addText(description);
+    settings.addTextInput(&inputText);
     settings.setItemSize(200, 100);
     graph= settings.addDataGraph("GRAPH MOUSE X", 500);
     graph->setCustomRange(0, ofGetWidth());

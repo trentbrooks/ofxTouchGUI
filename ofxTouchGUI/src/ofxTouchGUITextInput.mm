@@ -12,6 +12,18 @@ ofxTouchGUITextInput::ofxTouchGUITextInput(){
     textColour = textColourDark;
     fontSize = 16;
     defaultInput = "";
+    
+    // DEFAULT TOGGLE BUTTON BACKGROUND CLRS: GRADIENT GRAY 75%
+    // creates a fade from right to left instead of left to right
+    bgClrTL = ofColor(255,255,255,255); //rgba
+    bgClrTR = ofColor(255,255,255,255); //rgba
+    bgClrBL = ofColor(255,255,255,255); //rgba
+    bgClrBR = ofColor(255,255,255,255); //rgba
+    
+    #ifdef TARGET_OF_IPHONE
+    #else
+    isInteractive = true;
+    #endif
 }
 
 ofxTouchGUITextInput::~ofxTouchGUITextInput(){
@@ -24,12 +36,15 @@ void ofxTouchGUITextInput::resetDefaultValue(){
         if(keyboardSet) {
             keyboard->setText(defaultInput);
         }
+    #else
+    *input = defaultInput;
     #endif
 }
 
 void ofxTouchGUITextInput::setInput(string *placeHolderText) {
     
     //placeHolderInput = placeHolderText;
+    input = placeHolderText;
     
     #ifdef TARGET_OF_IPHONE
     
@@ -54,10 +69,11 @@ void ofxTouchGUITextInput::setInput(string *placeHolderText) {
             //ofAddListener(ofEvents().update, this, &ofxTouchGUITextInput::updateKeyboard);
         }
         
-        keyboard->setText(*placeHolderText);
-        input = placeHolderText;
+        keyboard->setText(*input);
         //defaultInput = *placeHolderText;
         keyboardSet = true;
+    
+    #else
     
     #endif
     
@@ -67,6 +83,8 @@ void ofxTouchGUITextInput::setPlaceHolderText(string text) {
     
     #ifdef TARGET_OF_IPHONE
     keyboard->setText(text);
+    #else
+    *input = text;
     #endif
 }
 
@@ -123,30 +141,56 @@ void ofxTouchGUITextInput::draw(){
     // not the best place to put this
     #ifdef TARGET_OF_IPHONE
         updateKeyboard();
-    #endif
-    /*
+    #else
     if(!hidden) {
         ofPushMatrix();
         ofTranslate(int(posX), int(posY));
-        
-        // draw the background rectangle
-        if(isPressed) {
-            drawGLRect(vertexArrActive, colorsArrActive);
-        }
-        else {
-            drawGLRect(vertexArr, colorsArr);
-        }
+        drawGLRect(vertexArr,colorsArr);//vertexArrActive, colorsArrActive);
         
         // draw text
         ofPushStyle();
-        ofSetColor(textColourLight);
-        drawText(label, 1);
-        ofPopStyle();
+        ofSetColor(textColourDark);
+        //ofSetColor(textColourLight);
+        //ofSetColor(textColour);
+
+        // draw text
+        drawText(*input, 0);
         
+        ofPopStyle();
         ofPopMatrix();
-    }*/
+    }
+    #endif
+
      
 }
 
+//--------------------------------------------------------------
+bool ofxTouchGUITextInput::onUp(float x, float y, int pId){
+    
+    //ofLog() << "on up!";
+    if(ofxTouchGUIBase::onUp(x, y, pId)) {
+        /*if(hitTest(x,y)) {
+            
+            doToggleAction(!*toggleVal);
+            return true;
+        }*/
+        
+        #ifdef TARGET_OF_IPHONE
+        #else
+        string userText = ofSystemTextBoxDialog("Enter text...");
+        if(userText.length() > 0 && userText != *input) {
+            *input = userText;
+            onKeyboardInput();
+        }
+        
+        // there is a bug with the mouse event after a dialog: https://github.com/openframeworks/openFrameworks/issues/2630
+        //restoreAppWindowFocus();
+        
+        #endif
+    }
+    
+    return false;
+    
+}
 
 
