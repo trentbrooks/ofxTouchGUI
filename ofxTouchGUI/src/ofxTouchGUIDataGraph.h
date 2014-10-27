@@ -20,6 +20,8 @@ public:
     deque<float> savedValues;
     virtual void insertValue(float val);
     float currentValue;
+    float getMinValue() { return min; }
+    float getMaxValue() { return max; }
     
     // gl    
     void setFilled(bool fill);

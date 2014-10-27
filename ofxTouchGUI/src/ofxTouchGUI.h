@@ -61,7 +61,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.41
+#define OFXTOUCHGUI_VERSION 0.42
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -275,6 +275,7 @@ public:
     void mouseDragged(ofMouseEventArgs& args);
     void mousePressed(ofMouseEventArgs& args);
     void mouseReleased(ofMouseEventArgs& args);
+    void mouseScrolled(ofMouseEventArgs& args);
     void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
@@ -345,6 +346,7 @@ protected:
     string saveToFile;
     string defaultSaveToFile;
     ofxXmlSettings XML;
+    ofXml xml;
     bool ignoreXMLValues;
     bool settingsLoaded;
     

@@ -141,7 +141,7 @@ void ofxTouchGUIDropDown::draw(){
             ofPopStyle();*/
             
          } else {
-              ofTriangle(arrowCenterX - arrowOffset, destArrowLowerY, arrowCenterX, destArrowLowerY - arrowOffset, arrowCenterX + arrowOffset, destArrowLowerY);
+              ofDrawTriangle(arrowCenterX - arrowOffset, destArrowLowerY, arrowCenterX, destArrowLowerY - arrowOffset, arrowCenterX + arrowOffset, destArrowLowerY);
          }
         
         // draw text
@@ -172,7 +172,7 @@ void ofxTouchGUIDropDown::drawOverlay() {
         ofSetColor(arrowClr);
         ofFill();
         
-        ofTriangle(arrowCenterX - arrowOffset, destArrowUpperY, arrowCenterX, destArrowUpperY + arrowOffset, arrowCenterX + arrowOffset, destArrowUpperY);
+        ofDrawTriangle(arrowCenterX - arrowOffset, destArrowUpperY, arrowCenterX, destArrowUpperY + arrowOffset, arrowCenterX + arrowOffset, destArrowUpperY);
         
         // display drop down list bg
         vertexArr[1] = height; // TL y

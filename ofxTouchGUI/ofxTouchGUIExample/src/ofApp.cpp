@@ -72,6 +72,8 @@ void ofApp::onGUIChanged(ofxTouchGUIEventArgs& args) {//const void* sender, stri
 //--------------------------------------------------------------
 void ofApp::update(){
 
+    //if(ofGetMousePressed())
+        //ofLog() << "mouse pressed " << ofGetMousePressed();
 }
 
 //--------------------------------------------------------------
