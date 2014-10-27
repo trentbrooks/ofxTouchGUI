@@ -108,7 +108,16 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     if(xml.load(this->saveToFile)) {
         settingsLoaded = true;
+
     } else {
+        
+        // legacy fix: save old xml to settings-backup.xml (old style doesn't load/parse)
+        ofFile file(this->saveToFile);
+        if(file.exists()) {
+            ofLogError() << "Found xml, but could not parse: backing up to settings-backup.xml";
+            file.copyTo("settings-backup.xml");
+        }
+        
         ofLog() << "TouchGUI: NO XML file to load. Creating new " << saveToFile;
         saveSettings();
         settingsLoaded = true;
@@ -976,8 +985,9 @@ void ofxTouchGUI::saveSettings(string path) {
     if(!xml.exists("//settings") && xml.getName() != "settings") {
         ofLog() << "Adding new settings node!";
         xml.addChild("settings");
-        xml.setTo("//settings");
     }
+    
+    xml.setTo("//settings");
     
     // loop through the xml and udpate the values from the gui
     //int numSavedControllers = XML.getNumTags("control");
@@ -1089,11 +1099,11 @@ void ofxTouchGUI::resetFromSettings(string path) {
     
     // loop through the xml and udpate the gui values from xml - inverse of saveControl
     //int numSavedControllers = XML.getNumTags("control");
-    int numSavedControllers = xml.getNumChildren("settings");
+    int numSavedControllers = xml.getNumChildren();//getNumChildren("settings");
     for(int i = 0; i < numSavedControllers; i++){
         
         //XML.pushTag("control", i);
-        xml.setTo("control");
+        //xml.setTo("control");
         xml.setToChild(i);
         
         //string controlLabel = XML.getValue("label", "", 0);
