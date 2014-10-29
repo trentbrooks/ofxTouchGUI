@@ -203,7 +203,7 @@ void ofxTouchGUIDropDown::drawOverlay() {
             if(i > 0) {
                 ofSetColor(arrowClr);
                 //ofLine(0, listY, width, listY); // weird bug with ofLine when 4x sampling enabled in main.mm
-                ofRect(0, listY, width, 1); // 1px rect instead of ofLine for now
+                ofDrawRectangle(0, listY, width, 1); // 1px rect instead of ofLine for now
             }
         }
         ofPopStyle();        

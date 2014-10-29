@@ -39,6 +39,6 @@ Ubuntu and windows user's will need to rename the file's from .mm to .cpp, or ju
 See example files for more detailed code samples.
 
 ## Openframeworks addons required ##
-* 	ofxXmlSettings & ofxOsc (in addons folder)
+* 	ofxOsc (in addons folder)
 
 -Trent Brooks

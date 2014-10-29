@@ -111,26 +111,14 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
 
     } else {
         
-        // legacy fix: save old xml to settings-backup.xml (old style doesn't load/parse)
-        ofFile file(this->saveToFile);
-        if(file.exists()) {
-            ofLogError() << "Found xml, but could not parse: backing up to settings-backup.xml";
-            file.copyTo("settings-backup.xml");
+        // legacy fix: save old xml to settings-backup.xml (old style doesn't load/parse without a root node)
+        bool legacyFix = checkLegacyXml();
+        if(!legacyFix) {
+            ofLog() << "TouchGUI: NO XML file to load. Creating new " << saveToFile;
+            saveSettings();
+            settingsLoaded = true;
         }
-        
-        ofLog() << "TouchGUI: NO XML file to load. Creating new " << saveToFile;
-        saveSettings();
-        settingsLoaded = true;
     }
-    
-    // TODO: delete old xml settings
-    /*if( XML.loadFile(this->saveToFile) ){
-        settingsLoaded = true;
-    } else {
-        ofLog() << "TouchGUI: NO XML file to load. Creating new " << saveToFile;
-        saveSettings();
-        settingsLoaded = true;
-    }*/
 }
 
 void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
@@ -142,7 +130,7 @@ void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
 void ofxTouchGUI::loadBackgroundImage(string imgPath){	
     
     hasBackgroundImage = true;
-    backgroundImage.loadImage(imgPath);
+    backgroundImage.load(imgPath);
 
 }
 
@@ -166,13 +154,13 @@ void ofxTouchGUI::loadFont(string fontPath, int fontSize, int fontSizeLarge, boo
 void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int fontSizeSmall, int fontSizeLarge, bool antialiasedSmall, bool antialisedLarge){
     
     hasFont = true;
-    if(guiFont.loadFont(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
+    if(guiFont.load(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
         guiFont.setLineHeight(int(fontSizeSmall * 2)); // not sure about this?
     } else {
         hasFont = false;
     }
     
-    if(guiFontLarge.loadFont(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
+    if(guiFontLarge.load(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
         guiFontLarge.setLineHeight(int(fontSizeLarge * 2 * .8)); // weird.
     } else {
         hasFont = false;
@@ -438,7 +426,7 @@ void ofxTouchGUI::draw(){
         
         if(hasBackgroundColor) {
             ofSetColor(bg);
-            ofRect(bgX, bgY, bgWidth, bgHeight);
+            ofDrawRectangle(bgX, bgY, bgWidth, bgHeight);
         }
         
         ofSetColor(255);
@@ -971,6 +959,30 @@ ofxTouchGUIBase* ofxTouchGUI::getItemByOSCAddress(string oscAddress) {
 
 // XML SETTINGS
 //--------------------------------------------------------------
+// the old xml style didn't have a root node, and wouldn't parse. this just makes sure we dont loose original data
+bool ofxTouchGUI::checkLegacyXml() {
+    
+    ofFile file(saveToFile);
+    if(file.exists()) {
+        ofLog() << "Found xml, but did not parse: converting to new format with <settings> root node.";
+        
+        // want to extract all the xml data from this file and add to a new xml doc with a root node of <settings>
+        ofBuffer buffer = file.readToBuffer();
+        string contents = buffer.getText();
+        string output = "<settings>\n" + contents + "</settings>";
+
+        if(xml.loadFromBuffer(output)) {
+            ofLog() << "Success: legacy xml converted, saved to new format.";
+            settingsLoaded = true;
+            saveSettings();
+            return true;
+        } else {
+            ofLogError() << "Failed to convert xml string, must be invalid xml: " << output;
+        }
+    }
+    
+    return false;
+}
 
 // SAVE ALL SETTINGS
 void ofxTouchGUI::saveSettings() {
@@ -978,7 +990,6 @@ void ofxTouchGUI::saveSettings() {
     saveSettings(saveToFile);
 }
 
-// TODO: delete old xml version
 void ofxTouchGUI::saveSettings(string path) {
     
     // ofXML must have a root document for some reason
@@ -990,46 +1001,33 @@ void ofxTouchGUI::saveSettings(string path) {
     xml.setTo("//settings");
     
     // loop through the xml and udpate the values from the gui
-    //int numSavedControllers = XML.getNumTags("control");
     int numSavedControllers = xml.getNumChildren();
     ofLog() << "Num saved controllers: " << numSavedControllers;
     
 
     for(int i = 0; i < numSavedControllers; i++){
-        
-        //XML.pushTag("control", i);
-        //xml.setTo("control");
+
         xml.setToChild(i);
-        
-        //string controlLabel = XML.getValue("label", "", 0);
-        //string controlType = XML.getValue("type", "", 0); // get the type value or ""
-        //string controlItemId = XML.getValue("itemid", "", 0);
+
         string controlLabel = xml.getValue<string>("label");
         string controlType = xml.getValue<string>("type");
         //string controlItemId = xml.getValue<string>("itemid");
         
         if(controlType == TOGGLE_TYPE) {
             
-            //ofxTouchGUIBase* controller = getItemByLabel(controlLabel);
-            //const ofxTouchGUIToggleButton* controller = (const ofxTouchGUIToggleButton*)getItemById(controlItemId);
             const ofxTouchGUIToggleButton* controller = (const ofxTouchGUIToggleButton*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //XML.setValue("value", *controller->toggleVal, 0);
-                //xml.addValue("value", *controller->toggleVal);
                 xml.setValue("value", ofToString(*controller->toggleVal));
             }
         }
         else if(controlType == SLIDER_TYPE) {
             
-            //const ofxTouchGUISlider* controller = (const ofxTouchGUISlider*)getItemById(controlItemId);
             const ofxTouchGUISlider* controller = (const ofxTouchGUISlider*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
                 if(controller->useInteger == true) {
-                    //XML.setValue("value", *controller->intVal, 0);
                     xml.setValue("value", ofToString(*controller->intVal));
                 }
                 else {
-                    //XML.setValue("value", *controller->val, 0);
                     xml.setValue("value", ofToString(*controller->val));
                 }
             }
@@ -1037,10 +1035,8 @@ void ofxTouchGUI::saveSettings(string path) {
         }
         else if(controlType == DROPDOWN_TYPE) {
             
-            //const ofxTouchGUIDropDown* controller = (const ofxTouchGUIDropDown*)getItemById(controlItemId);
             const ofxTouchGUIDropDown* controller = (const ofxTouchGUIDropDown*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //XML.setValue("value", *controller->selectId, 0);
                 xml.setValue("value", ofToString(*controller->selectId));
             }
         }
@@ -1048,66 +1044,46 @@ void ofxTouchGUI::saveSettings(string path) {
             
             const ofxTouchGUITextInput* controller = (const ofxTouchGUITextInput*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //XML.setValue("value", *controller->input, 0);
                 xml.setValue("value", ofToString(*controller->input));
             }
         }
         else if(controlType == VAR_TYPE) {
-            //NameValuePair nvp;
-            //= {varName, (void*)regVar};
-            //varItems.push_back(nvp);
+
             const TGNameValuePair* var = (const TGNameValuePair*)getVarByLabel(controlLabel);
             if(var) {
                 
                 if(var->type == _STRING) {
-                    //XML.setValue("value", *(string*)var->value, 0);
                     xml.setValue("value", ofToString(*(string*)var->value));
                 } else if(var->type == _INT) {
-                    //XML.setValue("value", *(int*)var->value, 0);
                     xml.setValue("value", ofToString(*(int*)var->value));
                 } else if(var->type == _FLOAT) {
-                    //XML.setValue("value", *(float*)var->value, 0);
                     xml.setValue("value", ofToString(*(float*)var->value));
                 } else if(var->type == _BOOL) {
-                    //XML.setValue("value", *(bool*)var->value, 0);
                     xml.setValue("value", ofToString(*(bool*)var->value));
                 }
             }
         }
         
         // note fixed vars/constants aren't saved, they are set once on creation
-        // need to add more generic 'vars/addVar' property for a changing var - done!
         
-        //XML.popTag();
         xml.setToParent();
     }
     
     ofLog() << "TouchGUI: file saved " << path;
-    //XML.saveFile( path );
     xml.save(path);
-    
-
-    //xml.setTo("settings");
-    
 }
 
-// TODO: delete old xml version
 void ofxTouchGUI::resetFromSettings(string path) {
     
     // need to overwrite all the gui values from new xml...
     loadSettings(path);
     
     // loop through the xml and udpate the gui values from xml - inverse of saveControl
-    //int numSavedControllers = XML.getNumTags("control");
     int numSavedControllers = xml.getNumChildren();//getNumChildren("settings");
     for(int i = 0; i < numSavedControllers; i++){
-        
-        //XML.pushTag("control", i);
-        //xml.setTo("control");
+
         xml.setToChild(i);
-        
-        //string controlLabel = XML.getValue("label", "", 0);
-        //string controlType = XML.getValue("type", "", 0); // get the type value or ""
+
         string controlLabel = xml.getValue<string>("label");
         string controlType = xml.getValue<string>("type");
 
@@ -1116,7 +1092,6 @@ void ofxTouchGUI::resetFromSettings(string path) {
             
             ofxTouchGUIToggleButton* controller = (ofxTouchGUIToggleButton*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //*controller->toggleVal = XML.getValue("value", *controller->toggleVal, 0);
                 *controller->toggleVal = xml.getValue<bool>("value");
             }
         } else if(controlType == SLIDER_TYPE) {
@@ -1124,10 +1099,8 @@ void ofxTouchGUI::resetFromSettings(string path) {
             ofxTouchGUISlider* controller = (ofxTouchGUISlider*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
                 if(controller->useInteger == true) {
-                    //*controller->intVal = XML.getValue("value", *controller->intVal, 0);
                     *controller->intVal = xml.getValue<int>("value");
                 } else {
-                    //*controller->val = XML.getValue("value", *controller->val, 0);
                     *controller->val = xml.getValue<float>("value");
                 }
                 
@@ -1136,14 +1109,12 @@ void ofxTouchGUI::resetFromSettings(string path) {
             
             ofxTouchGUIDropDown* controller = (ofxTouchGUIDropDown*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //*controller->selectId = XML.getValue("value", *controller->selectId, 0);
                 *controller->selectId = xml.getValue<int>("value");
             }
         } else if(controlType == TEXTINPUT_TYPE) {
             
             ofxTouchGUITextInput* controller = (ofxTouchGUITextInput*)getItemByLabelAndType(controlLabel,controlType);
             if(controller) {
-                //*controller->input = XML.getValue("value", *controller->input, 0);
                 *controller->input = xml.getValue<string>("value");
             }
         } else if(controlType == VAR_TYPE) {
@@ -1152,28 +1123,22 @@ void ofxTouchGUI::resetFromSettings(string path) {
             if(var) {
                 
                 if(var->type == _STRING) {
-                    //*(string*)var->value = XML.getValue("value", *(string*)var->value, 0);
                     *(string*)var->value = xml.getValue<string>("value");
                 } else if(var->type == _INT) {
-                    //*(int*)var->value = XML.getValue("value", *(int*)var->value, 0);
                     *(int*)var->value = xml.getValue<int>("value");
                 } else if(var->type == _FLOAT) {
-                    //*(float*)var->value = XML.getValue("value", *(float*)var->value, 0);
                     *(float*)var->value = xml.getValue<float>("value");
                 } else if(var->type == _BOOL) {
-                    //*(bool*)var->value = XML.getValue("value", *(bool*)var->value, 0);
                     *(bool*)var->value = xml.getValue<bool>("value");
                 }
             }
         }
         
-        //XML.popTag();
         xml.setToParent();
     }
 }
 
 
-// TODO: delete old xml version
 // SAVE INDIVIDUAL SETTINGS - saves the controller: T param must be int,float or bool
 template <typename T>
 bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* currentValue, bool overwriteXMLValue)
@@ -1181,33 +1146,23 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
     xml.setTo("//settings");
     
     bool isControlSaved = false;
-    //int numSavedControllers = XML.getNumTags("control");
     int numSavedControllers = xml.getNumChildren();
     
     for(int i = 0; i < numSavedControllers; i++){
         
         // check by label & type instead of id, as the id changes when new controls are added. need to change/ remove id's all together maybe?
         // or create non incremental id's so they don't get recreated?
-        //XML.pushTag("control", i);
-        //xml.setTo("control");
         xml.setToChild(i);
         
-        //string controlLabel = XML.getValue("label", "", 0);
-        //string controlItemId = XML.getValue("itemid", "", 0);
-        //string controlItemType = XML.getValue("type", "", 0);
         string controlLabel = xml.getValue<string>("label");
         string controlItemType = xml.getValue<string>("type");
         //string controlItemId = xml.getValue<string>("itemid");
         
-        //if(currentItemId == controlItemId) {
         if(currentLabel == controlLabel && currentType == controlItemType) {
             isControlSaved = true;
             
             if(overwriteXMLValue) {
                 // save over the xml values (this is false by default)
-                //XML.setValue("type", currentType, 0);
-                //XML.setValue("label", currentLabel, 0);
-                //XML.setValue("value", *currentValue, 0);
                 xml.setValue("type", ofToString(currentType));
                 xml.setValue("label", ofToString(currentLabel));
                 xml.setValue("value", ofToString(*currentValue));
@@ -1216,18 +1171,14 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
             } else {
                 // overwrite the value with the saved xml value if not ignoring
                 if(!ignoreXMLValues) {
-                    //*currentValue = XML.getValue("value", *currentValue, 0);
                     *currentValue = xml.getValue<T>("value");
                 }
             }
             
-            //cout << "val: " << *currentValue << endl;
-            //XML.popTag();
             xml.setToParent();
             
             break;
         } else {
-            //XML.popTag();
             xml.setToParent();
         }
     }
@@ -1236,27 +1187,14 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
     if(!isControlSaved) {
         
         // create xml 'control' node
-        //XML.addTag("control");
-        
         ofXml controlXML;
         controlXML.addChild("control");
         controlXML.setTo("control");
-        
-        //int numControlTags = (numSavedControllers > 0) ? numSavedControllers : 0;
-        //XML.pushTag("control", numControlTags);
-        
-        // required values
-        //XML.setValue("type", currentType, 0);
-        //XML.setValue("itemid", currentItemId, 0);
-        //XML.setValue("label", currentLabel, 0);
-        //XML.setValue("value", *currentValue, 0);
+
         controlXML.addValue("type", currentType);
         controlXML.addValue("label", currentLabel);
         controlXML.addValue("value", *currentValue);
-        //XML.popTag();
-        //xml.setToParent();
-        
-        //XML.saveFile( saveToFile );
+
         xml.addXml(controlXML);
         xml.save(saveToFile);
         return true;

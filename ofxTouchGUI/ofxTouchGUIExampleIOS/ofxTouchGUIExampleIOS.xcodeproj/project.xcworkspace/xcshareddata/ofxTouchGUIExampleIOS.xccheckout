@@ -5,46 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>677A7117-8A68-4110-B531-BF788E635BF2</string>
+	<string>63787B41-103A-4967-890F-75219AC41A00</string>
 	<key>IDESourceControlProjectName</key>
 	<string>ofxTouchGUIExampleIOS</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
-		<string>https://github.com/trentbrooks/openFrameworks.git</string>
-		<key>97CA4108-7035-438A-A182-E4A92DEA1CA0</key>
+		<key>54E58150-20E3-408C-B8DE-4B07DE3D255F</key>
 		<string>https://github.com/trentbrooks/openFrameworks.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>addons/ofxTouchGUI/ofxTouchGUIExampleIOS/ofxTouchGUIExampleIOS.xcodeproj</string>
+	<string>apps/trentbrooks/ofxTouchGUIExampleIOS/ofxTouchGUIExampleIOS.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
+		<key>54E58150-20E3-408C-B8DE-4B07DE3D255F</key>
 		<string>../../../../..</string>
-		<key>97CA4108-7035-438A-A182-E4A92DEA1CA0</key>
-		<string>../../../../../../OF_080</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/trentbrooks/openFrameworks.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>111</integer>
+	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+	<string>54E58150-20E3-408C-B8DE-4B07DE3D255F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>97CA4108-7035-438A-A182-E4A92DEA1CA0</string>
-			<key>IDESourceControlWCCName</key>
-			<string>OF_080</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+			<string>54E58150-20E3-408C-B8DE-4B07DE3D255F</string>
 			<key>IDESourceControlWCCName</key>
 			<string>openFrameworks</string>
 		</dict>

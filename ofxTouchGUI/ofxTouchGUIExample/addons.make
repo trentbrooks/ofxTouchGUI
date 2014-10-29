@@ -1,3 +1,2 @@
 ofxOsc
 ofxTouchGUI
-ofxXmlSettings

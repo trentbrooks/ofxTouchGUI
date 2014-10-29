@@ -9,7 +9,6 @@
 #include "ofxTouchGUIDropDown.h"
 #include "ofxTouchGUITextInput.h"
 #include "ofxTouchGUIDataGraph.h"
-#include "ofxXmlSettings.h"
 #include "ofxOsc.h"
 #include "ofxTouchGUIEventArgs.h"
 
@@ -61,7 +60,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.42
+#define OFXTOUCHGUI_VERSION 0.43
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -345,10 +344,10 @@ protected:
     // save settings
     string saveToFile;
     string defaultSaveToFile;
-    ofxXmlSettings XML;
     ofXml xml;
     bool ignoreXMLValues;
     bool settingsLoaded;
+    bool checkLegacyXml(); // the old xml style didn't have a root node, this just makes sure we dont loose original data
     
     // controls
     int numGuiItems;
