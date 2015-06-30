@@ -57,9 +57,9 @@ void ofxTouchGUITextInput::setInput(string *placeHolderText) {
             //keyboard = new ofxiPhoneKeyboardExtra(-5000, 0, 10, 10);
             keyboard->setVisible(true);
             //keyboard->setMaxChars(100);
-            keyboard->setBgColor(255, 255, 255, 255); // retina weirdness if(retina) 
+            keyboard->setBgColor(255, 255, 255, 255); // retina weirdness if(retina)
             keyboard->setFontColor(textColour.r,textColour.g,textColour.b,textColour.a);
-            keyboard->setFontSize(fontSize);
+            keyboard->setFontSize(fontSize*2);
             //keyboard->disableAutoCorrection(); // disable auto type corrections, custom method added to ofxIphoneKeyboard.
             //keyboard->setPlaceholder(placeHolderText);
             //keyboard->setPosition(posX, posY);// + height);

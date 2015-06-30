@@ -22,8 +22,8 @@ ofxTouchGUIButton::~ofxTouchGUIButton(){
 void ofxTouchGUIButton::loadImageStates(string upImagePath, string downImagePath, bool useWidthHeightFromImage) {
     
     hasImages = true;
-    upImage.load(upImagePath);
-    downImage.load(downImagePath); 
+    upImage.loadImage(upImagePath);
+    downImage.loadImage(downImagePath); 
     if(useWidthHeightFromImage) {
         this->width = upImage.width;
         this->height = upImage.height;

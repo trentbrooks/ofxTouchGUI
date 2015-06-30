@@ -106,10 +106,13 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     ofLog() << "IOS detected- save to path: " << this->saveToFile;
 #endif
     
-    if(xml.load(this->saveToFile)) {
-        settingsLoaded = true;
+    try {
+        settingsLoaded = xml.load(this->saveToFile);
+    } catch (int e) {
+        ofLog() << "XML could not load file (file doesn't exist yet): " << this->saveToFile;
+    }
 
-    } else {
+    if(!settingsLoaded) {
         
         // legacy fix: save old xml to settings-backup.xml (old style doesn't load/parse without a root node)
         bool legacyFix = checkLegacyXml();
@@ -121,6 +124,11 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     }
 }
 
+void ofxTouchGUI::loadSettingsStripped(string saveToFile) {
+    loadSettings(saveToFile, false, true);
+    disableMouse();
+}
+
 void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
     ignoreXMLValues = ignoreXML;
 }
@@ -130,7 +138,7 @@ void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
 void ofxTouchGUI::loadBackgroundImage(string imgPath){	
     
     hasBackgroundImage = true;
-    backgroundImage.load(imgPath);
+    backgroundImage.loadImage(imgPath);
 
 }
 
@@ -154,13 +162,13 @@ void ofxTouchGUI::loadFont(string fontPath, int fontSize, int fontSizeLarge, boo
 void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int fontSizeSmall, int fontSizeLarge, bool antialiasedSmall, bool antialisedLarge){
     
     hasFont = true;
-    if(guiFont.load(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
+    if(guiFont.loadFont(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
         guiFont.setLineHeight(int(fontSizeSmall * 2)); // not sure about this?
     } else {
         hasFont = false;
     }
     
-    if(guiFontLarge.load(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
+    if(guiFontLarge.loadFont(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
         guiFontLarge.setLineHeight(int(fontSizeLarge * 2 * .8)); // weird.
     } else {
         hasFont = false;
@@ -294,7 +302,7 @@ void ofxTouchGUI::nextColumn() {
 // hides all previous panels items and makes a new panel for subsequent gui items to be added.
 // only 1 panel should be visible at any time.
 // panel items are positioned at the defaultItem positions and sizes (same as first panel).
-// TODO: positional panels 
+// TODO: positional panels
 int ofxTouchGUI::newPanel() {
     
     hideAllPanels();
@@ -426,7 +434,7 @@ void ofxTouchGUI::draw(){
         
         if(hasBackgroundColor) {
             ofSetColor(bg);
-            ofDrawRectangle(bgX, bgY, bgWidth, bgHeight);
+            ofRect(bgX, bgY, bgWidth, bgHeight);
         }
         
         ofSetColor(255);
@@ -1002,7 +1010,7 @@ void ofxTouchGUI::saveSettings(string path) {
     
     // loop through the xml and udpate the values from the gui
     int numSavedControllers = xml.getNumChildren();
-    ofLog() << "Num saved controllers: " << numSavedControllers;
+    //ofLog() << "Num saved controllers: " << numSavedControllers;
     
 
     for(int i = 0; i < numSavedControllers; i++){
@@ -1269,6 +1277,16 @@ void ofxTouchGUI::sendOSC(string address, string val) {
     }
 }
 
+void ofxTouchGUI::sendOSC(ofxOscMessage& msg) {
+    if(oscSendEnabled) {
+        //msg.clear();
+        //msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
+        //msg.addStringArg(val);
+        //ofLog() << "FICK - sending: " << address << " : " << val;
+        oscSender->sendMessage( msg, wrapOscMessagesInBundle );
+    }
+}
+
 void ofxTouchGUI::setupReceiveOSC(int port) {    
     
     // setup osc host + port after settings have loaded
@@ -1334,12 +1352,18 @@ void ofxTouchGUI::enableTouch(){
     useMouse = false;
     
     // register touch events
-    ofRegisterTouchEvents(this);
+    //ofRegisterTouchEvents(this);
+    ofAddListener(ofEvents().touchDown, this, &ofxTouchGUI::touchDown);
+    ofAddListener(ofEvents().touchMoved, this, &ofxTouchGUI::touchMoved);
+    ofAddListener(ofEvents().touchUp, this, &ofxTouchGUI::touchUp);
 }
 
 //--------------------------------------------------------------
 void ofxTouchGUI::disableTouch(){    
-    ofUnregisterTouchEvents(this);
+    //ofUnregisterTouchEvents(this);
+    ofRemoveListener(ofEvents().touchDown, this, &ofxTouchGUI::touchDown);
+    ofRemoveListener(ofEvents().touchMoved, this, &ofxTouchGUI::touchMoved);
+    ofRemoveListener(ofEvents().touchUp, this, &ofxTouchGUI::touchUp);
 }
 
 //--------------------------------------------------------------
@@ -1348,20 +1372,22 @@ void ofxTouchGUI::enableMouse(){
     useMouse = true;
     
     // register mouse events
-    ofRegisterMouseEvents(this);
+    //ofRegisterMouseEvents(this);
+    ofAddListener(ofEvents().mouseDragged,this,&ofxTouchGUI::mouseDragged);
+    ofAddListener(ofEvents().mousePressed,this,&ofxTouchGUI::mousePressed);
+    ofAddListener(ofEvents().mouseReleased,this,&ofxTouchGUI::mouseReleased);
 }
 
 //--------------------------------------------------------------
 void ofxTouchGUI::disableMouse(){    
-    ofUnregisterMouseEvents(this);
+    //ofUnregisterMouseEvents(this);
+    ofRemoveListener(ofEvents().mouseDragged,this,&ofxTouchGUI::mouseDragged);
+    ofRemoveListener(ofEvents().mousePressed,this,&ofxTouchGUI::mousePressed);
+    ofRemoveListener(ofEvents().mouseReleased,this,&ofxTouchGUI::mouseReleased);
 }
 
 
 // MOUSE EVENTS
-//--------------------------------------------------------------
-void ofxTouchGUI::mouseMoved(ofMouseEventArgs& args){    
-}
-
 //--------------------------------------------------------------
 void ofxTouchGUI::mouseDragged(ofMouseEventArgs& args){
     // offset all through touches by windowPosition
@@ -1380,9 +1406,14 @@ void ofxTouchGUI::mouseReleased(ofMouseEventArgs& args){
     onUp(args.x , args.y );
 }
 
+//--------------------------------------------------------------
+/*void ofxTouchGUI::mouseMoved(ofMouseEventArgs& args){
+}
+
+
 // new required callback mouse scroll
 void ofxTouchGUI::mouseScrolled(ofMouseEventArgs& args) {
-}
+}*/
 
 // TOUCH
 //--------------------------------------------------------------
@@ -1404,12 +1435,12 @@ void ofxTouchGUI::touchUp(ofTouchEventArgs &touch){
 }
 
 //--------------------------------------------------------------
-void ofxTouchGUI::touchDoubleTap(ofTouchEventArgs &touch){    
+/*void ofxTouchGUI::touchDoubleTap(ofTouchEventArgs &touch){
 }
 
 //--------------------------------------------------------------
 void ofxTouchGUI::touchCancelled(ofTouchEventArgs& args){    
-}
+}*/
 
 // TOUCH/MOUSE BINDED
 //--------------------------------------------------------------

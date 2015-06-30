@@ -244,7 +244,12 @@ void ofxTouchGUIBase::drawLargeText(const string &text, int destX, int destY){
 }
 
 void ofxTouchGUIBase::drawGLRect(float *&vtxArray, float *&clrArray) {
-    
+
+    // TODO: unify this with just OF calls so works on everything
+    #ifdef TARGET_OPENGLES
+    ofSetColor(clrArray[0]*255, clrArray[1]*255, clrArray[2]*255, clrArray[3]*255);
+    ofDrawRectangle(vtxArray[0], vtxArray[1], vtxArray[2]-vtxArray[0], vtxArray[7]-vtxArray[1]);
+    #else
     glVertexPointer(2, GL_FLOAT, 0, &vtxArray[0]); //GLint size, GLenum type, GLsizei stride, const GLvoid *pointer
     glEnableClientState(GL_VERTEX_ARRAY);
     glColorPointer(4, GL_FLOAT, 0, &clrArray[0]);
@@ -252,6 +257,7 @@ void ofxTouchGUIBase::drawGLRect(float *&vtxArray, float *&clrArray) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); // number of vertexs/colours
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    #endif
 }
 
 

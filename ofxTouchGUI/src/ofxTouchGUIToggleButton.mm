@@ -29,8 +29,8 @@ ofxTouchGUIToggleButton::~ofxTouchGUIToggleButton(){
 void ofxTouchGUIToggleButton::loadImageStates(string onImagePath, string offImagePath, bool useWidthHeightFromImage) {
     
     hasImages = true;
-    onImage.load(onImagePath);
-    offImage.load(offImagePath);
+    onImage.loadImage(onImagePath);
+    offImage.loadImage(offImagePath);
     if(useWidthHeightFromImage) {
         this->width = onImage.width;
         this->height = onImage.height;
@@ -109,8 +109,8 @@ void ofxTouchGUIToggleButton::draw(){
             if(*toggleVal) {
                 ofSetColor(crossX);
                 ofSetLineWidth(crossLineWidth);
-                ofDrawLine(destValX + crossOffset, crossOffset, width - crossOffset, height - crossOffset);
-                ofDrawLine(width - crossOffset, crossOffset, destValX + crossOffset, height - crossOffset);
+                ofLine(destValX + crossOffset, crossOffset, width - crossOffset, height - crossOffset);
+                ofLine(width - crossOffset, crossOffset, destValX + crossOffset, height - crossOffset);
             }
             
             

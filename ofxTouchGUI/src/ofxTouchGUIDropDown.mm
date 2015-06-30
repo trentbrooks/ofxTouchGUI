@@ -141,14 +141,18 @@ void ofxTouchGUIDropDown::draw(){
             ofPopStyle();*/
             
          } else {
-              ofDrawTriangle(arrowCenterX - arrowOffset, destArrowLowerY, arrowCenterX, destArrowLowerY - arrowOffset, arrowCenterX + arrowOffset, destArrowLowerY);
+              ofTriangle(arrowCenterX - arrowOffset, destArrowLowerY, arrowCenterX, destArrowLowerY - arrowOffset, arrowCenterX + arrowOffset, destArrowLowerY);
          }
         
         // draw text
         ofPushStyle();
         ofSetColor(textColour);
+        if(*selectId < 0) {
+            drawText(label, 0);
+        } else if(listValues.size()) {
+            drawText(listValues[*selectId], 0);
+        }
         //drawText((toggleShowList) ? label : listValues[selectId], 0);
-        drawText((*selectId < 0) ? label : listValues[*selectId], 0);
         ofPopStyle();
           
         ofPopMatrix();   
@@ -172,7 +176,7 @@ void ofxTouchGUIDropDown::drawOverlay() {
         ofSetColor(arrowClr);
         ofFill();
         
-        ofDrawTriangle(arrowCenterX - arrowOffset, destArrowUpperY, arrowCenterX, destArrowUpperY + arrowOffset, arrowCenterX + arrowOffset, destArrowUpperY);
+        ofTriangle(arrowCenterX - arrowOffset, destArrowUpperY, arrowCenterX, destArrowUpperY + arrowOffset, arrowCenterX + arrowOffset, destArrowUpperY);
         
         // display drop down list bg
         vertexArr[1] = height; // TL y
@@ -203,7 +207,7 @@ void ofxTouchGUIDropDown::drawOverlay() {
             if(i > 0) {
                 ofSetColor(arrowClr);
                 //ofLine(0, listY, width, listY); // weird bug with ofLine when 4x sampling enabled in main.mm
-                ofDrawRectangle(0, listY, width, 1); // 1px rect instead of ofLine for now
+                ofRect(0, listY, width, 1); // 1px rect instead of ofLine for now
             }
         }
         ofPopStyle();        

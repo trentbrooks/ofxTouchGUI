@@ -60,7 +60,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.43
+#define OFXTOUCHGUI_VERSION 0.44
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -96,7 +96,6 @@ struct TGPanel {
 
 
 class ofxTouchGUI {
-    
 public:
     
     ofxTouchGUI();
@@ -105,6 +104,7 @@ public:
     
     // setup
     void loadSettings(string saveToFile = "settings.xml", bool loadDefaultFont = true, bool useMouse = true);
+    void loadSettingsStripped(string saveToFile); // no font loading, or interaction events
     void setIgnoreXMLValues(bool ignoreXML); // ignore previously saved values in xml. all initial values set by app.
     
     // background
@@ -254,6 +254,7 @@ public:
     void sendOSC(string address, float val); // send any generic message- must pass address + value
     void sendOSC(string address, int val);
     void sendOSC(string address, string val);
+    void sendOSC(ofxOscMessage& msg);
     string getHostOSC() {
         return oscSendHostAddress;
     };
@@ -270,16 +271,16 @@ public:
     void disableTouch();
     void enableMouse();
     void disableMouse();
-    void mouseMoved(ofMouseEventArgs& args );
     void mouseDragged(ofMouseEventArgs& args);
     void mousePressed(ofMouseEventArgs& args);
     void mouseReleased(ofMouseEventArgs& args);
-    void mouseScrolled(ofMouseEventArgs& args);
+    //void mouseMoved(ofMouseEventArgs& args );
+    //void mouseScrolled(ofMouseEventArgs& args);
     void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
-	void touchDoubleTap(ofTouchEventArgs &touch);
-	void touchCancelled(ofTouchEventArgs &touch);
+	//void touchDoubleTap(ofTouchEventArgs &touch);
+	//void touchCancelled(ofTouchEventArgs &touch);
     
     // touch/mouse binded
     virtual void onMoved(float x, float y, int pId = -1);
