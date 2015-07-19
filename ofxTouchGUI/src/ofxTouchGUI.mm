@@ -1251,8 +1251,12 @@ void ofxTouchGUI::sendOSC(string address, float val) {
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addFloatArg(val);
         //ofLog() << "FICK - sending: " << address << " : " << val;
+        #ifdef IS_OF_9
         oscSender->sendMessage( msg, wrapOscMessagesInBundle );
-    }    
+        #else
+        oscSender->sendMessage( msg );
+        #endif
+    }
 }
 
 void ofxTouchGUI::sendOSC(string address, int val) {
@@ -1262,7 +1266,11 @@ void ofxTouchGUI::sendOSC(string address, int val) {
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addIntArg(val);
         //ofLog() << "FICK - sending: " << address << " : " << val;
+        #ifdef IS_OF_9
         oscSender->sendMessage( msg, wrapOscMessagesInBundle );
+        #else
+        oscSender->sendMessage( msg );
+        #endif
     }
 }
 
@@ -1273,7 +1281,11 @@ void ofxTouchGUI::sendOSC(string address, string val) {
         msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         msg.addStringArg(val);
         //ofLog() << "FICK - sending: " << address << " : " << val;
+        #ifdef IS_OF_9
         oscSender->sendMessage( msg, wrapOscMessagesInBundle );
+        #else
+        oscSender->sendMessage( msg );
+        #endif
     }
 }
 
@@ -1283,11 +1295,15 @@ void ofxTouchGUI::sendOSC(ofxOscMessage& msg) {
         //msg.setAddress(address);//oscAddress + "/" + type + "/" + label); // eg. "/tg/slider/mythingy"
         //msg.addStringArg(val);
         //ofLog() << "FICK - sending: " << address << " : " << val;
+        #ifdef IS_OF_9
         oscSender->sendMessage( msg, wrapOscMessagesInBundle );
+        #else
+        oscSender->sendMessage( msg );
+        #endif
     }
 }
 
-void ofxTouchGUI::setupReceiveOSC(int port) {    
+void ofxTouchGUI::setupReceiveOSC(int port) {
     
     // setup osc host + port after settings have loaded
     if(!oscReceiveEnabled) {

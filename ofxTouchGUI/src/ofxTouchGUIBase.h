@@ -8,6 +8,9 @@
 
 //static bool ignoreExternalEvents = false;
 
+#if OF_VERSION_MINOR > 8 
+#define IS_OF_9
+#endif
 
 class ofxTouchGUIBase {
 	

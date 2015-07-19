@@ -563,9 +563,13 @@ void ofxTouchGUIBase::sendOSC(int val) {
     if(oscEnabled) {
         msg.clear();
         msg.setAddress(fullOscAddress); // eg. "/tg/slider/mythingy"
-        msg.addIntArg(val); 
+        msg.addIntArg(val);
+        #ifdef IS_OF_9
         oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
-    }    
+        #else
+        oscSenderRef->sendMessage( msg );
+        #endif
+    }
 }
 
 void ofxTouchGUIBase::sendOSC(float val) {
@@ -574,8 +578,12 @@ void ofxTouchGUIBase::sendOSC(float val) {
         msg.clear();
         msg.setAddress(fullOscAddress);//oscAddress + "/" + label); // eg. "/tg/mythingy"
         msg.addFloatArg(val); 
+        #ifdef IS_OF_9
         oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
-    }    
+        #else
+        oscSenderRef->sendMessage( msg );
+        #endif
+    }
 }
 
 void ofxTouchGUIBase::sendOSC(string val) {
@@ -584,8 +592,12 @@ void ofxTouchGUIBase::sendOSC(string val) {
         msg.clear();
         msg.setAddress(fullOscAddress); // eg. "/tg/mythingy"
         msg.addStringArg(val); 
+        #ifdef IS_OF_9
         oscSenderRef->sendMessage( msg, wrapOscMessagesInBundle );
-    }    
+        #else
+        oscSenderRef->sendMessage( msg );
+        #endif
+    }
 }
 
 bool ofxTouchGUIBase::isCharacter(const char Character)
