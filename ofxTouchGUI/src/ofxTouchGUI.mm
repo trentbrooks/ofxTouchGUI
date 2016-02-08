@@ -100,9 +100,9 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     this->saveToFile = saveToFile;
     
-#ifdef TARGET_OF_IPHONE
+#ifdef OF_TARGET_IOS
     // load xml from public itunes directory
-    this->saveToFile = ofxiPhoneGetDocumentsDirectory() + saveToFile;
+    this->saveToFile = ofxiOSGetDocumentsDirectory() + saveToFile;
     ofLog() << "IOS detected- save to path: " << this->saveToFile;
 #endif
     
@@ -965,6 +965,42 @@ ofxTouchGUIBase* ofxTouchGUI::getItemByOSCAddress(string oscAddress) {
 }
 
 
+// get the saved xml value only - doesn't require creating GUI controls
+// usage: float a = settings.getXMLValue<float>("ARC RES");
+template <typename T>
+T ofxTouchGUI::getXMLValue(string label) {
+    
+    if(!settingsLoaded) {
+        ofLogError() << "XML has not been loaded yet.";
+        return T();
+    }
+    
+    xml.setTo("//settings");
+    for(int i = 0; i < xml.getNumChildren(); i++){
+        
+        // check by label & type instead of id, as the id changes when new controls are added. need to change/ remove id's all together maybe?
+        // or create non incremental id's so they don't get recreated?
+        xml.setToChild(i);
+        
+        string controlLabel = xml.getValue<string>("label");
+        string controlItemType = xml.getValue<string>("type");
+        
+        // for now, we're only interested in slider/float values...
+        //if(controlItemType == SLIDER_TYPE) {
+        if(label == controlLabel) {
+            return xml.getValue<T>("value");
+        }
+        //}
+        
+        xml.setToParent();
+    }
+    
+    ofLogError() << "Could not find value for label: " << label << ". Returning default: " << T();
+    return T();
+}
+
+
+
 // XML SETTINGS
 //--------------------------------------------------------------
 // the old xml style didn't have a root node, and wouldn't parse. this just makes sure we dont loose original data
@@ -1539,4 +1575,8 @@ template void ofxTouchGUI::setVariable<string>(string varName, string*);
 
 // displaying var
 
-
+// getting xml values
+template bool ofxTouchGUI::getXMLValue(string label);
+template int ofxTouchGUI::getXMLValue(string label);
+template float ofxTouchGUI::getXMLValue(string label);
+template string ofxTouchGUI::getXMLValue(string label);

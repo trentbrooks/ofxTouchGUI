@@ -12,6 +12,9 @@
 #include "ofxOsc.h"
 #include "ofxTouchGUIEventArgs.h"
 
+#ifdef OF_TARGET_IOS
+#include "ofxiOS.h"
+#endif
     
 /*
  Usage:
@@ -247,6 +250,10 @@ public:
     vector <ofxTouchGUIBase*> guiItems;
     vector <ofxTouchGUIDropDown*> dropDownGuiItems;
     
+    // get the saved xml value only - doesn't require creating GUI controls
+    // usage: float a = settings.getXMLValue<float>("ARC RES");
+    template <typename T>
+    T getXMLValue(string label);
     
     // osc settings - send
     void setupSendOSC(string host, int port, bool wrapOscMessagesInBundle = true);
@@ -261,6 +268,9 @@ public:
     int getPortOSC() {
         return oscSendPort;
     };
+    ofxOscMessage getMessage() {
+        return msg; // get a copy of the last sent message
+    }
     // osc receive
     void setupReceiveOSC(int port);
     void disableReceiveOSC();
@@ -367,7 +377,7 @@ protected:
 };
 
 
-
+typedef ofxTouchGUI ofxTouchGui;
 
 
 
