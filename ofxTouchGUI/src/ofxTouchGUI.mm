@@ -108,7 +108,7 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     try {
         settingsLoaded = xml.load(this->saveToFile);
-    } catch (int e) {
+    } catch (...) {
         ofLog() << "XML could not load file (file doesn't exist yet): " << this->saveToFile;
     }
 
@@ -138,7 +138,7 @@ void ofxTouchGUI::setIgnoreXMLValues(bool ignoreXML) {
 void ofxTouchGUI::loadBackgroundImage(string imgPath){	
     
     hasBackgroundImage = true;
-    backgroundImage.loadImage(imgPath);
+    backgroundImage.load(imgPath);
 
 }
 
@@ -162,13 +162,13 @@ void ofxTouchGUI::loadFont(string fontPath, int fontSize, int fontSizeLarge, boo
 void ofxTouchGUI::loadFonts(string fontPathSmall, string fontPathLarge, int fontSizeSmall, int fontSizeLarge, bool antialiasedSmall, bool antialisedLarge){
     
     hasFont = true;
-    if(guiFont.loadFont(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
+    if(guiFont.load(fontPathSmall,fontSizeSmall,antialiasedSmall,true)) {
         guiFont.setLineHeight(int(fontSizeSmall * 2)); // not sure about this?
     } else {
         hasFont = false;
     }
     
-    if(guiFontLarge.loadFont(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
+    if(guiFontLarge.load(fontPathLarge,fontSizeLarge,antialisedLarge,true)) {
         guiFontLarge.setLineHeight(int(fontSizeLarge * 2 * .8)); // weird.
     } else {
         hasFont = false;
@@ -434,7 +434,7 @@ void ofxTouchGUI::draw(){
         
         if(hasBackgroundColor) {
             ofSetColor(bg);
-            ofRect(bgX, bgY, bgWidth, bgHeight);
+            ofDrawRectangle(bgX, bgY, bgWidth, bgHeight);
         }
         
         ofSetColor(255);
@@ -928,6 +928,7 @@ TGNameValuePair* ofxTouchGUI::getVarByLabel(string textLabel) {
         }
     } 
     
+    ofLogError() << "Could not find " << textLabel << ".";
     return NULL;
 }
 
@@ -939,6 +940,7 @@ ofxTouchGUIBase* ofxTouchGUI::getItemByLabelAndType(string textLabel, string ite
         }
     } 
 
+    ofLogError() << "Could not find " << textLabel << " of " << itemType << " type.";
     return NULL;
 }
 
@@ -950,6 +952,7 @@ ofxTouchGUIBase* ofxTouchGUI::getItemById(string itemId) {
         }
     } 
     
+    ofLogError() << "Could not find " << itemId << ".";
     return NULL;
 }
 
@@ -961,6 +964,7 @@ ofxTouchGUIBase* ofxTouchGUI::getItemByOSCAddress(string oscAddress) {
         }
     }
     
+    ofLogError() << "Could not osc address " << oscAddress << ".";
     return NULL;
 }
 
@@ -1363,7 +1367,7 @@ void ofxTouchGUI::checkOSCReceiver() {
     
 	while(oscReceiver->hasWaitingMessages()){
 		ofxOscMessage m;
-		oscReceiver->getNextMessage(&m);
+		oscReceiver->getNextMessage(m);
         
         ofxTouchGUIBase* item = getItemByOSCAddress(m.getAddress());
         if(item != NULL) {

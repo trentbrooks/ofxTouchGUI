@@ -254,6 +254,13 @@ public:
     // usage: float a = settings.getXMLValue<float>("ARC RES");
     template <typename T>
     T getXMLValue(string label);
+    ofXml& getXML() {
+        return xml;
+    }
+    
+    string getSavedFilename() {
+        return saveToFile;
+    }
     
     // osc settings - send
     void setupSendOSC(string host, int port, bool wrapOscMessagesInBundle = true);
