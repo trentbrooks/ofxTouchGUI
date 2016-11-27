@@ -154,7 +154,9 @@ void ofxTouchGUITextInput::draw(){
         //ofSetColor(textColour);
 
         // draw text
-        drawText(*input, 0);
+        //drawText(*input, 0);
+        drawText(label + " : " + *input, 0);
+        //ofLog() << *input;
         
         ofPopStyle();
         ofPopMatrix();

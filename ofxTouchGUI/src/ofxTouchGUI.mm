@@ -850,6 +850,30 @@ ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string *placeHolderText, int pos
     return tgti; // return object to add listeners, etc.
 }
 
+ofxTouchGUITextInput* ofxTouchGUI::addTextInput(string inputLabel, string *placeHolderText, int posX, int posY, int width, int height) {
+    
+    ofxTouchGUITextInput* tgti = new ofxTouchGUITextInput();
+    tgti->type = TEXTINPUT_TYPE;
+    //tgti->itemId = TEXTINPUT_TYPE + ofToString(numGuiItems);
+    checkItemPosSize(posX, posY, width, height);
+    tgti->setDisplay(inputLabel, posX, posY, width, height); // inputs don't have display text
+    tgti->defaultInput = *placeHolderText;
+    //tgti->enable(useMouse);
+    if(hasFont) tgti->assignFonts(&guiFont,fontSize, &guiFontLarge,fontSizeLarge);
+    
+    guiItems.push_back(tgti);
+    panels.back()->panelGuiItems.push_back(tgti);
+    numGuiItems = guiItems.size();
+    
+    // save controller if doesn't already exist, if it does overwrite the passed in value with the saved xml value
+    saveControl(TEXTINPUT_TYPE, tgti->getLabel(), placeHolderText);
+    
+    // set the input after it's saved in case it's been saved over
+    tgti->setInput(placeHolderText);
+    
+    return tgti; // return object to add listeners, etc.
+}
+
 
 ofxTouchGUIDataGraph* ofxTouchGUI::addDataGraph(string graphLabel, int maxValues, int posX, int posY, int width, int height) {
     
@@ -1367,7 +1391,7 @@ void ofxTouchGUI::checkOSCReceiver() {
     
 	while(oscReceiver->hasWaitingMessages()){
 		ofxOscMessage m;
-		oscReceiver->getNextMessage(m);
+		oscReceiver->getNextMessage(&m);
         
         ofxTouchGUIBase* item = getItemByOSCAddress(m.getAddress());
         if(item != NULL) {

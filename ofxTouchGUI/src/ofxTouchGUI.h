@@ -196,6 +196,7 @@ public:
     
     // text input (ios only)
     ofxTouchGUITextInput* addTextInput(string *placeHolderText, int posX=-1, int posY=-1, int width=-1, int height=-1);
+    ofxTouchGUITextInput* addTextInput(string inputLabel, string *placeHolderText, int posX=-1, int posY=-1, int width=-1, int height=-1);
     
     // time/data series graph: not interactive, but good for viewing data over time
     ofxTouchGUIDataGraph* addDataGraph(string graphLabel, int maxValues, int posX=-1, int posY=-1, int width=-1, int height=-1);
