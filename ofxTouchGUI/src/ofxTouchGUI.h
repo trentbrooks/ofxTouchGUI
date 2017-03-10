@@ -12,8 +12,9 @@
 #include "ofxOsc.h"
 #include "ofxTouchGUIEventArgs.h"
 
-#ifdef OF_TARGET_IOS
+#ifdef TARGET_OF_IPHONE
 #include "ofxiOS.h"
+#include "ofxiOSExtras.h"
 #endif
     
 /*
@@ -63,7 +64,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.44
+#define OFXTOUCHGUI_VERSION 0.45
 
 // gui item types
 #define SLIDER_TYPE "slider"

@@ -100,7 +100,7 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     
     this->saveToFile = saveToFile;
     
-#ifdef OF_TARGET_IOS
+#ifdef TARGET_OF_IPHONE
     // load xml from public itunes directory
     this->saveToFile = ofxiOSGetDocumentsDirectory() + saveToFile;
     ofLog() << "IOS detected- save to path: " << this->saveToFile;
