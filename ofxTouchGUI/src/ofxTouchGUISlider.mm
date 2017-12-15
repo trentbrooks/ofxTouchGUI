@@ -90,7 +90,7 @@ void ofxTouchGUISlider::draw(){
             
             ofPushStyle();
             ofSetColor(255);
-            bgImage.draw(0, 0);
+            bgImage.draw(0, 0, getItemWidth(), getItemHeight());
             fgImage.draw(-fgImage.getWidth()*.5+ destValX, -fgImage.getHeight()*.5 + getItemHeight() * .5);
             ofPopStyle();
             

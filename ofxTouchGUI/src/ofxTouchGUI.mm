@@ -2,7 +2,7 @@
 
 
 ofxTouchGUI::ofxTouchGUI(){
-	
+    
     // init props
     numGuiItems = 0;
     hasFont = false;
@@ -46,6 +46,11 @@ ofxTouchGUI::ofxTouchGUI(){
 
 ofxTouchGUI::~ofxTouchGUI(){
     clear();
+    
+    // extras - mouse listeners were still active when multiple guis in app
+    disableMouse();
+    disableTouch();
+    setAutoDraw(false);
 }
 
 void ofxTouchGUI::clear() {
@@ -1391,7 +1396,7 @@ void ofxTouchGUI::checkOSCReceiver() {
     
 	while(oscReceiver->hasWaitingMessages()){
 		ofxOscMessage m;
-		oscReceiver->getNextMessage(&m);
+		oscReceiver->getNextMessage(m);
         
         ofxTouchGUIBase* item = getItemByOSCAddress(m.getAddress());
         if(item != NULL) {
@@ -1441,9 +1446,12 @@ void ofxTouchGUI::enableTouch(){
 //--------------------------------------------------------------
 void ofxTouchGUI::disableTouch(){    
     //ofUnregisterTouchEvents(this);
-    ofRemoveListener(ofEvents().touchDown, this, &ofxTouchGUI::touchDown);
-    ofRemoveListener(ofEvents().touchMoved, this, &ofxTouchGUI::touchMoved);
-    ofRemoveListener(ofEvents().touchUp, this, &ofxTouchGUI::touchUp);
+    if(!useMouse) {
+        ofRemoveListener(ofEvents().touchDown, this, &ofxTouchGUI::touchDown);
+        ofRemoveListener(ofEvents().touchMoved, this, &ofxTouchGUI::touchMoved);
+        ofRemoveListener(ofEvents().touchUp, this, &ofxTouchGUI::touchUp);
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -1461,9 +1469,12 @@ void ofxTouchGUI::enableMouse(){
 //--------------------------------------------------------------
 void ofxTouchGUI::disableMouse(){    
     //ofUnregisterMouseEvents(this);
-    ofRemoveListener(ofEvents().mouseDragged,this,&ofxTouchGUI::mouseDragged);
-    ofRemoveListener(ofEvents().mousePressed,this,&ofxTouchGUI::mousePressed);
-    ofRemoveListener(ofEvents().mouseReleased,this,&ofxTouchGUI::mouseReleased);
+    if(!useMouse) {
+        ofRemoveListener(ofEvents().mouseDragged,this,&ofxTouchGUI::mouseDragged);
+        ofRemoveListener(ofEvents().mousePressed,this,&ofxTouchGUI::mousePressed);
+        ofRemoveListener(ofEvents().mouseReleased,this,&ofxTouchGUI::mouseReleased);
+    }
+    
 }
 
 

@@ -64,7 +64,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.45
+#define OFXTOUCHGUI_VERSION 0.46
 
 // gui item types
 #define SLIDER_TYPE "slider"
