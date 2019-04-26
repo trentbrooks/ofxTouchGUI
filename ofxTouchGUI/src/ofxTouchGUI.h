@@ -10,6 +10,7 @@
 #include "ofxTouchGUITextInput.h"
 #include "ofxTouchGUIDataGraph.h"
 #include "ofxOsc.h"
+#include "ofxXmlPoco.h"
 #include "ofxTouchGUIEventArgs.h"
 
 #ifdef TARGET_OF_IPHONE
@@ -64,7 +65,7 @@
 
 
 // ofxTouchGUI versioning
-#define OFXTOUCHGUI_VERSION 0.46
+#define OFXTOUCHGUI_VERSION 0.51
 
 // gui item types
 #define SLIDER_TYPE "slider"
@@ -256,7 +257,7 @@ public:
     // usage: float a = settings.getXMLValue<float>("ARC RES");
     template <typename T>
     T getXMLValue(string label);
-    ofXml& getXML() {
+    ofxXmlPoco& getXML() {
         return xml;
     }
     
@@ -364,7 +365,7 @@ protected:
     // save settings
     string saveToFile;
     string defaultSaveToFile;
-    ofXml xml;
+    ofxXmlPoco xml;
     bool ignoreXMLValues;
     bool settingsLoaded;
     bool checkLegacyXml(); // the old xml style didn't have a root node, this just makes sure we dont loose original data

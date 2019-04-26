@@ -1,0 +1,3 @@
+ofxOsc
+ofxPoco
+ofxTouchGUI

@@ -92,8 +92,8 @@ void ofxTouchGUI::loadSettings(string saveToFile, bool loadDefaultFont, bool use
     // first time setup - load fonts + touch/mouse listeners
     if(!settingsLoaded) {
                 
-        // load the default font
-        if(loadDefaultFont) loadFont("stan0755.ttf", 6, 6, false);
+//        // load the default font
+//        if(loadDefaultFont) loadFont("Arial.ttf", 6, 6, false);
         
         // touch controlled or mouse controlled?
         //this->useMouse = useMouse;
@@ -1264,7 +1264,7 @@ bool ofxTouchGUI::saveControl(string currentType, string currentLabel, T* curren
     if(!isControlSaved) {
         
         // create xml 'control' node
-        ofXml controlXML;
+        ofxXmlPoco controlXML;
         controlXML.addChild("control");
         controlXML.setTo("control");
 

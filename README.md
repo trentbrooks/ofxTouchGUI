@@ -10,6 +10,9 @@ Running the ofxTouchGUIExampleIOS on iPhone and the ofxTouchGUIExample on deskto
 
 Ubuntu and windows user's will need to rename the file's from .mm to .cpp, or just use the project generator to when creating project with ofxTouchGUI.
 
+UPDATE: 26/4/19
+Openframeworks 0.1 update. Must switch the 'of_010' branch'
+
 ## Sample usage ##
 	// setup
 	ofxTouchGUI settings;
